@@ -1,14 +1,15 @@
 ---
 layout:     post
 title:      Reading Notes: Dynamic Bid Prices in Revenue Management
+subtitle:   
 date:       2024-07-03
 author:     Wanyu Zhang
+header-img: 
 catalog: 	 true
 tags:
     - MDP
     - Revenue Management
 ---
-
 
 > Adelman, Daniel. "Dynamic bid prices in revenue management." *Operations* *Research* 55.4 (2007): 647-661.
 
