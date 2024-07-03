@@ -1,10 +1,10 @@
 ---
 layout:     post
 title:      Reading Notes: Dynamic Bid Prices in Revenue Management
-subtitle:   
+subtitle:   None
 date:       2024-07-03
 author:     Wanyu Zhang
-header-img: 
+header-img: img/home-bg.jpg
 catalog: 	 true
 tags:
     - MDP
