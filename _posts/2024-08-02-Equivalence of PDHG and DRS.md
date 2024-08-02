@@ -4,7 +4,7 @@ title:      Equivalence of PDHG and DRS
 subtitle:   
 date:       2024-08-02
 author:     Wanyu Zhang
-header-img: img/post-bg-swift2.jpg
+header-img: img/post-bg-coffee.jpeg
 catalog: true
 tags:
     - PDHG
