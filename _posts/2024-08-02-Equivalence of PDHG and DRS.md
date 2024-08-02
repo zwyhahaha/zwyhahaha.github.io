@@ -1,4 +1,15 @@
-# Equivalence of PDHG and DRS
+---
+layout:     post
+title:      Equivalence of PDHG and DRS
+subtitle:   
+date:       2024-08-02
+author:     Wanyu Zhang
+header-img: img/post-bg-swift2.jpg
+catalog: true
+tags:
+    - PDHG
+    - DRS
+---
 
 The PDHG algorithm solves the following composite optimization problem:
 $$
