@@ -12,9 +12,11 @@ tags:
 ---
 
 The PDHG algorithm solves the following composite optimization problem:
+
 \[
 \min_x f (x) + g (A x)
 \]
+
 where $x \in \mathbb{R}^n, A \in \mathbb{R}^{m \times n}$, and $f, g$ are convex closed functions with nonempty domains.
 
 ## PDHG
