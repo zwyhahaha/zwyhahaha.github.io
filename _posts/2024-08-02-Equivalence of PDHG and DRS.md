@@ -32,16 +32,16 @@ Starting from point $(x^k, \lambda^k)$, the PDHG iteration is:
 
 $$
 x^{k + 1} = & \text{argmin}_x \left\{ f (x) - \langle A^T \lambda^k, x - x^k
-  \rangle + \frac{1}{2 t} \| x - x^k \|_2^2 \right\} = \text{prox}_{t f} (x^k - t A^T \lambda^k) \nonumber\\
+  \rangle + \frac{1}{2 t} \| x - x^k \|_2^2 \right\} = \text{prox}_{t f} (x^k - t A^T \lambda^k) \\
   
-\lambda^{k + 1} = & \text{argmin}_{\lambda} \left\{ g^{\ast} (\lambda) + \langle A^T (2 x^{k + 1} - x^k), \lambda - \lambda^k \rangle + \frac{t}{2} \| \lambda - \lambda^k \|_2^2 \right\} = \text{prox}_{t^{- 1} g^{\ast}} \left( \lambda^k + \frac{1}{t} A (2 x^{k + 1} - x^k) \right) \nonumber
+\lambda^{k + 1} = & \text{argmin}_{\lambda} \left\{ g^{\ast} (\lambda) + \langle A^T (2 x^{k + 1} - x^k), \lambda - \lambda^k \rangle + \frac{t}{2} \| \lambda - \lambda^k \|_2^2 \right\} = \text{prox}_{t^{- 1} g^{\ast}} \left( \lambda^k + \frac{1}{t} A (2 x^{k + 1} - x^k) \right) 
 $$
 
 In the language of operator theory, the update rule is:
 
 $$
-  x^{k + 1} = & J_{t F} (x^k - t A^T \lambda^k) \nonumber\\
-  \lambda^{k + 1} = & J_{t^{- 1} G^{\ast}} \left( \lambda^k + \frac{1}{t} A (2x^{k + 1} - x^k) \right) \nonumber
+  x^{k + 1} = & J_{t F} (x^k - t A^T \lambda^k) \\
+  \lambda^{k + 1} = & J_{t^{- 1} G^{\ast}} \left( \lambda^k + \frac{1}{t} A (2x^{k + 1} - x^k) \right) 
 $$
 
 where $F, G^{\ast}$ are the subgradients of $f, g^{\ast}$, which are maximal monotone, and $J_F, J_{G^{\ast}}$ are their resolvents. Next, we will transform the PDHG iteration into DRS.
