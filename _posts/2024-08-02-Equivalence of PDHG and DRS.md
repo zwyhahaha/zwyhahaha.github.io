@@ -95,9 +95,9 @@ $$
 Then we denote operators $\partial f, A^T \partial g A$ by $F, H$. Starting from $y^k$, DRS iteration gives
 
 $$
-  w^{k + 1} = J_{t F} (y^k) \nonumber\\
-  v^{k + 1} = J_{t H} (2 w^{k + 1} - y^k) \nonumber\\
-  y^{k + 1} = y^k - w^{k + 1} + v^{k + 1} \nonumber
+  w^{k + 1} = J_{t F} (y^k) \nonumber \\
+  v^{k + 1} = J_{t H} (2 w^{k + 1} - y^k) \nonumber \\
+  y^{k + 1} = y^k - w^{k + 1} + v^{k + 1} \nonumber 
 $$
 
 By the property of composite operators, when $A A^T = I$ and $H = A^T G A$
