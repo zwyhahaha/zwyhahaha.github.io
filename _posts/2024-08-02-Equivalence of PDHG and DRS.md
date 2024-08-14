@@ -9,6 +9,7 @@ catalog: true
 tags:
     - PDHG
     - DRS
+    - optimization
 ---
 
 The PDHG algorithm solves the following composite optimization problem:
@@ -124,14 +125,14 @@ which is the same as PDHG.
 
 **remark**
   If the assumption $A A^T = I$ not hold, choose $\gamma \| A \| \leq 1$, we can construct the following matrix:
-  
+
 $$
 B = \left[ A \quad C \right], C = (\gamma^{- 2} I - A A^T)^{1 / 2} \in
      \mathbb{R}^{m \times m}
 $$
 
  such that $B B^T = \gamma^{- 2} I$. Then we consider the following optimization problem
- 
+
 $$
     \min_{x, u}  f (x) +\mathbb{I} (u = 0) + g (B [x, u]^T) \nonumber
 $$
