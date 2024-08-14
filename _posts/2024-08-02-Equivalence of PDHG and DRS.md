@@ -35,7 +35,7 @@ $$
 x^{k + 1} = \text{argmin}_x \left\{ f (x) - \langle A^T \lambda^k, x - x^k
   \rangle + \frac{1}{2 t} \| x - x^k \|_2^2 \right\} = \text{prox}_{t f} (x^k - t A^T \lambda^k) \\
   
-\lambda^{k + 1} = \text{argmin}_{\lambda} \left\{ g^{\ast} (\lambda) + \langle A^T (2 x^{k + 1} - x^k), \lambda - \lambda^k \rangle + \frac{t}{2} \| \lambda - \lambda^k \|_2^2 \right\} = \text{prox}_{t^{- 1} g^{\ast}} \left( \lambda^k + \frac{1}{t} A (2 x^{k + 1} - x^k) \right) 
+\lambda^{k + 1} = \text{argmin}_{\lambda} \left\{ g^{\ast} (\lambda) + \langle A^T (2 x^{k + 1} - x^k), \lambda - \lambda^k \rangle + \frac{t}{2} \| \lambda - \lambda^k \|_2^2 \right\} = \text{prox}_{t^{- 1} g^{\ast}} \left( \lambda^k + \frac{1}{t} A (2 x^{k + 1} - x^k) \right)
 $$
 
 In the language of operator theory, the update rule is:
@@ -96,9 +96,9 @@ $$
 Then we denote operators $\partial f, A^T \partial g A$ by $F, H$. Starting from $y^k$, DRS iteration gives
 
 $$
-  w^{k + 1} = J_{t F} (y^k) \nonumber \\
+w^{k + 1} = J_{t F} (y^k) \nonumber \\
   v^{k + 1} = J_{t H} (2 w^{k + 1} - y^k) \nonumber \\
-  y^{k + 1} = y^k - w^{k + 1} + v^{k + 1} \nonumber 
+  y^{k + 1} = y^k - w^{k + 1} + v^{k + 1} \nonumber
 $$
 
 By the property of composite operators, when $A A^T = I$ and $H = A^T G A$
