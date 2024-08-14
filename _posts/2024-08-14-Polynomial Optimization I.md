@@ -13,8 +13,6 @@ tags:
 
 
 
-# Polynomial Optimization I
-
 This note is taken from the [summer course](https://sites.google.com/site/cedricjosz/home/introduction-to-polynomial-optimization), which is really amazing since Prof.Cédric Josz makes everything clear and intuitive! This blog is about univariate unconstrained polynomial optimization, and multivariate case is delayed to the next episode. 
 
 To begin with, the univariate unconstrained polynomial optimization tackles
@@ -94,6 +92,8 @@ $$
 \text{s.t.}  y_0=1\\
   (y_{i+j})_{0\leq i,j\leq d}\succeq 0
 $$
+
+## Sums-of-Squares
 
 
 
