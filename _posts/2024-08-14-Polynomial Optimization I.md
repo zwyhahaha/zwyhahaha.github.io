@@ -45,7 +45,7 @@ $$
  & y_3 = x^3\\
  & y_2 = x^2\\
  & y_1 = x^1\\
- & y_0 = 1\\
+ & y_0 = 1
 $$
 
 
@@ -66,7 +66,7 @@ Thus we can reformulate problem (3)
 $$
 \min_x & f(x) =\frac{1}{4}y_4+\frac{1}{8}y_3-2y_2-\frac{3}{2}y_1+7y_0\\
 \text{s.t.}  & y_0 = 1\\
-& \begin{bmatrix} y_0, y_1, y_2\\
+ & \begin{bmatrix} y_0, y_1, y_2\\
 y_1,y_2,y_3\\
 y_2,y_3,y_4
 \end{bmatrix}\succeq 0
@@ -92,7 +92,7 @@ is equal to the optimal value of the convex problem
 $$
 \inf_x & f_{2d}x^{2d}+...+f_2 x^2+f_1x+f_0\\
 \text{s.t.} & y_0=1\\
-& (y_{i+j})_{0\leq i,j\leq d}\succeq 0
+ & (y_{i+j})_{0\leq i,j\leq d}\succeq 0
 $$
 
 
