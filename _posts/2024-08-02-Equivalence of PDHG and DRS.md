@@ -9,7 +9,7 @@ catalog: true
 tags:
     - PDHG
     - DRS
-    - optimization
+    - Optimization
 ---
 
 The PDHG algorithm solves the following composite optimization problem:
