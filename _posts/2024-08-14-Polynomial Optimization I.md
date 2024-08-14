@@ -38,6 +38,7 @@ $$
 For the above example, we can introduce new variables
 
 
+
 $$
 \min_x & f(x) =\frac{1}{4}y_4+\frac{1}{8}y_3-2y_2-\frac{3}{2}y_1+7y_0\\
 \text{s.t.} & y_4 = x^4\\
@@ -48,8 +49,8 @@ $$
 $$
 
 
-For $y_0,y_1,y_2,y_3,y_4$ satisfying the constraints, we have
 
+For $y_0,y_1,y_2,y_3,y_4$ satisfying the constraints, we have
 
 $$
 \begin{bmatrix} y_0, y_1, y_2\\
@@ -58,8 +59,8 @@ y_2,y_3,y_4
 \end{bmatrix}=\begin{bmatrix}1 \\x\\x^2\end{bmatrix}^T \begin{bmatrix}1 \\x\\x^2\end{bmatrix}\succeq 0
 $$
 
-
 Thus we can reformulate problem (3)
+
 
 
 $$
@@ -70,6 +71,7 @@ y_1,y_2,y_3\\
 y_2,y_3,y_4
 \end{bmatrix}\succeq 0
 $$
+
 
 
 The next proposition shows that the above "relaxation" is actually tight.
@@ -83,8 +85,8 @@ $$
 \inf_x f_{2d}x^{2d}+...+f_2 x^2+f_1x+f_0
 $$
 
-
 is equal to the optimal value of the convex problem
+
 
 
 $$
@@ -92,7 +94,6 @@ $$
 \text{s.t.} & y_0=1\\
 & (y_{i+j})_{0\leq i,j\leq d}\succeq 0
 $$
-
 
 
 
