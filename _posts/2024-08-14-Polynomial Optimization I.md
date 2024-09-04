@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      Polynomial Optimization I: Univariant Unconstrained Problems
+title:      Polynomial Optimization I
 subtitle:   
 date:       2024-08-14
 author:     Wanyu Zhang
