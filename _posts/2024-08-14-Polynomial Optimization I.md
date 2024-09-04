@@ -76,6 +76,7 @@ $$
 
 is equal to the optimal value of the convex problem
 
+
 $$
 \inf_x  f_{2d}x^{2d}+...+f_2 x^2+f_1x+f_0\\
 \text{s.t.}  y_0=1\\
@@ -85,16 +86,24 @@ $$
 ## Sum-of-Squares
 
 Another method is to approach the optimal value of (2) by constructing an increasing sequence of lower bounds. To be specific, we formulate (2) as a problem of maximizing the lower bound:
+
+
 $$
 \sup_{\lambda} \lambda\\
 \frac{1}{4}x^4+\frac{1}{8}x^3-2x^2-\frac{3}{2}x+7-\lambda \geq 0, \forall x
 $$
+
+
 The constraint describes a set of non-negative polynomials. For non-negative univariant even order polynomials, they can always be expressed by sums of squares with the form $\sum_k p_k(x)^2$.
 
 To optimize over this set, we write the polynomial $p(x)=\sum_{k=1}^{2d} p_k x^k$ by the quadratic form
+
+
 $$
 p(x)=\sum_{i,j\leq d} m_{ij} x^{i+j}=\begin{bmatrix}x_0\\.\\.\\x_d \end{bmatrix}^T \begin{bmatrix}m_{00}, ..., m_{0d}\\...\\...\\m_{d0}, ..., m_{dd} \end{bmatrix} \begin{bmatrix}x_0\\.\\.\\x_d \end{bmatrix}
 $$
+
+
 If $p(x)$ is a non-negative polynomial, the quadratic form also has an important property:
 
 ***Proposition 2*** (informal)
@@ -104,12 +113,18 @@ If $p(x)$ is a non-negative polynomial, the quadratic form also has an important
 
 
 To see how the algorithm works, we go back to the example (2). It is now reformulated as
+
+
 $$
 \sup_{\lambda} \lambda\\
 \frac{1}{4}x^4+\frac{1}{8}x^3-2x^2-\frac{3}{2}x+7-\lambda = \sum_{0\leq i,j\leq 2} m_{ij} x^{i+j}\\
 (m_{ij})_{0\leq i,j\leq 2} \succeq 0
 $$
+
+
 By equating the coefficients,
+
+
 $$
 \sup_{\lambda} \lambda\\
 7-\lambda=m_{00}\\
