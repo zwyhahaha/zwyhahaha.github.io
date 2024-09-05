@@ -90,7 +90,7 @@ If the nonnegative polynomial $p(x)-p^*$ is a sum-of-squares of polynomials, the
 
 The theorem suggests that, in an ideal case, we can solve $Q$ directly to obtain global optimality. However, in a more general case where the condition is not necessarily satisfied, we need to solve a sequence of SDP to approach global optimality. 
 
-Suppose $x^*=\arg \min_x p(x)$ exists, and $$\| x^* \| \leq a$$. 
+Suppose $x^*=\arg \min_x p(x)$ , $\| x^* \| \leq a$. 
 
 Then for $N \geq m$, as $N$ tends to infinity, one has $Q_a^N$ -> $p^*$, where 
 
