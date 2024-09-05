@@ -52,7 +52,7 @@ $$
 
 with dimension $s(2m)$. For moment $y_{\alpha}=\int x^{\alpha} \text{d} \mu$, they compose a $s(2m)$-degree vector of moments $y=\{y_{\alpha}\}$, with $y_{0,...,0}=1$. Then we introduce moment matrix $M_m(y)\in \mathbb R^{s(m)\times s(m)}$.  This matrix is defined by blocks $\{M_{\alpha}(y)\}_{\sum_i \alpha_i=k,1\leq k \leq 2m}$. Here is an example of the moment matrix with $n=2,m=2$:
 
-<img src="./_posts/090401.png"/>
+<img src="[zwyhahaha.github.io](https://github.com/zwyhahaha/zwyhahaha.github.io/tree/main/_posts/090401.png)"/>
 
 Given $y$ with $M_m(y)\succeq 0$, the theory of moments identifies whether it corresponds to some probability measure $\mu_y$.  For univariant case, the positive semideifiniteness is necessary and sufficient to guarantee the existence of  $\mu_y$. However, in multivariant case, there are vectors $y$ with  $M_m(y)\succ 0$ but no representing $\mu_y$. In addition, this theory of moments is in duality with the theory of nonnegative polynomials on SOS representations.
 
@@ -90,7 +90,9 @@ If the nonnegative polynomial $p(x)-p^*$ is a sum-of-squares of polynomials, the
 
 The theorem suggests that, in an ideal case, we can solve $Q$ directly to obtain global optimality. However, in a more general case where the condition is not necessarily satisfied, we need to solve a sequence of SDP to approach global optimality. 
 
-Suppose $x^*=\arg \min_x p(x)$ exists. Then for $N \geq m$, as $N$ tends to infinity, one has $Q_a^N$ -> $p^*$, where 
+Suppose $x^*=\arg \min_x p(x)$ exists. 
+
+Then for $N \geq m$, as $N$ tends to infinity, one has $Q_a^N$ -> $p^*$, where 
 
 
 $$
