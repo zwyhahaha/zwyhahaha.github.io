@@ -90,7 +90,7 @@ If the nonnegative polynomial $p(x)-p^*$ is a sum-of-squares of polynomials, the
 
 The theorem suggests that, in an ideal case, we can solve $Q$ directly to obtain global optimality. However, in a more general case where the condition is not necessarily satisfied, we need to solve a sequence of SDP to approach global optimality. 
 
-Suppose $x^*=\arg \min_x p(x)$  ( $p$ is a $2m$-degree polynomial) exists and $\|x^*\|\leq a$ for some $a$. Then for $N\geq m$, as $N$ tends to infinity, one has $Q_a^N \rightarrow p^*$, where 
+Suppose $x^*=\arg \min_x p(x)$  ( $p$ is a $2m$-degree polynomial) exists and $\|x^*\|\leq a$ for some $a$. Then for $N\geq m$, as $N$ tends to infinity, one has $Q_a^N$ -> $p^*$, where 
 
 
 $$
@@ -108,7 +108,7 @@ and $\theta(x)=a-\|x\|^2$, $M_{N-1}(\theta y)(i,j)=\sum_{\alpha} \theta_{\alpha}
 
 ### Constrained Case
 
-If the problem is constrained to the set $K:=\{x \in \mathbb{R}^n|g_i(x) \geq 0, i=1,...,m\}$, one has similar result  $Q_K^N \rightarrow p^*$ as $N$ tends to infinity, where
+If the problem is constrained to the set $K:=\{x \in \mathbb{R}^n|g_i(x) \geq 0, i=1,...,m\}$, one has similar result  $Q_K^N$ ->$ p^*$ as $N$ tends to infinity, where
 
 
 $$
