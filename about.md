@@ -1,13 +1,13 @@
 ---
 layout: page
-title: "About Me|Wanyu Zhang"
+title: "About Me"
 description: "Undergraduate Researcher & 2025 Fall PhD Applicant"
 header-img: "img/home2.png"
 ---
 
 ### Welcome!
 
-I'm Wanyu Zhang, a senior undergraduate student at [Shanghai University of Finance and Economics (SUFE)](https://english.sufe.edu.cn/). This website serves as a gateway to know me and my research, feel free to explore it!
+I'm Wanyu Zhang, a senior undergraduate student at [Shanghai University of Finance and Economics (SUFE)](https://english.sufe.edu.cn/).
 
 I'm fortunate to enter the itnerdiciplinary sciences pilot class in SUFE, a program designed for excellent undergraduate students with academic pursuits, hosted by [Research Institute for Interdisplinary Sciences (RIIS)]( https://riis.sufe.edu.cn/). I start my research in operation research and its applications in management at 2023 summer, under the supervision of [Prof. Yinyu Ye](https://web.stanford.edu/~yyye/) (Stanford University) and [Prof. Dongdong Ge](https://scholar.google.com/citations?user=Kwvdy78AAAAJ&hl=en) (Shanghai Jiao Tong University, SJTU).  I spent wonderful undergraduate years here, working with supportive professors and outstanding peers, among whom I've learnt so much.
 
@@ -32,8 +32,6 @@ Lastly, I'm interested in solving management problems arising from supply chain,
 ### Contacts
 
 Reach out to me through email wanyuzhang@stu.sufe.edu.cn or WeChat (<u>Chelseaaa-Z</u>)
-
-Download my CV <a href="https://drive.google.com/file/d/1FdkVyHsGnXSuQ24GJvE8T6WB4O6y9dc4/view?usp=sharing" download> here </a>.
 
 For publications and preprints: [Google Scholar](https://scholar.google.com.hk/citations?user=Xt9MRH8AAAAJ&hl=zh-CN)
 
