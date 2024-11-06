@@ -58,7 +58,3 @@ open `~/.TeXmacs/progs/my-init-texmacs.scm`, and add the following code
 ```
 
 For Windows, refer to the repository instructions for setup details.
-
-------
-
-Finally, let me know if you’d like any more adjustments!
