@@ -4,7 +4,7 @@ title:      TeXmacs Tips: Efficient Math Typing, Crash Fixes, and More
 subtitle:   
 date:       2024-11-06
 author:     Wanyu Zhang
-header-img: img/home-bg.jpg
+header-img: img/home-bg-o.jpg
 catalog: 	 true
 tags:
     - TeXmacs
