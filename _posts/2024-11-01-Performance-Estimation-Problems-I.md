@@ -88,6 +88,8 @@ where $\mathcal{F}$ is convex, $L$-smooth, and $h$ is the given stepsize.
 ## Interpolation Theory
 
 So far, the transformations are equivalent, and it remains to show necessary and sufficient conditions for the constraint
+
+
 $$
 \exists f \in \mathcal{F}, f_i = f (x_i), g_i = g (x_i),
 $$
@@ -116,15 +118,27 @@ $$
 
 
 which comes from the property of convex functions. Actually, this condition is also sufficient, since we can construct a convex function that interpolates $\{ x_i, f_i, g_i \}$. Consider the following piecewiese linear function:
+
+
 $$
 f (x) = \max_j  \{ f_j + \langle g_j, x - x_j \rangle \},     {\operatorname{if}}\ x \in {\operatorname{conv}} (\{     x_i \})
 $$
+
+
 For convex and $L$-smooth function class, the interpolation conditions are
+
+
 $$
 f_i \geq f_j + \langle g_j, x_i - x_j \rangle + \frac{1}{2 L} \| g_i - g_j   \|_2^2, \forall i, j
 $$
+
+
 Equipped with these conditions, we can transform (P3) into an equivalent problem
+
+
 $$
 \begin{array}{rcl}  (P4)\max_{\{ x_i, f_i, g_i \}} & f_N - f_{\star} &  \nonumber\\  \text{s.t.} & f_i \geq f_j + \langle g_j, x_i - x_j \rangle + \frac{1}{2 L}  \| g_i - g_j \|_2^2 &  \label{finalpep}\\  & \| x_0 - x_{\star} \|_2^2 \leq R^2 &  \nonumber\\  & x_i = x_{i - 1} - \frac{h}{L} f_{i - 1} &  \nonumber\\  & g_{\star} = 0 &  \nonumber\end{array}
 $$
+
+
 Problem (P4) is now tractable, as it can be further reformulated into a semidefinite program (SDP). For more technical details, refer to [1].
