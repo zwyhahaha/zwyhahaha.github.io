@@ -89,8 +89,9 @@ where $\mathcal{F}$ is convex, $L$-smooth, and $h$ is the given stepsize.
 
 So far, the transformations are equivalent, and it remains to show necessary and sufficient conditions for the constraint
 $$
- \exists f \in \mathcal{F}, f_i = f (x_i), g_i = g (x_i), 
+\exists f \in \mathcal{F}, f_i = f (x_i), g_i = g (x_i),
 $$
+
 
 which is shown by convex interpolation condition:
 
@@ -98,14 +99,22 @@ which is shown by convex interpolation condition:
 
 We'll begin with the simplest case: the interpolation conditions for a convex function class. The interpolation problem is: given first order observation $\{ x_i, 
 f_i, g_i \}$, can we find a convex function $f$, such that
+
+
 $$
 f_i = f (x_i), g_i = \nabla f (x_i)?
 $$
 
+
+
 We can easily identify a necessary condition
+
+
 $$
 f_i - f_j \geq \langle g_j, x_i - x_j \rangle, \forall i, j
 $$
+
+
 which comes from the property of convex functions. Actually, this condition is also sufficient, since we can construct a convex function that interpolates $\{ x_i, f_i, g_i \}$. Consider the following piecewiese linear function:
 $$
 f (x) = \left\{\begin{array}{l}     \max_j  \{ f_j + \langle g_j, x - x_j \rangle \},     {\operatorname{if}}\ x \in {\operatorname{conv}} (\{     x_i \})\\     + \infty, {\operatorname{otherwise}}   \end{array}\right.
