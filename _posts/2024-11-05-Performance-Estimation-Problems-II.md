@@ -17,7 +17,7 @@ This is the second post in a series on **Performance Estimation Problems (PEP)**
 
 Let's briefly review the basics of PEP framework $(\mathcal{P}, \mathcal{F}, \mathcal{I}, \mathcal{M})$:
 
-- Realize by $ f (x_N) - f_{*}, \mathcal{F}_{0, L}, \| x_0 - x_{\star} 
+- Realize by $ f (x_N) - f_{*}, \mathcal{F}_{0, L}, \| x_0 - x_{*} 
   \| \leq R,˙x_i = x_{i - 1} - \frac{h}{L} f (x_{i - 1}) $
 - Interpolation: $f \in \mathcal{F} \longrightarrow \{ x_i, f_i, g_i \}$, and interpolation conditions
 - Reformulate into SDP
