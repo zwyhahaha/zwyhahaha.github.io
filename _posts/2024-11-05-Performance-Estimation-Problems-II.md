@@ -17,7 +17,7 @@ This is the second post in a series on **Performance Estimation Problems (PEP)**
 
 Let's briefly review the basics of PEP framework $(\mathcal{P}, \mathcal{F}, \mathcal{I}, \mathcal{M})$:
 
-- Realize by $ f (x_N) - f_{\star}, \mathcal{F}_{0, L}, \| x_0 - x_{\star} \| \leq R,˙x_i = x_{i - 1} - \frac{h}{L} f (x_{i - 1}) $
+- Realize by $ f (x_N) - f_{\star}$, $\mathcal{F}_{0, L}$, $\| x_0 - x_{\star} \| \leq R$,˙$x_i = x_{i - 1} - \frac{h}{L} f (x_{i - 1}) $
 - Interpolation: $f \in \mathcal{F} \longrightarrow \{ x_i, f_i, g_i \}$, and interpolation conditions
 - Reformulate into SDP
 
@@ -75,23 +75,21 @@ While PEP improvements thus far have primarily impacted constant factors, Grimme
 
 - In [2], a *straightforward* stepsize pattern $h$ is defined is shown to converge
 
-  
-  $$
-  f (x_T) - f (x_{\star}) \leq \frac{LR^2}{{{{\operatorname{avg}} (h)}} T} + O (\frac{1}{T^2})
-  $$
 
-  
+$$
+f (x_T) - f (x_{\star}) \leq \frac{LR^2}{{\operatorname{avg} (h)} T} + O (\frac{1}{T^2})
+$$
 
-  and they conjecture that ${\operatorname{avg}} (h) = \Omega (\log T)$.
+
+
+and they conjecture that ${\operatorname{avg}} (h) = \Omega (\log T)$.
 
 - In [3], they proved that by using *nonconstant, nonperiodic* stepsize,
 
-  
 
 $$
-\min_i f (x_i) - f (x_{\star}) \leq \frac{11.7816 LR^2}{{T^{1.0564}}}
+\min_i f (x_i) - f (x_{\star}) \leq \frac{11.7816 LR^2}{T^{1.0564}}
 $$
-
 
 
 ## References
