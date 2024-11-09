@@ -4,7 +4,7 @@ title:      Performance Estimation Problems I
 subtitle:   Methodology Review
 date:       2024-11-01
 author:     Wanyu Zhang
-header-img: img/post-bg-coffee.jpg
+header-img: img/post-bg-coffee.jpeg
 catalog: 	 true
 tags:
     - Optimization
@@ -50,7 +50,7 @@ We consider the problem of minimizing a function $f \in \mathcal{F}$, and we con
 In the most general sense, PEP is formulated as
 $$
 \begin{array}{rcl}
-  \max_{x_0, {\color{red}{f}}} & \mathcal{P} (\{ x_i, f (x_i), g (x_i) \}) & 
+  (P1)\max_{x_0, {\color{red}{f}}} & \mathcal{P} (\{ x_i, f (x_i), g (x_i) \}) & 
   \nonumber\\
   \text{s.t.} & f \in \mathcal{F} &  \label{pep}\\
   & \mathcal{I} (x_0, f (x_0), g (x_0)) {\operatorname{holds}} & 
@@ -59,12 +59,12 @@ $$
   & x^{\ast}
   \ {\operatorname{is}}\ a\ {\operatorname{minimizer}}\ {\operatorname{of}}\ f
   (x) &  \nonumber
-\end{array}(P1) 
+\end{array}
 $$
 The challenge in solving (P1) lies in the infinite-dimensional constraint on the function class. However, we can convert this into a finite-dimensional problem by focusing solely on the outputs of the first-order oracle:
 $$
 \begin{array}{rcl}
-  \max_{\{ x_i, {\color{red}{f_i, g_i}} \}} & \mathcal{P} (\{ x_i, f_i, g_i
+  (P2)\max_{\{ x_i, {\color{red}{f_i, g_i}} \}} & \mathcal{P} (\{ x_i, f_i, g_i
   \}) &  \nonumber\\
   \text{s.t.} & \exists f \in \mathcal{F}, f_i = f (x_i), g_i = g (x_i) & 
   \label{fpep}\\
@@ -74,13 +74,13 @@ $$
   & x^{\ast}
   \ {\operatorname{is}}\ a\ {\operatorname{minimizer}}\ {\operatorname{of}}\ f
   (x) &  \nonumber
-\end{array}(P2) 
+\end{array}
 $$
 We claim that (P1) and (P2) are equivalent. Specifically, every solution to (P2), $\{ x_i, f (x_i), g (x_i) \}$, corresponds to a function $F∈\mathcal F$, such that $\{x_i,f\}$ is feasible in (P1). Reciprocally, every solution to (P1) can be discretized to provide a solution for (P2).
 
 Now, we instantiate problem (P2) by specific choices of  $(\mathcal{P}, \mathcal{F}, \mathcal{I}, \mathcal{M})$:
 $$
-\begin{array}{rcl}  \max_{\{ x_i, {\color{red}{f_i, g_i}} \}} & f_N - f_{\star} &  \nonumber\\  \text{s.t.} & \exists f \in \mathcal{F}, f_i = f (x_i), g_i = g (x_i) &   \label{rpep}\\  & \| x_0 - x_{\star} \| \leq R &  \nonumber\\  & x_i = x_{i - 1} - \frac{h}{L} f_{i - 1} &  \nonumber\\  & g_{\star} = 0 &  \nonumber\end{array}(P3)
+\begin{array}{rcl}  (P3)\max_{\{ x_i, {\color{red}{f_i, g_i}} \}} & f_N - f_{\star} &  \nonumber\\  \text{s.t.} & \exists f \in \mathcal{F}, f_i = f (x_i), g_i = g (x_i) &   \label{rpep}\\  & \| x_0 - x_{\star} \| \leq R &  \nonumber\\  & x_i = x_{i - 1} - \frac{h}{L} f_{i - 1} &  \nonumber\\  & g_{\star} = 0 &  \nonumber\end{array}
 $$
 
 where $\mathcal{F}$ is convex, $L$-smooth, and $h$ is the given stepsize. 
@@ -116,6 +116,6 @@ f_i \geq f_j + \langle g_j, x_i - x_j \rangle + \frac{1}{2 L} \| g_i - g_j   \|_
 $$
 Equipped with these conditions, we can transform (P3) into an equivalent problem
 $$
-\begin{array}{rcl}  \max_{\{ x_i, f_i, g_i \}} & f_N - f_{\star} &  \nonumber\\  \text{s.t.} & f_i \geq f_j + \langle g_j, x_i - x_j \rangle + \frac{1}{2 L}  \| g_i - g_j \|_2^2 &  \label{finalpep}\\  & \| x_0 - x_{\star} \|_2^2 \leq R^2 &  \nonumber\\  & x_i = x_{i - 1} - \frac{h}{L} f_{i - 1} &  \nonumber\\  & g_{\star} = 0 &  \nonumber\end{array}(P4)
+\begin{array}{rcl}  (P4)\max_{\{ x_i, f_i, g_i \}} & f_N - f_{\star} &  \nonumber\\  \text{s.t.} & f_i \geq f_j + \langle g_j, x_i - x_j \rangle + \frac{1}{2 L}  \| g_i - g_j \|_2^2 &  \label{finalpep}\\  & \| x_0 - x_{\star} \|_2^2 \leq R^2 &  \nonumber\\  & x_i = x_{i - 1} - \frac{h}{L} f_{i - 1} &  \nonumber\\  & g_{\star} = 0 &  \nonumber\end{array}
 $$
 Problem (P4) is now tractable, as it can be further reformulated into a semidefinite program (SDP). For more technical details, refer to [1].
