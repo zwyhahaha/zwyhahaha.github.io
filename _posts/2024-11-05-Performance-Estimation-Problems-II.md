@@ -79,7 +79,7 @@ While PEP improvements thus far have primarily impacted constant factors, Grimme
   
   $$
   f (x_T) - f (x_{\star}) \leq \frac{L
-     R^2}{{\color{red}{{\operatorname{avg}} (h)}} T} + O \left(
+     R^2}{{{{\operatorname{avg}} (h)}} T} + O \left(
      \frac{1}{T^2} \right)
   $$
 
@@ -92,8 +92,8 @@ While PEP improvements thus far have primarily impacted constant factors, Grimme
   
 
 $$
- \min_i f (x_i) - f (x_{\star}) \leq \frac{11.7816 L
-   R^2}{{\color{red}{T^{1.0564}}}} 
+\min_i f (x_i) - f (x_{\star}) \leq \frac{11.7816 L
+   R^2}{{T^{1.0564}}}
 $$
 
 ## References
