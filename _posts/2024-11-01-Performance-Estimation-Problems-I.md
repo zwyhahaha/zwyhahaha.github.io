@@ -48,6 +48,8 @@ Given these components, can we establish an optimization problem to automaticall
 We consider the problem of minimizing a function $f \in \mathcal{F}$, and we consider first-order setting, which means that we can only have access to the function values and the gradients. The first-order oracle is represented as  $\{ x_i, f (x_i), g (x_i) \}$.
 
 In the most general sense, PEP is formulated as
+
+
 $$
 \begin{array}{rcl}
   (P1)\max_{x_0, {\color{red}{f}}} & \mathcal{P} (\{ x_i, f (x_i), g (x_i) \}) & 
@@ -61,7 +63,11 @@ $$
   (x) &  \nonumber
 \end{array}
 $$
+
+
 The challenge in solving (P1) lies in the infinite-dimensional constraint on the function class. However, we can convert this into a finite-dimensional problem by focusing solely on the outputs of the first-order oracle:
+
+
 $$
 \begin{array}{rcl}
   (P2)\max_{\{ x_i, {\color{red}{f_i, g_i}} \}} & \mathcal{P} (\{ x_i, f_i, g_i
@@ -76,12 +82,18 @@ $$
   (x) &  \nonumber
 \end{array}
 $$
+
+
 We claim that (P1) and (P2) are equivalent. Specifically, every solution to (P2), $\{ x_i, f (x_i), g (x_i) \}$, corresponds to a function $F∈\mathcal F$, such that $\{x_i,f\}$ is feasible in (P1). Reciprocally, every solution to (P1) can be discretized to provide a solution for (P2).
 
 Now, we instantiate problem (P2) by specific choices of  $(\mathcal{P}, \mathcal{F}, \mathcal{I}, \mathcal{M})$:
+
+
 $$
 \begin{array}{rcl}  (P3)\max_{\{ x_i, {\color{red}{f_i, g_i}} \}} & f_N - f_{\star} &  \nonumber\\  \text{s.t.} & \exists f \in \mathcal{F}, f_i = f (x_i), g_i = g (x_i) &   \label{rpep}\\  & \| x_0 - x_{\star} \| \leq R &  \nonumber\\  & x_i = x_{i - 1} - \frac{h}{L} f_{i - 1} &  \nonumber\\  & g_{\star} = 0 &  \nonumber\end{array}
 $$
+
+
 
 where $\mathcal{F}$ is convex, $L$-smooth, and $h$ is the given stepsize. 
 
