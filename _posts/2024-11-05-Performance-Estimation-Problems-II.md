@@ -77,7 +77,7 @@ While PEP improvements thus far have primarily impacted constant factors, Grimme
 
 
 $$
-f (x_T) - f (x_{\star}) \leq \frac{LR^2}{{\operatorname{avg} (h)} T} + O (\frac{1}{T^2})
+f (x_T) - f (x_{\star}) \leq \frac{LR^2}{{\text{avg} (h)} T} + O (\frac{1}{T^2})
 $$
 
 
