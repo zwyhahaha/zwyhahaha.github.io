@@ -117,7 +117,7 @@ $$
 
 which comes from the property of convex functions. Actually, this condition is also sufficient, since we can construct a convex function that interpolates $\{ x_i, f_i, g_i \}$. Consider the following piecewiese linear function:
 $$
-f (x) = \left\{\begin{array}{l}     \max_j  \{ f_j + \langle g_j, x - x_j \rangle \},     {\operatorname{if}}\ x \in {\operatorname{conv}} (\{     x_i \})\\     + \infty, {\operatorname{otherwise}}   \end{array}\right.
+f (x) = \max_j  \{ f_j + \langle g_j, x - x_j \rangle \},     {\operatorname{if}}\ x \in {\operatorname{conv}} (\{     x_i \})
 $$
 For convex and $L$-smooth function class, the interpolation conditions are
 $$
