@@ -13,7 +13,7 @@ tags:
 
 
 
-This note is taken from the [summer course](https://sites.google.com/site/cedricjosz/home/introduction-to-polynomial-optimization), in which Prof.Cédric Josz makes everything clear and intuitive! This blog is about the univariate unconstrained polynomial optimization, and multivariate case is delayed to the next episode. 
+This note is taken from the [summer course](https://sites.google.com/site/cedricjosz/home/introduction-to-polynomial-optimization), in which Prof.Cédric Josz makes everything clear and intuitive! This blog is about univariate unconstrained polynomial optimization, and the multivariate case is delayed to the next episode. 
 
 To begin with, the univariate unconstrained polynomial optimization tackles
 

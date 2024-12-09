@@ -14,13 +14,13 @@ tags:
 
 
 
-This note is taken from the [summer course](https://sites.google.com/site/cedricjosz/home/introduction-to-polynomial-optimization), in which Prof.Cédric Josz makes everything clear and intuitive! This blog is about the multivariate polynomial optimization, including both unconstrained and constrained cases. In particular, we are interested in the moment method for GLOBAL polynomial optimization, proposed by:
+This note is taken from the [summer course](https://sites.google.com/site/cedricjosz/home/introduction-to-polynomial-optimization), in which Prof.Cédric Josz makes everything clear and intuitive! This blog is about multivariate polynomial optimization, including both unconstrained and constrained cases. In particular, we are interested in the moment method for GLOBAL polynomial optimization, proposed by:
 
 > ”Global Optimization with Polynomials and the problem of moments”, by Jean B. Lasserre (2001)
 
 ### Moment Problem
 
-To get some intuition of moment approach, we transform optimization problem over a set of points into the ones over a set of measures. To be specific, a polynomial optimization problem
+To get some intuition of the moment approach, we transform the optimization problem over a set of points into the ones over a set of measures. To be specific, a polynomial optimization problem
 
 
 

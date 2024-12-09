@@ -1,19 +1,22 @@
 ---
 layout:     post
-title:      Equivalence of PDHG and DRS
+title:      Equivalence of Primal-Dual Hybrid Gradient (PDHG) and Douglas-Rachford Splitting (DRS)
 subtitle:   
 date:       2024-08-02
 author:     Wanyu Zhang
 header-img: img/post-bg-coffee.jpeg
 catalog: true
 tags:
-    - PDHG
-    - DRS
     - Optimization
 ---
 
-The PDHG algorithm solves the following composite optimization problem:
+It is common to hear that Primal-Dual Hybrid Gradient (PDHG) and Douglas-Rachford Splitting (DRS) are equivalent, and this blog is about why. I read Daniel and Vandenberghe's paper [1] and organized the proof in a way that was accessible to me. I hope you will find it helpful, too.
 
+> [1] O’Connor, Daniel, and Lieven Vandenberghe. "On the equivalence of the primal-dual hybrid gradient method and Douglas–Rachford splitting." *Mathematical Programming* 179.1 (2020): 85-108.
+
+------
+
+The PDHG algorithm solves the following composite optimization problem:
 $$
 \min_x f (x) + g (A x)
 $$
