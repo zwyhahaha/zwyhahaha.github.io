@@ -4,7 +4,7 @@ title:      A Bunny Lover’s Guide to Happy and Healthy Hops 🐰
 subtitle:   
 date:       2024-10-01
 author:     Wanyu Zhang
-header-img: img/post-bg-rwd.jpg
+header-img: img/bunny.jpg
 catalog: 	 true
 tags:
     - Life
