@@ -7,7 +7,6 @@ author:     Wanyu Zhang
 header-img: img/post-bg-rwd.jpg
 catalog: 	 true
 tags:
-    - AI
     - Optimization
 ---
 

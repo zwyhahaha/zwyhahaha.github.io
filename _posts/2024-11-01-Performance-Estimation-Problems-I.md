@@ -8,7 +8,6 @@ header-img: img/post-bg-coffee.jpeg
 catalog: 	 true
 tags:
     - Optimization
-    - Performance Estimation Problems
 ---
 
 This is the first post in a new series on **Performance Estimation Problems (PEP)**. I've divided the series into two parts: the first introduces the PEP framework, and the second covers applications of PEP, including convergence proofs and stepsize optimization. Let's start with the basics.
