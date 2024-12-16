@@ -2,7 +2,7 @@
 layout: page
 title: "About Me"
 description: 
-header-img: "img/home2.png"
+header-img: "img/home2.jpg"
 ---
 
 ### Welcome!
