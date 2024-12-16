@@ -4,7 +4,7 @@ title:      Having Fun with Coding 🎵
 subtitle:   
 date:       2024-12-01
 author:     Wanyu Zhang
-header-img: img/home-bg-o.jpeg
+header-img: img/home-bg-o.jpg
 catalog: 	 true
 tags:
     - Productivity
