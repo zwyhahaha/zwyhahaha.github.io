@@ -2,7 +2,7 @@
 layout:     post
 title:      A Simple Proof for the Nonexpansiveness and Contraction Properties of PDHG
 subtitle:   
-date:       2025-03-03
+date:       2025-03-02
 author:     Wanyu Zhang
 header-img: img/post-bg-coffee.jpeg
 catalog: 	 true
