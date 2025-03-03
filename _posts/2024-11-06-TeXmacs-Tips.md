@@ -16,9 +16,9 @@ tags:
 
 In case you need help getting started, here are some tutorials that might be useful:
 
-- [TeXmacs Video Tutorials](https://www.texmacs.org/tmweb/home/videos.en.html)
-- [TeXmacs Guide by whzecomjm](https://whzecomjm.com/p/2021/04/texmacs/)
-- [Introduction to TeXmacs by x-wei](https://x-wei.github.io/soft/TeXmacs_intro.html)
+- [https://www.texmacs.org/tmweb/home/videos.en.html](https://www.texmacs.org/tmweb/home/videos.en.html)
+- [https://whzecomjm.com/p/2021/04/texmacs/](https://whzecomjm.com/p/2021/04/texmacs/)
+- [https://x-wei.github.io/soft/TeXmacs_intro.html](https://x-wei.github.io/soft/TeXmacs_intro.html)
 
 Hope you enjoy using TeXmacs! :)
 

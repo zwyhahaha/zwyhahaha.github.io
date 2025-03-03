@@ -20,13 +20,13 @@ For optimistic online learning, the player can predict the next gradient, and th
 For online learning update,
 $$
 \begin{array}{rcl}
-x_{k + 1} = x_k - \eta \nabla \ell_{k + 1} (x_{k + 1})
+	&  & x_{k + 1} = x_k - \eta \nabla \ell_{k + 1} (x_{k + 1})
 \end{array}
 $$
 where we assume $\ell_k (x)$ is convex w.r.t. $x$. For a static action $u$, we have the following regret bound,
 $$
 \begin{array}{rcl}
-\sum_{k = 0}^{K - 1} (\ell_k (x_k) - \ell_k (u)) \leq \frac{1}{2 \eta} \|
+	 &  & \sum_{k = 0}^{K - 1} (\ell_k (x_k) - \ell_k (u)) \leq \frac{1}{2 \eta} \|
    x_0 - u \|^2 + \langle x_0 - u, \nabla \ell_0 (x_0) \rangle
 \end{array}
 $$
