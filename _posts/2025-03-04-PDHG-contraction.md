@@ -4,7 +4,7 @@ title:      A Simple Proof for the Nonexpansiveness and Contraction Properties o
 subtitle:   
 date:       2025-03-04
 author:     Wanyu Zhang
-header-img: img/post-bg-coffee.jpg
+header-img: img/post-bg-coffee.jpeg
 catalog: 	 true
 tags:
     - Optimization
