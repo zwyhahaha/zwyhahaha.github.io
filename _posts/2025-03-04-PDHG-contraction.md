@@ -2,7 +2,7 @@
 layout:     post
 title:      A Simple Proof for the Nonexpansiveness and Contraction Properties of PDHG
 subtitle:   
-date:       2025-03-04
+date:       2025-03-03
 author:     Wanyu Zhang
 header-img: img/post-bg-coffee.jpeg
 catalog: 	 true
@@ -33,27 +33,24 @@ $$
 Apply this property on point $z_A$ and $z_{\star}$, then
 
 $$
- \langle P (z - z_A) - P (z_{\star} - z_{\star}), (z_A - z_{\star}) \rangle
-   \geq 0 
+\langle P (z - z_A) - P (z_{\star} - z_{\star}), (z_A - z_{\star}) \rangle
+   \geq 0
 $$
 
 simplify it,
 
 $$
 \begin{array}{rcl}
-  \langle z - z_A, z_A - z_{\star} \rangle_P \geq 0 \label{mono} \quad (1)
+  \langle z - z_A, z_A - z_{\star} \rangle_P \geq 0 \quad (1)
 \end{array}
 $$
 
 **2. Sharpness** [2] has showed one definition of sharpness condition:
-
 $$
 \begin{array}{rcl}
-  \alpha^2 \| z - z_{\star} \|^2_P \leq \| z - z_A \|^2_P \label{sharp} \quad (2)
+  \alpha^2 \| z - z_{\star} \|^2_P \leq \| z - z_A \|^2_P  \quad (2)
 \end{array}
 $$
-
-
 
 ## Proof
 
