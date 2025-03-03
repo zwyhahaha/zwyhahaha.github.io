@@ -6,47 +6,11 @@ layout: default
 
 <!-- Post Header -->
 <style type="text/css">
-    header.intro-header {
-        padding: 40px 0; /* 增加内边距，使内容更美观 */
-    }
-
-    .post-heading {
-        text-align: center; /* 居中显示标题和副标题 */
-    }
-
-    .tags {
-        margin-bottom: 20px; /* 调整标签与标题之间的间距 */
-    }
-
-    .tag {
-        display: inline-block;
-        margin: 0 5px;
-        padding: 5px 10px;
-        background-color: #e9ecef;
-        border-radius: 3px;
-        color: #333;
-        text-decoration: none;
-    }
-
-    .tag:hover {
-        background-color: #dee2e6;
-    }
-
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-        color: #333; /* 设置标题颜色 */
-    }
-
-    h2.subheading {
-        font-size: 1.5rem;
-        color: #6c757d;
-        margin-bottom: 20px;
-    }
-
-    .meta {
-        font-size: 1rem;
-        color: #6c757d;
+    header.intro-header{
+        position: relative;
+        background-color: transparent; /* 移除背景图片，使用透明背景 */
+        padding: 40px 0; /* 增加一些内边距，使标题不会贴在页面顶部 */
+        text-align: center;
     }
 </style>
 
@@ -61,16 +25,13 @@ layout: default
                         {% endfor %}
                     </div>
                     <h1>{{ page.title }}</h1>
-                    {% if page.subtitle %}
                     <h2 class="subheading">{{ page.subtitle }}</h2>
-                    {% endif %}
                     <span class="meta">Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} on {{ page.date | date: "%B %-d, %Y" }}</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
-
 <!-- Post Content -->
 <article>
     <div class="container">
