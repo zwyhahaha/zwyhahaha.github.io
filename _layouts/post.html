@@ -4,38 +4,73 @@ layout: default
 
 <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-<!-- Simple Heading -->
-<style>
-    .post-header {
-        text-align: center;
-        margin: 0 auto;
-        max-width: 800px;
-        padding: 80px 20px;
-        background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}');
-        background-size: cover;
-        background-position: center;
-        color: white;
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header {
+        padding: 40px 0; /* 增加内边距，使内容更美观 */
+        background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')
     }
+
+    .post-heading {
+        text-align: center; /* 居中显示标题和副标题 */
+    }
+
+    .tags {
+        margin-bottom: 20px; /* 调整标签与标题之间的间距 */
+    }
+
+    .tag {
+        display: inline-block;
+        margin: 0 5px;
+        padding: 5px 10px;
+        background-color: #e9ecef;
+        border-radius: 3px;
+        color: #333;
+        text-decoration: none;
+    }
+
+    .tag:hover {
+        background-color: #dee2e6;
+    }
+
     h1 {
         font-size: 2.5rem;
         margin-bottom: 10px;
+        color: #333; /* 设置标题颜色 */
     }
-    h2 {
+
+    h2.subheading {
         font-size: 1.5rem;
-        margin-bottom: 15px;
+        color: #6c757d;
+        margin-bottom: 20px;
     }
+
     .meta {
         font-size: 1rem;
+        color: #6c757d;
     }
 </style>
 
-<div class="post-header">
-    <h1>{{ page.title }}</h1>
-    {% if page.subtitle %}
-    <h2>{{ page.subtitle }}</h2>
-    {% endif %}
-    <p class="meta">Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} on {{ page.date | date: "%B %-d, %Y" }}</p>
-</div>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        {% for tag in page.tags %}
+                        <a class="tag" href="{{ site.baseurl }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>
+                        {% endfor %}
+                    </div>
+                    <h1>{{ page.title }}</h1>
+                    {% if page.subtitle %}
+                    <h2 class="subheading">{{ page.subtitle }}</h2>
+                    {% endif %}
+                    <span class="meta">Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} on {{ page.date | date: "%B %-d, %Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
 <!-- Post Content -->
 <article>
     <div class="container">
