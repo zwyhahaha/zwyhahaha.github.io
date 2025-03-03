@@ -8,22 +8,24 @@ layout: default
 <style>
     .post-header {
         text-align: center;
-        margin: 40px auto;
+        margin: 0 auto;
         max-width: 800px;
+        padding: 80px 20px;
+        background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}');
+        background-size: cover;
+        background-position: center;
+        color: white;
     }
     h1 {
         font-size: 2.5rem;
-        color: #333;
         margin-bottom: 10px;
     }
     h2 {
         font-size: 1.5rem;
-        color: #6c757d;
         margin-bottom: 15px;
     }
     .meta {
         font-size: 1rem;
-        color: #6c757d;
     }
 </style>
 
