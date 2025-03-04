@@ -4,7 +4,7 @@ title:      A Simple Proof for the Nonexpansiveness and Contraction Properties o
 subtitle:   
 date:       2025-03-04
 author:     Wanyu Zhang
-header-img: img/home-bg.jpg
+header-img: img/post-bg-coffee.jpeg
 catalog: 	 true
 tags:
     - Optimization
@@ -24,11 +24,9 @@ $z_A$ is the next iteration, $\mathcal{F}$ is a subdifferential operator, $P$ is
 
 **1. Motononicity** Consider the property of $\mathcal{F}$. When $F$ is convex, $\mathcal{F}$ is maximal monotone, which implies that
 $$
-\langle z_1 - z_2, f_1 - f_2 \rangle \geq 0, \quad
-   f_1 \in \mathcal{F} (z_1), f_2 \in
+\langle z_1 - z_2, f_1 - f_2 \rangle \geq 0, \quad f_1 \in \mathcal{F} (z_1), f_2 \in
    \mathcal{F} (z_2)
 $$
-
 Apply this property on point $z_A$ and $z_{\star}$, then
 
 $$
@@ -65,6 +63,7 @@ Then we prove contraction using (1) and (2). Let
 $$
 \rho = \frac{\| z_A - z_{\star} \|^2_P}{\| z - z_{\star} \|^2_P}
 $$
+
 
 WLOG, fix $\| z - z_{\star} \|^2_P = 1$.
 
