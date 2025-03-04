@@ -18,7 +18,7 @@ $$
 P (z - z_A) \in \mathcal{F} (z_A)
 $$
 
-$z_A$ is the next iteration, $\mathcal{F}$ is a subdifferential operator of $F$.
+$z_A$ is the next iteration, $\mathcal{F}$ is a subdifferential operator, $P$ is a positive semi-definite iteration matrix and varies between different algorithms. 
 
 ## Assumptions
 
