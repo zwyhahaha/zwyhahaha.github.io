@@ -25,7 +25,7 @@ $z_A$ is the next iteration, $\mathcal{F}$ is a subdifferential operator, $P$ is
 **1. Motononicity** Consider the property of $\mathcal{F}$. When $F$ is convex, $\mathcal{F}$ is maximal monotone, which implies that
 $$
 \langle z_1 - z_2, f_1 - f_2 \rangle \geq 0, \quad
-   {\operatorname{where}}f_1 \in \mathcal{F} (z_1), f_2 \in
+   f_1 \in \mathcal{F} (z_1), f_2 \in
    \mathcal{F} (z_2)
 $$
 
@@ -39,16 +39,12 @@ $$
 simplify it,
 
 $$
-\begin{array}{rcl}
-  \langle z - z_A, z_A - z_{\star} \rangle_P \geq 0 \quad (1)
-\end{array}
+\langle z - z_A, z_A - z_{\star} \rangle_P \geq 0 \quad (1)
 $$
 
 **2. Sharpness** [2] has shown a definition of sharpness condition:
 $$
-\begin{array}{rcl}
-  \alpha^2 \| z - z_{\star} \|^2_P \leq \| z - z_A \|^2_P  \quad (2)
-\end{array}
+\alpha^2 \| z - z_{\star} \|^2_P \leq \| z - z_A \|^2_P  \quad (2)
 $$
 
 ## Proof
@@ -58,35 +54,31 @@ $$
 First we prove monotonicity of distance to optimality using (1).
 
 $$
-\begin{array}{rcl}
-  {\color{red}{\| z - z_{\star} \|_P^2}} & = & \| z - z_A \|_P^2 + \| z_A -
+{\color{red}{\| z - z_{\star} \|_P^2}} = \| z - z_A \|_P^2 + \| z_A -
   z_{\star} \|_P^2 + 2 \langle z - z_A, z_A - z_{\star} \rangle_P
   {\color{red}{\geq \| z_A - z_{\star} \|_P^2}}
-\end{array}
 $$
 
 ### Contraction
 
 Then we prove contraction using (1) and (2). Let
 $$
- \rho = \frac{\overset{}{\| z_A - z_{\star} \|^2_P}}{\| z - z_{\star}
-   \|^2_P} 
+\rho = \frac{\| z_A - z_{\star} \|^2_P}{\| z - z_{\star} \|^2_P}
 $$
 
 WLOG, fix $\| z - z_{\star} \|^2_P = 1$.
 
 $$
- \| z - z_A \|_P^2 + \| z_A - z_{\star} \|_P^2 \leq_{(1)}
-   {\color{red}{{\color{black}{\| z - z_{\star} \|_P^2}}}} \leq_{(2)}
+\| z - z_A \|_P^2 + \| z_A - z_{\star} \|_P^2 \leq
+   {\| z - z_{\star} \|_P^2} \leq
    \frac{1}{\alpha^2} \| z - z_A \|^2_P \quad \Rightarrow \quad
-   \frac{\alpha^2}{1 - \alpha^2} \| z_A - z_{\star} \|_P^2 \leq \| z - z_A
-   \|^2_P 
+   \frac{\alpha^2}{1 - \alpha^2} \| z_A - z_{\star} \|_P^2 \leq \| z - z_A \|^2_P
 $$
 
 $$
- \frac{\alpha^2}{1 - \alpha^2} \| z_A - z_{\star} \|_P^2 + \| z_A -
+\frac{\alpha^2}{1 - \alpha^2} \| z_A - z_{\star} \|_P^2 + \| z_A -
    z_{\star} \|_P^2 \leq \| z - z_A \|^2_P + \| z_A - z_{\star} \|_P^2 \leq \|
-   z - z_{\star} \|^2_P = 1 
+   z - z_{\star} \|^2_P = 1
 $$
 
 Finally,
