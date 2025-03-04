@@ -23,12 +23,15 @@ $z_A$ is the next iteration, $\mathcal{F}$ is a subdifferential operator, $P$ is
 ## Assumptions
 
 **1. Motononicity** Consider the property of $\mathcal{F}$. When $F$ is convex, $\mathcal{F}$ is maximal monotone, which implies that
+
+
 $$
 \langle z_1 - z_2, f_1 - f_2 \rangle \geq 0, \quad f_1 \in \mathcal{F} (z_1), f_2 \in
    \mathcal{F} (z_2)
 $$
-Apply this property on point $z_A$ and $z_{\star}$, then
 
+
+Apply this property on point $z_A$ and $z_{\star}$, then
 $$
 \langle P (z - z_A) - P (z_{\star} - z_{\star}), (z_A - z_{\star}) \rangle
    \geq 0
@@ -41,9 +44,12 @@ $$
 $$
 
 **2. Sharpness** [2] has shown a definition of sharpness condition:
+
+
 $$
 \alpha^2 \| z - z_{\star} \|^2_P \leq \| z - z_A \|^2_P  \quad (2)
 $$
+
 
 ## Proof
 
@@ -60,6 +66,8 @@ $$
 ### Contraction
 
 Then we prove contraction using (1) and (2). Let
+
+
 $$
 \rho = \frac{\| z_A - z_{\star} \|^2_P}{\| z - z_{\star} \|^2_P}
 $$
