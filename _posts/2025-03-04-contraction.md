@@ -32,13 +32,16 @@ $$
 
 
 Apply this property on point $z_A$ and $z_{\star}$, then
+
+
 $$
 \langle P (z - z_A) - P (z_{\star} - z_{\star}), (z_A - z_{\star}) \rangle
    \geq 0
 $$
 
-simplify it,
 
+
+simplify it,
 $$
 \langle z - z_A, z_A - z_{\star} \rangle_P \geq 0 \quad (1)
 $$
