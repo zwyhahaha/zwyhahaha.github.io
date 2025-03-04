@@ -18,8 +18,7 @@ $$
 P (z - z_A) \in \mathcal{F} (z_A)
 $$
 
-$z_A$ is the next iteration, $\mathcal{F}$ is a subdifferential operator of $F$. For PDHG, $P = \left(\begin{array}{cc}  \frac{1}{t} I & A^{\top}\\  A 
-& \frac{1}{t} I \end{array}\right)$.
+$z_A$ is the next iteration, $\mathcal{F}$ is a subdifferential operator of $F$.
 
 ## Assumptions
 
