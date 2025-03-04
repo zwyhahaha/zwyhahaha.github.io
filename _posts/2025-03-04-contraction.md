@@ -42,9 +42,13 @@ $$
 
 
 simplify it,
+
+
 $$
 \langle z - z_A, z_A - z_{\star} \rangle_P \geq 0 \quad (1)
 $$
+
+
 
 **2. Sharpness** [2] has shown a definition of sharpness condition:
 
