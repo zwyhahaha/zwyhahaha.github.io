@@ -115,7 +115,7 @@ f_i, g_i \}$, can we find a convex function $f$, such that
 
 
 $$
-f_i = f (x_i), g_i = \nabla f (x_i)?
+f_i = f (x_i), g_i = \nabla f (x_i)
 $$
 
 
