@@ -11,13 +11,11 @@ I’m Wanyu Zhang, a senior undergraduate student at [Shanghai University of Fin
 
 ### About my research
 
-My research interest lies in mathematical optimization. Currently, my research focuses on first-order methods for minimax optimization. Below is a catalog of the related topics I have explored:
+My research interest lies in mathematical optimization. Currently, my research focuses on providing convergence guarantees for first-order methods. Below is a catalog of the related topics I have explored:
 
 - Restarted primal-dual hybrid conjugate gradient algorithm for large-scale quadratic programming. Supervised by [Prof. Yinyu Ye](https://web.stanford.edu/~yyye/) and [Prof. Huikang Liu](https://huikang2019.github.io/), featured by PhD student Yicheng Huang. [[Paper]](https://arxiv.org/abs/2405.16160)
 - Performance estimation problems for the primal-dual hybrid gradient algorithm. Supervised by [Prof. Haihao Lu](https://mitsloan.mit.edu/faculty/directory/haihao-lu).
 - Uniformed analysis for nonconvex-concave minimax optimization. Supervised by [Prof. Jiajin Li](https://gerrili1996.github.io/).
-
-For preprints and repositories, you can also refer to my [Google Scholar](https://scholar.google.com.hk/citations?user=Xt9MRH8AAAAJ&hl=zh-CN) and [GitHub Profile](https://github.com/zwyhahaha).
 
 ### About this blog
 

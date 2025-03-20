@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      A Simple Proof for the Nonexpansiveness and Contraction Properties of PDHG
+title:      Proof for the Nonexpansiveness and Contraction Properties of PDHG
 subtitle:   
 date:       2025-03-04
 author:     Wanyu Zhang
@@ -12,7 +12,7 @@ tags:
 
 In this blog, we introduce how to simply derive the nonexpansiveness and contraction properties of primal-dual hybrid gradient method (PDHG) iteration through the language of operator theory.
 
-In [1], Lu and Yang introduced a unified iteration form of proximal point method, PDHG, and ADMM:
+In [1], Lu and Yang introduced a unified iteration form of the proximal point method, PDHG, and ADMM:
 
 $$
 P (z - z_A) \in \mathcal{F} (z_A)
