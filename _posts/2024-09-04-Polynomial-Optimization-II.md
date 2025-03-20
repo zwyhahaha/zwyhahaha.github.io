@@ -102,9 +102,9 @@ $$
 
 and $\theta(x)=a-\|x\|^2$, $M_{N-1}(\theta y)(i,j)=\sum_{\alpha} \theta_{\alpha} y_{\beta (i,j)+\alpha}$. For instance,
 
-<img src="{{ site.baseurl }}/_posts/090402.png" alt="test1">
+<img src="{{ site.baseurl }}/img/090402.png" alt="test2">
 
-<img src="{{ site.baseurl }}/_posts/090403.png" alt="test1">
+<img src="{{ site.baseurl }}/img/090403.png" alt="test2">
 
 ### Constrained Case
 
