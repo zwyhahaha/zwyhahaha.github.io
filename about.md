@@ -9,12 +9,6 @@ header-img: "img/home2.jpg"
 
 I’m Wanyu Zhang, a senior undergraduate student at [Shanghai University of Finance and Economics](https://english.sufe.edu.cn/). Since the summer of 2023, I have had the privilege of conducting research under the guidance of [Prof. Yinyu Ye](https://web.stanford.edu/~yyye/) and [Prof. Huikang Liu](https://huikang2019.github.io/). Additionally, I have been fortunate to collaborate with [Prof. Haihao Lu](https://mitsloan.mit.edu/faculty/directory/haihao-lu) and [Prof. Jiajin Li](https://gerrili1996.github.io/).
 
-You can also check my LinkedIn profile:
-
-<script src="https://platform.linkedin.com/badges/js/profile.js" async defer type="text/javascript"></script>
-
-<div class="badge-base LI-profile-badge" data-locale="zh_CN" data-size="medium" data-theme="light" data-type="HORIZONTAL" data-vanity="zwanyu" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://cn.linkedin.com/in/zwanyu/zh-cn?trk=profile-badge">Wanyu Zhang</a></div>
-
 ### About my research
 
 My research interest lies in mathematical optimization. Currently, my research focuses on first-order methods for minimax optimization. Below is a catalog of the related topics I have explored:
