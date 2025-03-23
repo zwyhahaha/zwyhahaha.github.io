@@ -21,5 +21,5 @@ My research interest lies in mathematical optimization. Currently, my research f
 
 ### About this blog
 
-I started this blog inspired by Ariana Tang, whose blog is thoughtful and well worth-reading. Here, I typically log my technical write-ups and reading notes here. Occasionally, I share some practical tips and life experiences. It would be a great pleasure if you found some of my posts useful!
+I started this blog inspired by Ariana Tang, whose blog is thoughtful and well worth-reading. Here, I typically log my technical write-ups and reading notes. Occasionally, I share some practical tips and life experiences. It would be a great pleasure if you found some of my posts useful!
 
