@@ -9,7 +9,7 @@ header-img: "img/home2.jpg"
 
 I’m Wanyu Zhang, a senior undergraduate student at <u>[Shanghai University of Finance and Economics](https://english.sufe.edu.cn/)</u>. Since the summer of 2023, I have had the privilege of conducting research under the guidance of <u>[Prof. Yinyu Ye](https://web.stanford.edu/~yyye/)</u> and <u>[Prof. Huikang Liu](https://huikang2019.github.io/)</u>. Additionally, I have been fortunate to collaborate with <u>[Prof. Haihao Lu](https://mitsloan.mit.edu/faculty/directory/haihao-lu)</u> and <u>[Prof. Jiajin Li](https://gerrili1996.github.io/)</u>.
 
-You can download my CV <u>[here](https://drive.google.com/file/d/1CQCCthllm8AAIpPSYyHOyYi_ZPE-nAyn/view?usp=drive_link)</u>.
+You can download my CV [<u>here</u>](https://drive.google.com/file/d/1CQCCthllm8AAIpPSYyHOyYi_ZPE-nAyn/view?usp=drive_link).
 
 ### About my research
 
