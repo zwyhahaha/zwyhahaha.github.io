@@ -58,6 +58,22 @@ For Windows, refer to the repository instructions for setup details.
 
 ## Math typing tips
 
-- Use `option + F` to create fraction numbers.
-- Type `shift + [ + Tab` to create various brackets, which is much more convenient than `\langle \rangle`.
-- Select some content and type `\red` to mark it in red.
+- Use `option F` to create fraction numbers.
+
+- Type `shift [ + Tab` to create various brackets, which is much more convenient than `\langle \rangle`.
+
+- Select some content and type `\red` to mark it in red, which is faster than selecting color in the menu.
+
+- :star: Enter the preamble (Select `Document->Part->Show preamble`), and type
+
+  ```scheme
+  <new-theorem|assumption|Assumption>
+  ```
+
+  Then return to the file and type `\assumption` to define assumptions! Here are the references:
+
+  http://forum.texmacs.cn/t/how-do-i-add-a-new-environment-assumption/795/2
+
+  https://www.texmacs.org/tmdoc/main/styles/env/env-base-dtd.en.html
+
+  
