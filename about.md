@@ -9,6 +9,8 @@ header-img: "img/home2.jpg"
 
 I’m Wanyu Zhang, a senior undergraduate student at [<u>Shanghai University of Finance and Economics</u>](https://english.sufe.edu.cn/). Since the summer of 2023, I have had the privilege of conducting research under the guidance of [<u>Prof. Yinyu Ye</u>](https://web.stanford.edu/~yyye/) and [<u>Prof. Huikang Liu</u>](https://huikang2019.github.io/). Additionally, I have been fortunate to collaborate with [<u>Prof. Haihao Lu</u>](https://mitsloan.mit.edu/faculty/directory/haihao-lu) and [<u>Prof. Jiajin Li</u>](https://gerrili1996.github.io/).
 
+You can download my CV [<u>here</u>](https://drive.google.com/file/d/1CQCCthllm8AAIpPSYyHOyYi_ZPE-nAyn/view?usp=drive_link).
+
 ### About my research
 
 My research interest lies in mathematical optimization. Currently, my research focuses on providing convergence guarantees for first-order methods. Below is a catalog of the related topics I have explored:
