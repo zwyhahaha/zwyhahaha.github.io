@@ -64,7 +64,9 @@ For Windows, refer to the repository instructions for setup details.
 
 - Select some content and type `\red` to mark it in red, which is faster than selecting color in the menu.
 
-- :star: Enter the preamble (Select `Document->Part->Show preamble`), and type
+- :star: **How to define Assumption environment or other theorem-like environment?**
+
+  Enter the preamble (Select `Document->Part->Show preamble`), and type
 
   ```scheme
   <new-theorem|assumption|Assumption>
@@ -76,4 +78,7 @@ For Windows, refer to the repository instructions for setup details.
 
   https://www.texmacs.org/tmdoc/main/styles/env/env-base-dtd.en.html
 
-  
+- :crystal_ball: **Magic `right click`: Customized environment**
+
+  In the `Algorithm` environment, `right click->Preferences->Framed Programs` to add box on your algorithm block. Also, you can selected `named` environment. There are so many customized functions by `right click`. Also, in the `theorem` environment, you can `right click->Preferences->European Numbering Style` to seperately number the lemmas, theorems, etc.
+
