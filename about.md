@@ -21,6 +21,7 @@ My research interest lies in mathematical optimization. Currently, my research f
 
 ### About this blog
 
-I typically log some technical write-ups and reading notes. Occasionally, I share some practical tips and life experiences. It would be a great pleasure if you found some of my posts useful!
+I typically log some technical write-ups and reading notes. Occasionally, I share some practical tips and life experiences. It would be a great pleasure if you found some of my posts useful.
 
-Acknowledgement: This blog was inspired by Ariana Tang, whose blog is thoughtful and well worth-reading! Many thanks to my sister Wanxin for designing the site’s logo — a cute bunny with red eyeglasses and carrots! Thanks also to my other sister Xinyu for illustrating the background image of this site. And finally, thank you to everyone who takes the time to read my posts!
+**Acknowledgement**: This blog was inspired by **Ariana Tang**, whose blog is thoughtful and well worth-reading! Heartfelt thanks to my sister **Wanxin** for designing the site’s logo: a cute bunny with red eyeglasses and carrots! Gratitude also goes to my other sister **Xinyu** for illustrating the background image of this site, and to **Chuwen Zhang** for photographing the headshot! Finally, thank you to everyone who takes the time to read my posts — it means a lot!
+
