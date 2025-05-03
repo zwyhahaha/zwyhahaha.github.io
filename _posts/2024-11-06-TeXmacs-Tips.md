@@ -7,7 +7,7 @@ author:     Wanyu Zhang
 header-img: img/home-bg-o.jpg
 catalog: 	 true
 tags:
-    - Experiences
+    - Tips
 ---
 
 ## About TeXmacs

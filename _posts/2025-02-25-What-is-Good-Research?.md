@@ -6,7 +6,7 @@ date:       2025-02-25
 author:     Wanyu Zhang
 header-img: img/post-bg-rwd.jpg
 catalog: 	 true
-tags:	    Experiences
+tags:	    Tips
 ---
 
 I’ve been quite busy with PhD interviews recently, and I’ve found the experience to be very rewarding. I see interviews as a great opportunity to engage in meaningful conversations with experts. During the Q&A sessions, I often ask research-related questions that I’m truly passionate about—some specific, others more philosophical. One question I frequently ask is:

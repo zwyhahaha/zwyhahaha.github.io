@@ -7,7 +7,7 @@ author:     Wanyu Zhang
 header-img: img/bunny.jpg
 catalog: 	 true
 tags:
-    - Life
+    - Tips
 ---
 
 The original post is written in [Chinese](https://mp.weixin.qq.com/s/KApbXib2-3b-RMZ4Vtb93A?token=1949901549&lang=zh_CN), and this version is translated by ChatGPT.
