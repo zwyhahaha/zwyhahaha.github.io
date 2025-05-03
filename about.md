@@ -7,7 +7,7 @@ header-img: "img/home2.jpg"
 
 ### Welcome!
 
-I’m Wanyu Zhang, a senior undergraduate student at [<u>Shanghai University of Finance and Economics</u>](https://english.sufe.edu.cn/). Since the summer of 2023, I have had the privilege of conducting research under the guidance of [<u>Prof. Yinyu Ye</u>](https://web.stanford.edu/~yyye/) and [<u>Prof. Huikang Liu</u>](https://huikang2019.github.io/). Additionally, I have been fortunate to collaborate with [<u>Prof. Haihao Lu</u>](https://mitsloan.mit.edu/faculty/directory/haihao-lu) and [<u>Prof. Jiajin Li</u>](https://gerrili1996.github.io/).
+I’m Wanyu Zhang, a senior undergraduate student at [<u>Shanghai University of Finance and Economics</u>](https://english.sufe.edu.cn/). Since the summer of 2023, I have had the privilege of conducting research under the guidance of [<u>Prof. Yinyu Ye</u>](https://web.stanford.edu/~yyye/) and [<u>Prof. Huikang Liu</u>](https://huikang2019.github.io/). Additionally, I have been fortunate to work with [<u>Prof. Haihao Lu</u>](https://mitsloan.mit.edu/faculty/directory/haihao-lu) and [<u>Prof. Jiajin Li</u>](https://gerrili1996.github.io/).
 
 You can download my CV [<u>here</u>](https://drive.google.com/file/d/1CQCCthllm8AAIpPSYyHOyYi_ZPE-nAyn/view?usp=drive_link).
 
@@ -21,5 +21,6 @@ My research interest lies in mathematical optimization. Currently, my research f
 
 ### About this blog
 
-I started this blog inspired by Ariana Tang, whose blog is thoughtful and well worth-reading. Here, I typically log my technical write-ups and reading notes. Occasionally, I share some practical tips and life experiences. It would be a great pleasure if you found some of my posts useful!
+I typically log some technical write-ups and reading notes. Occasionally, I share some practical tips and life experiences. It would be a great pleasure if you found some of my posts useful!
 
+Acknowledgement: This blog was inspired by Ariana Tang, whose blog is thoughtful and well worth-reading! Many thanks to my sister Wanxin for designing the site’s logo — a cute bunny with red eyeglasses and carrots! Thanks also to my other sister Xinyu for illustrating the background image of this site. And finally, thank you to everyone who takes the time to read my posts!
