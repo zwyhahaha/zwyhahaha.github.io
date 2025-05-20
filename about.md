@@ -7,17 +7,18 @@ header-img: "img/home2.jpg"
 
 ### Welcome!
 
-I’m Wanyu Zhang, a senior undergraduate student at [<u>Shanghai University of Finance and Economics</u>](https://english.sufe.edu.cn/). Since the summer of 2023, I have had the privilege of conducting research under the guidance of [<u>Prof. Yinyu Ye</u>](https://web.stanford.edu/~yyye/) and [<u>Prof. Huikang Liu</u>](https://huikang2019.github.io/). Additionally, I have been fortunate to work with [<u>Prof. Haihao Lu</u>](https://mitsloan.mit.edu/faculty/directory/haihao-lu) and [<u>Prof. Jiajin Li</u>](https://gerrili1996.github.io/).
+I’m Wanyu Zhang, a senior undergraduate student at Shanghai University of Finance and Economics. Since the summer of 2023, I have had the privilege of conducting research under the guidance of [<u>Prof. Yinyu Ye</u>](https://web.stanford.edu/~yyye/) and [<u>Prof. Huikang Liu</u>](https://huikang2019.github.io/). Additionally, I have been fortunate to work with [<u>Prof. Haihao Lu</u>](https://mitsloan.mit.edu/faculty/directory/haihao-lu). In the fall, I will begin my Ph.D. in Operations Research at Stanford MS&E.
 
 You can download my CV [<u>here</u>](https://drive.google.com/file/d/1CQCCthllm8AAIpPSYyHOyYi_ZPE-nAyn/view?usp=drive_link).
 
 ### About my research
 
-My research interest lies in mathematical optimization. Currently, my research focuses on providing convergence guarantees for first-order methods. Below is a catalog of the related topics I have explored:
+My research interests lie in **mathematical optimization**. I have worked on both establishing theoretical convergence guarantees and enhancing the empirical performance of optimization algorithms. Below is a catalog of the research topics I have explored:
 
-- Restarted primal-dual hybrid conjugate gradient algorithm for large-scale quadratic programming. Supervised by [Prof. Yinyu Ye](https://web.stanford.edu/~yyye/) and [Prof. Huikang Liu](https://huikang2019.github.io/), featured by PhD student Yicheng Huang. [<u>[Paper]</u>](https://arxiv.org/abs/2405.16160)
-- Performance estimation problems for the primal-dual hybrid gradient algorithm. Supervised by [Prof. Haihao Lu](https://mitsloan.mit.edu/faculty/directory/haihao-lu).
-- Uniformed analysis for nonconvex-concave minimax optimization. Supervised by [Prof. Jiajin Li](https://gerrili1996.github.io/).
+- [Theory] Stochastic online scaled gradient method. Supervised by Wenzhi Gao.
+- [Experiments] Data-driven mixed integer optimization through probabilistic multi-variable branching. [<u>[Paper]</u>](https://arxiv.org/abs/2305.12352)
+- [Theory] Restarted primal-dual hybrid conjugate gradient algorithm for large-scale quadratic programming. Supervised by [Prof. Yinyu Ye](https://web.stanford.edu/~yyye/) and [Prof. Huikang Liu](https://huikang2019.github.io/). [<u>[Paper]</u>](https://arxiv.org/abs/2405.16160)
+- [Theory] Performance estimation problems for the primal-dual hybrid gradient algorithm. Supervised by [Prof. Haihao Lu](https://mitsloan.mit.edu/faculty/directory/haihao-lu).
 
 ### About this blog
 
