@@ -4,7 +4,7 @@ title:      Routines for Setting Up a New Server
 subtitle:   
 date:       2025-05-23
 author:     Wanyu Zhang
-header-img: img/heart.jpeg
+header-img: img/qingjiang.jpeg
 catalog: 	 true
 tags:
     - Tips
