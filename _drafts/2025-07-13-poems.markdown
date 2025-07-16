@@ -1,0 +1,53 @@
+# A Collection of My Favorate Poems and Lyrics
+
+## Flowers
+
+by Miley Cyrus
+
+> I can buy myself flowers
+>
+> Write my name in the sand
+>
+> Talk to my self for hours
+>
+> Say things you don't understand
+>
+> I can take myself dancing
+>
+> And I can hold my own hand
+>
+> Yeah, I can love me better than you can
+
+<figure style="text-align: center;">
+  <img src="{{ site.baseurl }}/img/flw.png" alt="test" style="width: 80%; height: auto;">
+  <figcaption style="font-size: 0.9em; color: #555;">Literally, buy meself flowers.</figcaption>
+</figure>
+
+## Possibilities
+
+by Wislawa Szymborska
+
+> I prefer exceptions
+>
+> I prefer to leave early
+>
+> I prefer talking to doctors about something else
+>
+> I prefer the absurdity of writing poems
+>
+> to the absurdity of not writing poems
+>
+> I prefer, where love's concerned, nonspecific anniversaries
+>
+> that can be celebrated every day
+>
+> I prefer zeros on the loose
+>
+> to those lined up behind a cipher
+>
+> I prefer keeping in mind even the possibility 
+>
+> that existence has its own reason for being
+
+I want to share the story behind this poem. I learned this poem from an elective class about Nobel Literature Prize winners, hosted by Prof. Dong Ding @SUFE. As the last assignment in the class, Prof. Ding let us write our own *Possibilities*, and she assembled the poems from our classmates into a new poem, Possibilities for class 2023. This poem is accessible, yet powerful especially when it echoes with a group of people from diversified backgrounds. Finally, I highly recommend SUFE students to select this course, this is one of the most rewarding courses in my undergrad years!
+

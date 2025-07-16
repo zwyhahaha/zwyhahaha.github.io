@@ -10,7 +10,7 @@ tags:
     - Tips
 ---
 
-I just gave my first academic talk at a conference at SJTU IIC yesterday. I presented an ongoing project, and I had hesitated for a long time about whether to give a talk on an "incomplete" work. It turns out much of my nervousness was unnecessary—I received a lot of helpful feedback from the audience. So I’m writing this post to summarize some lessons I’ve learned during this journey. Many of them echo the insights from *Paths to Research* by Chris Ryan and Russian Fu (which I highly recommend!): [Paths to Research (PDF)](https://christopher-thomas-ryan.github.io/papers/Paths_to_Research.pdf)
+I just gave my first academic talk at a conference at SJTU IIC yesterday. I presented an ongoing project, and I had hesitated for a long time about whether to give a talk on an "incomplete" work. It turns out much of my nervousness was unnecessary—I received a lot of helpful feedback from the audience. So I’m writing this post to summarize some lessons I’ve learned during this journey. Many of them echo the insights from *Paths to Research* by Christopher Ryan and Runshan Fu (which I highly recommend!): [Paths to Research (PDF)](https://christopher-thomas-ryan.github.io/papers/Paths_to_Research.pdf)
 
 ## Be confident
 
