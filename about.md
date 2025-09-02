@@ -7,7 +7,7 @@ header-img: "img/home2.jpg"
 
 ### Welcome!
 
-I am a first-year PhD student at Stanford MS&E. I obtained my bachelor's degree at Shanghai University of Finance and Economics, where I was fortunate to work with Prof. Yinyu Ye and Prof. Huikang Liu.
+I am a first-year PhD student at Stanford MS&E. I obtained my bachelor's degree at Shanghai University of Finance and Economics, where I was fortunate to work with Prof. Yinyu Ye, Prof. Dongdong Ge and Prof. Huikang Liu.
 
 My research interests lie in **optimization**. Below is a catalog of the research topics I have explored:
 
@@ -17,7 +17,7 @@ My research interests lie in **optimization**. Below is a catalog of the researc
 
 ### About this blog
 
-I typically log some technical write-ups and reading notes. Occasionally, I share some practical tips and life experiences. It would be a great pleasure if you found some of my posts useful.
+I share ideas and stories that I find interesting, beautiful, or helpful. Many of them grow out of my own life—my research, travels, daily routines, and moments of reflection. My hope is that you’ll discover something here that resonates with you or proves useful in some way.
 
-**Acknowledgement**: This blog was inspired by **Ariana Tang**, whose blog is thoughtful and well worth-reading! Thanks my sister **Wanxin** for designing the site’s logo, my other sister **Xinyu** for illustrating the background image of this site, and **Chuwen Zhang** for photographing the headshot. Finally, thank you to everyone who takes the time to read my posts — it means a lot!
+I’m deeply grateful to the people who helped bring this blog to life. This blog was inspired by Ariana Tang, whose blog is thoughtful and well worth-reading! Thanks my sisters Wanxin and Xinyu for designing the site’s logo and background image, and Chuwen Zhang for photographing the headshot. Finally, thank you to everyone who takes the time to read my posts — it means a lot!
 
