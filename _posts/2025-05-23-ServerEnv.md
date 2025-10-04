@@ -13,6 +13,10 @@ tags:
 
 Lately, I’ve been running deep learning experiments across different computing clusters. Every time I switch to a new server, I have to go through a series of setup steps to get my environment ready. To avoid repeating the same work from scratch each time, I decided to document my routine here. This post mainly serves as a personal checklist, but it might also be useful to others facing similar tasks. I’ll keep it updated whenever I add new steps to the routine.
 
+> [!NOTE]
+>
+> [Updated 10/25] Recently, I found a useful AI tool built in the Mac Terminal - [Warp](https://www.warp.dev/). I can use it to generate commands and scripts, check the environment of a new server, analyze errors, and automate pipeline. It is particularly helpful when using the remote server. So the routines in this post has been replaced by this wonderful AI tool. I also recommend you giving it a try!
+
 ## Connect to GitHub Account
 
 1. Generate an SSH key
