@@ -1,0 +1,82 @@
+---
+layout: default
+title: Travel
+header-img: img/Hangzhou/3.jpeg
+description: ""
+---
+
+<div class="container" style="padding-top: 30px;">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <h1>Travel</h1>
+        </div>
+    </div>
+</div>
+
+<!-- Travel Gallery -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
+            <style>
+                .travel-gallery {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 24px;
+                    padding: 40px 0;
+                }
+                @media (max-width: 767px) {
+                    .travel-gallery {
+                        grid-template-columns: 1fr;
+                    }
+                }
+                .travel-card {
+                    position: relative;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    height: 300px;
+                    background-size: cover;
+                    background-position: center;
+                    display: flex;
+                    align-items: flex-end;
+                    text-decoration: none;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+                .travel-card:hover,
+                .travel-card:focus {
+                    transform: translateY(-4px);
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+                    text-decoration: none;
+                }
+                .travel-card-overlay {
+                    width: 100%;
+                    padding: 20px 24px;
+                    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+                    color: #fff;
+                }
+                .travel-card-overlay h3 {
+                    margin: 0 0 4px;
+                    font-size: 20px;
+                    color: #fff;
+                }
+                .travel-card-overlay .date {
+                    margin: 0;
+                    font-size: 14px;
+                    opacity: 0.85;
+                }
+            </style>
+
+            <div class="travel-gallery">
+                {% for post in site.posts %}
+                    {% if post.tags contains "Travel✈️" %}
+                    <a class="travel-card" href="{{ post.url | prepend: site.baseurl }}" style="background-image: url('{{ site.baseurl }}/{{ post.header-img }}')">
+                        <div class="travel-card-overlay">
+                            <h3>{{ post.title }}</h3>
+                            <p class="date">{{ post.date | date: "%B %-d, %Y" }}</p>
+                        </div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

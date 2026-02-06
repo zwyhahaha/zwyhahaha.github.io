@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      A step-by-step derivation from DRS to ADMM
+title:      A Step-by-step Derivation of ADMM from DRS
 subtitle:   
 date:       2026-02-05
 author:     Wanyu Zhang

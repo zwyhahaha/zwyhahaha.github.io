@@ -3,14 +3,14 @@
   <channel>
     <title>Over the Rainbow</title>
     <description></description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 05 Feb 2026 23:42:17 -0800</pubDate>
-    <lastBuildDate>Thu, 05 Feb 2026 23:42:17 -0800</lastBuildDate>
+    <link>http://localhost:4001/</link>
+    <atom:link href="http://localhost:4001/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Fri, 06 Feb 2026 01:19:42 -0800</pubDate>
+    <lastBuildDate>Fri, 06 Feb 2026 01:19:42 -0800</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
     
       <item>
-        <title>A step-by-step derivation from DRS to ADMM</title>
+        <title>A Step-by-step Derivation of ADMM from DRS</title>
         <description>&lt;p&gt;In this note, we present a step-by-step derivation of the Alternating Direction Method of Multipliers (ADMM) from Douglas-Rachford Splitting (DRS). This derivation is adapted from the book below and fills in the intermediate steps that were skipped in the original exposition.&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -148,10 +148,51 @@ v^{k+1} &amp;amp;= u^{k+1} - w^k + \beta B y^{k+1} \\
 &lt;p&gt;This completes the derivation: the switched DRS applied to the Fenchel dual is equivalent to ADMM on the primal problem.&lt;/p&gt;
 </description>
         <pubDate>Thu, 05 Feb 2026 00:00:00 -0800</pubDate>
-        <link>http://localhost:4000/2026/02/05/From-DRS-to-ADMM/</link>
-        <guid isPermaLink="true">http://localhost:4000/2026/02/05/From-DRS-to-ADMM/</guid>
+        <link>http://localhost:4001/2026/02/05/From-DRS-to-ADMM/</link>
+        <guid isPermaLink="true">http://localhost:4001/2026/02/05/From-DRS-to-ADMM/</guid>
         
         <category>Optimization</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Canyons &amp; Colors of the Southwest</title>
+        <description>&lt;h2 id=&quot;grand-canyon&quot;&gt;Grand Canyon&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/vegas/canyon.jpeg&quot; alt=&quot;Grand Canyon&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;antelope-canyon&quot;&gt;Antelope Canyon&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/vegas/antelope.jpeg&quot; alt=&quot;Grand Canyon&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;bryce-canyon&quot;&gt;Bryce Canyon&lt;/h2&gt;
+
+&lt;figure&gt;
+  &lt;div style=&quot;display: flex; justify-content: center; gap: 10px;&quot;&gt;
+    &lt;img src=&quot;/img/vegas/bryce.jpeg&quot; alt=&quot;Bryce Canyon&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;/img/vegas/bryce2.jpeg&quot; alt=&quot;Bryce Canyon&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&quot;zion-national-park&quot;&gt;Zion National Park&lt;/h2&gt;
+
+&lt;figure&gt;
+  &lt;div style=&quot;display: flex; justify-content: center; gap: 10px;&quot;&gt;
+    &lt;img src=&quot;/img/vegas/zion.jpeg&quot; alt=&quot;Zion National Park&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;/img/vegas/zion2.jpeg&quot; alt=&quot;Zion National Park&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&quot;lake-powell&quot;&gt;Lake Powell&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/vegas/powell.jpeg&quot; alt=&quot;Lake Powell&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 25 Dec 2025 00:00:00 -0800</pubDate>
+        <link>http://localhost:4001/2025/12/25/vegas/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/12/25/vegas/</guid>
+        
+        <category>Travel✈️</category>
         
         
       </item>
@@ -414,8 +455,8 @@ P
 
 </description>
         <pubDate>Sat, 06 Sep 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/09/06/AutoLyap/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/09/06/AutoLyap/</guid>
+        <link>http://localhost:4001/2025/09/06/AutoLyap/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/09/06/AutoLyap/</guid>
         
         <category>Optimization</category>
         
@@ -423,7 +464,7 @@ P
       </item>
     
       <item>
-        <title>Travel Album | Hangzhou, Yichang, and Xi&apos;an</title>
+        <title>Hangzhou, Yichang, and Xi&apos;an</title>
         <description>&lt;h2 id=&quot;hangzhou&quot;&gt;Hangzhou&lt;/h2&gt;
 
 &lt;p&gt;On May 10, I took a one-day trip with my family to Hangzhou, where we celebrated a special Mother’s Day by visiting West Lake and Lingyin Temple.&lt;/p&gt;
@@ -467,114 +508,10 @@ P
 &lt;/figure&gt;
 </description>
         <pubDate>Fri, 01 Aug 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/08/01/HangZhou/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/08/01/HangZhou/</guid>
+        <link>http://localhost:4001/2025/08/01/HangZhou/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/08/01/HangZhou/</guid>
         
         <category>Travel✈️</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Collection | words that stay</title>
-        <description>&lt;p&gt;This blog is a collection of excerpts that have stayed with me—lines from poems, lyrics, and books. I’m not an expert in literature, but I write these notes to capture and share the personal connections I feel with these beautiful words.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;flowers&quot;&gt;Flowers&lt;/h2&gt;
-
-&lt;p&gt;Lyrics by &lt;em&gt;Miley Cyrus&lt;/em&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;I can buy myself flowers&lt;/p&gt;
-
-  &lt;p&gt;Write my name in the sand&lt;/p&gt;
-
-  &lt;p&gt;Talk to my self for hours&lt;/p&gt;
-
-  &lt;p&gt;Say things you don’t understand&lt;/p&gt;
-
-  &lt;p&gt;I can take myself dancing&lt;/p&gt;
-
-  &lt;p&gt;And I can hold my own hand&lt;/p&gt;
-
-  &lt;p&gt;Yeah, I can love me better than you can&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;figure style=&quot;text-align: center;&quot;&gt;
-  &lt;img src=&quot;/img/flw.jpeg&quot; alt=&quot;test&quot; style=&quot;width: 60%; height: auto;&quot; /&gt;
-  &lt;figcaption style=&quot;font-size: 0.9em; color: #555;&quot;&gt;Literally, buying meself flowers.&lt;/figcaption&gt;
-&lt;/figure&gt;
-
-&lt;h2 id=&quot;possibilities&quot;&gt;Possibilities&lt;/h2&gt;
-
-&lt;p&gt;Poem by &lt;em&gt;Wislawa Szymborska&lt;/em&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;I prefer exceptions&lt;/p&gt;
-
-  &lt;p&gt;I prefer to leave early&lt;/p&gt;
-
-  &lt;p&gt;I prefer talking to doctors about something else&lt;/p&gt;
-
-  &lt;p&gt;I prefer the absurdity of writing poems&lt;/p&gt;
-
-  &lt;p&gt;to the absurdity of not writing poems&lt;/p&gt;
-
-  &lt;p&gt;I prefer, where love’s concerned, nonspecific anniversaries&lt;/p&gt;
-
-  &lt;p&gt;that can be celebrated every day&lt;/p&gt;
-
-  &lt;p&gt;I prefer zeros on the loose&lt;/p&gt;
-
-  &lt;p&gt;to those lined up behind a cipher&lt;/p&gt;
-
-  &lt;p&gt;I prefer keeping in mind even the possibility&lt;/p&gt;
-
-  &lt;p&gt;that existence has its own reason for being&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I first encountered this poem in an elective course on Nobel Prize in Literature, taught by Prof. Dong Ding at SUFE. For our final assignment, she asked each of us to write our own &lt;em&gt;Possibilities&lt;/em&gt;. Later, she compiled our poems into a collective version, &lt;em&gt;Possibilities for Class 2023&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;This poem is both accessible and powerful, especially when it resonates within a diverse group of people. I still think back to that class as one of the most rewarding experiences in my undergraduate years. If you’re a SUFE student, I highly recommend taking it.&lt;/p&gt;
-
-&lt;h2 id=&quot;zen-mind-beginners-mind&quot;&gt;Zen Mind, Beginner’s Mind&lt;/h2&gt;
-
-&lt;p&gt;Book by &lt;em&gt;Shunryu Suzuki&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;The idea of keeping a &lt;em&gt;beginner’s mind&lt;/em&gt; is similar to the saying, “stay hungry, stay foolish.” At any moment, we can return to being beginners—free from the weight of past achievements and unburdened by desire or fear for the future.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;If your mind is empty, it is always ready for anything; it is open to everything. In the beginner’s mind there are many possibilities; in the expert’s mind there are few. In the beginner’s mind there is no thought, “I have attained something.” All self-centered thoughts limit our vast mind. When we have no thought of achievement, no thought of self, we are true beginners.&lt;/p&gt;
-
-&lt;/blockquote&gt;
-
-&lt;p&gt;Good books often echo this common truth. You can find the same spirit of beginner’s mind in &lt;em&gt;The Power of Now&lt;/em&gt;, &lt;em&gt;Siddhartha&lt;/em&gt;, and in yoga practice, though expressed in different language.&lt;/p&gt;
-
-&lt;p&gt;As a beginner, you listen carefully without comparing to what you already know; you keep doing without clinging to goals; and you forget yourself in the process:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;When you do something, you should burn yourself completely, as a good bonfire, leaving no trace of yourself.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;a-room-of-ones-own&quot;&gt;A Room of One’s Own&lt;/h2&gt;
-
-&lt;p&gt;Book by &lt;em&gt;Virginia Woolf&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;This book explores the relationship between women and fiction. It is often regarded as a cornerstone of feminist writing. The book doesn’t try to provide final answers, but I found that many of Woolf’s ideas resonate with my own reflections on gender and research.&lt;/p&gt;
-
-&lt;p&gt;As a woman in academia, I often enter rooms filled mostly with male researchers. It is hard not to wonder why this imbalance exists, and easy to slip into the mindset of “fighting for women in academia.” But my personal belief is that research itself has no gender. To carry the weight of “sexual awareness” into research can risk distorting its purity. Woolf articulated this with clarity:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The very first sentence that I would write here, I said, crossing over to the writing-table and taking up the page headed Women and Fiction, is that it is fatal for anyone who writes to think of their sex. It is fatal to be a man or woman pure and simple; one must be woman-manly or man-womanly.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</description>
-        <pubDate>Sun, 13 Jul 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/07/13/poems/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/07/13/poems/</guid>
-        
-        <category>Literature</category>
         
         
       </item>
@@ -608,8 +545,8 @@ P
 &lt;p&gt;Finally, I’m deeply grateful to my collaborator for helping me rehearse, and to everyone in the audience for being there and offering feedback. Their encouragement gave me a big boost of confidence for my future research journey.&lt;/p&gt;
 </description>
         <pubDate>Mon, 07 Jul 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/07/07/FirstTalk/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/07/07/FirstTalk/</guid>
+        <link>http://localhost:4001/2025/07/07/FirstTalk/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/07/07/FirstTalk/</guid>
         
         <category>Tips</category>
         
@@ -704,8 +641,8 @@ P
 
 </description>
         <pubDate>Sun, 22 Jun 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/06/22/Resource/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/06/22/Resource/</guid>
+        <link>http://localhost:4001/2025/06/22/Resource/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/06/22/Resource/</guid>
         
         <category>Tips</category>
         
@@ -785,8 +722,8 @@ pip config &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;install.trusted-hos
 
 </description>
         <pubDate>Fri, 23 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/23/ServerEnv/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/23/ServerEnv/</guid>
+        <link>http://localhost:4001/2025/05/23/ServerEnv/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/05/23/ServerEnv/</guid>
         
         <category>Tips</category>
         
@@ -893,8 +830,8 @@ j}$.&lt;/p&gt;
 &lt;p&gt;which is a standard &lt;em&gt;integer linear programming&lt;/em&gt;.&lt;/p&gt;
 </description>
         <pubDate>Mon, 19 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/19/IPLB/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/19/IPLB/</guid>
+        <link>http://localhost:4001/2025/05/19/IPLB/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/05/19/IPLB/</guid>
         
         <category>Optimization</category>
         
@@ -978,8 +915,8 @@ j}$.&lt;/p&gt;
 &lt;p&gt;As someone who has worked in optimization, I believe it’s increasingly important to improve computational efficiency for finding the optimal solution and, at times, embrace heuristics :)&lt;/p&gt;
 </description>
         <pubDate>Sat, 17 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/17/EPLB/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/17/EPLB/</guid>
+        <link>http://localhost:4001/2025/05/17/EPLB/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/05/17/EPLB/</guid>
         
         <category>Optimization</category>
         
@@ -1104,8 +1041,8 @@ j}$.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/img/tex/st.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 01 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/01/TeX/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/01/TeX/</guid>
+        <link>http://localhost:4001/2025/05/01/TeX/</link>
+        <guid isPermaLink="true">http://localhost:4001/2025/05/01/TeX/</guid>
         
         <category>Tips</category>
         

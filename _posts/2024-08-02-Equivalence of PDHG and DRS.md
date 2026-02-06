@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      Equivalence of Primal-Dual Hybrid Gradient (PDHG) and Douglas-Rachford Splitting (DRS)
+title:      Equivalence of PDHG and DRS
 subtitle:   
 date:       2024-08-02
 author:     Wanyu Zhang
