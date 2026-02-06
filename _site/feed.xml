@@ -3,10 +3,10 @@
   <channel>
     <title>Over the Rainbow</title>
     <description></description>
-    <link>http://localhost:4001/</link>
-    <atom:link href="http://localhost:4001/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 06 Feb 2026 01:19:42 -0800</pubDate>
-    <lastBuildDate>Fri, 06 Feb 2026 01:19:42 -0800</lastBuildDate>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Fri, 06 Feb 2026 11:29:46 -0800</pubDate>
+    <lastBuildDate>Fri, 06 Feb 2026 11:29:46 -0800</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
     
       <item>
@@ -148,8 +148,8 @@ v^{k+1} &amp;amp;= u^{k+1} - w^k + \beta B y^{k+1} \\
 &lt;p&gt;This completes the derivation: the switched DRS applied to the Fenchel dual is equivalent to ADMM on the primal problem.&lt;/p&gt;
 </description>
         <pubDate>Thu, 05 Feb 2026 00:00:00 -0800</pubDate>
-        <link>http://localhost:4001/2026/02/05/From-DRS-to-ADMM/</link>
-        <guid isPermaLink="true">http://localhost:4001/2026/02/05/From-DRS-to-ADMM/</guid>
+        <link>http://localhost:4000/2026/02/05/From-DRS-to-ADMM/</link>
+        <guid isPermaLink="true">http://localhost:4000/2026/02/05/From-DRS-to-ADMM/</guid>
         
         <category>Optimization</category>
         
@@ -189,8 +189,8 @@ v^{k+1} &amp;amp;= u^{k+1} - w^k + \beta B y^{k+1} \\
 &lt;p&gt;&lt;img src=&quot;/img/vegas/powell.jpeg&quot; alt=&quot;Lake Powell&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 25 Dec 2025 00:00:00 -0800</pubDate>
-        <link>http://localhost:4001/2025/12/25/vegas/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/12/25/vegas/</guid>
+        <link>http://localhost:4000/2025/12/25/vegas/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/12/25/vegas/</guid>
         
         <category>Travel✈️</category>
         
@@ -455,8 +455,8 @@ P
 
 </description>
         <pubDate>Sat, 06 Sep 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/09/06/AutoLyap/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/09/06/AutoLyap/</guid>
+        <link>http://localhost:4000/2025/09/06/AutoLyap/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/09/06/AutoLyap/</guid>
         
         <category>Optimization</category>
         
@@ -508,8 +508,8 @@ P
 &lt;/figure&gt;
 </description>
         <pubDate>Fri, 01 Aug 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/08/01/HangZhou/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/08/01/HangZhou/</guid>
+        <link>http://localhost:4000/2025/08/01/HangZhou/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/08/01/HangZhou/</guid>
         
         <category>Travel✈️</category>
         
@@ -545,8 +545,8 @@ P
 &lt;p&gt;Finally, I’m deeply grateful to my collaborator for helping me rehearse, and to everyone in the audience for being there and offering feedback. Their encouragement gave me a big boost of confidence for my future research journey.&lt;/p&gt;
 </description>
         <pubDate>Mon, 07 Jul 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/07/07/FirstTalk/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/07/07/FirstTalk/</guid>
+        <link>http://localhost:4000/2025/07/07/FirstTalk/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/07/07/FirstTalk/</guid>
         
         <category>Tips</category>
         
@@ -641,8 +641,8 @@ P
 
 </description>
         <pubDate>Sun, 22 Jun 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/06/22/Resource/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/06/22/Resource/</guid>
+        <link>http://localhost:4000/2025/06/22/Resource/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/06/22/Resource/</guid>
         
         <category>Tips</category>
         
@@ -722,8 +722,8 @@ pip config &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;install.trusted-hos
 
 </description>
         <pubDate>Fri, 23 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/05/23/ServerEnv/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/05/23/ServerEnv/</guid>
+        <link>http://localhost:4000/2025/05/23/ServerEnv/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/23/ServerEnv/</guid>
         
         <category>Tips</category>
         
@@ -830,8 +830,8 @@ j}$.&lt;/p&gt;
 &lt;p&gt;which is a standard &lt;em&gt;integer linear programming&lt;/em&gt;.&lt;/p&gt;
 </description>
         <pubDate>Mon, 19 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/05/19/IPLB/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/05/19/IPLB/</guid>
+        <link>http://localhost:4000/2025/05/19/IPLB/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/19/IPLB/</guid>
         
         <category>Optimization</category>
         
@@ -915,8 +915,8 @@ j}$.&lt;/p&gt;
 &lt;p&gt;As someone who has worked in optimization, I believe it’s increasingly important to improve computational efficiency for finding the optimal solution and, at times, embrace heuristics :)&lt;/p&gt;
 </description>
         <pubDate>Sat, 17 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/05/17/EPLB/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/05/17/EPLB/</guid>
+        <link>http://localhost:4000/2025/05/17/EPLB/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/17/EPLB/</guid>
         
         <category>Optimization</category>
         
@@ -1041,8 +1041,8 @@ j}$.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/img/tex/st.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 01 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4001/2025/05/01/TeX/</link>
-        <guid isPermaLink="true">http://localhost:4001/2025/05/01/TeX/</guid>
+        <link>http://localhost:4000/2025/05/01/TeX/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/01/TeX/</guid>
         
         <category>Tips</category>
         
