@@ -53,10 +53,16 @@
 }
 .side-catalog {
   display: block;
-  overflow: auto;
-  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 60px);
   padding-bottom: 40px;
   width: 195px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.side-catalog::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 .side-catalog.fixed {
   position: fixed;
@@ -129,6 +135,9 @@
     display: none;
   }
 }
+html {
+  overflow-x: hidden;
+}
 body {
   /* Hux learn from
      *     TypeIsBeautiful,
@@ -138,7 +147,6 @@ body {
   line-height: 1.7;
   font-size: 16px;
   color: #404040;
-  overflow-x: hidden;
   padding-top: 56px;
 }
 @media only screen and (min-width: 768px) {
@@ -177,7 +185,7 @@ a img:focus {
   cursor: zoom-in;
 }
 article {
-  overflow-x: hidden;
+  overflow: visible;
 }
 blockquote {
   color: #808080;
