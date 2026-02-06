@@ -1,122 +1,1113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>My Blog</title>
-    <description>写一句你想写的话</description>
+    <title>Over the Rainbow</title>
+    <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 21 Apr 2019 17:10:45 +0800</pubDate>
-    <lastBuildDate>Sun, 21 Apr 2019 17:10:45 +0800</lastBuildDate>
-    <generator>Jekyll v3.8.5</generator>
+    <pubDate>Thu, 05 Feb 2026 23:42:17 -0800</pubDate>
+    <lastBuildDate>Thu, 05 Feb 2026 23:42:17 -0800</lastBuildDate>
+    <generator>Jekyll v4.4.1</generator>
     
       <item>
-        <title>This is title</title>
-        <description>&lt;h1 id=&quot;title&quot;&gt;Title&lt;/h1&gt;
+        <title>A step-by-step derivation from DRS to ADMM</title>
+        <description>&lt;p&gt;In this note, we present a step-by-step derivation of the Alternating Direction Method of Multipliers (ADMM) from Douglas-Rachford Splitting (DRS). This derivation is adapted from the book below and fills in the intermediate steps that were skipped in the original exposition.&lt;/p&gt;
 
-&lt;p&gt;content&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Reference: &lt;a href=&quot;https://link.springer.com/content/pdf/10.1007/978-981-16-9840-8_2&quot;&gt;Convex Optimization: Algorithms and Complexity&lt;/a&gt;, Chapter 2.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;problem-setup&quot;&gt;Problem Setup&lt;/h2&gt;
+
+&lt;p&gt;Consider using ADMM to solve the following linearly constrained problem:&lt;/p&gt;
+
+\[\min_{x, y} \; f(x) + g(y) \quad \text{s.t.} \; Ax + By = b\]
+
+&lt;p&gt;The standard ADMM update consists of alternating minimization over the primal variables followed by a dual ascent step:&lt;/p&gt;
+
+\[\begin{aligned}
+x^{k+1} &amp;amp;= \arg\min_x \left\{ f(x) + \langle v^k, Ax \rangle + \tfrac{\beta}{2} \| Ax + By^k - b \|^2 \right\} \\
+y^{k+1} &amp;amp;= \arg\min_y \left\{ g(y) + \langle v^k, By \rangle + \tfrac{\beta}{2} \| Ax^{k+1} + By - b \|^2 \right\} \\
+v^{k+1} &amp;amp;= v^k + \beta (Ax^{k+1} + By^{k+1} - b)
+\end{aligned}\]
+
+&lt;p&gt;Our goal in this note is to derive the ADMM update from DRS applied to a suitable reformulation of the problem. To set the stage, consider the Fenchel dual problem:&lt;/p&gt;
+
+\[\min_{\lambda} \; \underbrace{f^{\ast}(-A^{\top} \lambda) + b^{\top} \lambda}_{\varphi_1(\lambda)} + \underbrace{g^{\ast}(-B^{\top} \lambda)}_{\varphi_2(\lambda)}\]
+
+&lt;p&gt;This is an unconstrained minimization of the sum of two convex functions $\varphi_1$ and $\varphi_2$, which is precisely the form to which DRS applies. Applying DRS to the dual problem yields the following iteration:&lt;/p&gt;
+
+\[\begin{aligned}
+v^k &amp;amp;= \operatorname{prox}_{\beta \varphi_2}(y^k) \\
+u^{k+1} &amp;amp;= \operatorname{prox}_{\beta \varphi_1}(2v^k - y^k) \\
+y^{k+1} &amp;amp;= y^k + u^{k+1} - v^k
+\end{aligned}\]
+
+&lt;h2 id=&quot;switched-drs&quot;&gt;Switched DRS&lt;/h2&gt;
+
+&lt;p&gt;To connect DRS with ADMM, we first rewrite the iteration in a more convenient form. Consider the start of the next DRS iteration:&lt;/p&gt;
+
+\[v^{k+1} = \operatorname{prox}_{\beta \varphi_2}(y^{k+1}) = \operatorname{prox}_{\beta \varphi_2}(y^k + u^{k+1} - v^k)\]
+
+&lt;p&gt;Then consider the DRS iteration $(u^{k+1}, y^{k+1}, v^{k+1})$ and switch the order of the $y^{k+1}$ and $v^{k+1}$ updates. Since $v^{k+1}$ depends on $y^{k+1}$ only through $y^k + u^{k+1} - v^k$, which is already determined before the switch, we derive an equivalent algorithm:&lt;/p&gt;
+
+\[\begin{aligned}
+u^{k+1} &amp;amp;= \operatorname{prox}_{\beta \varphi_1}(2v^k - y^k) \\
+v^{k+1} &amp;amp;= \operatorname{prox}_{\beta \varphi_2}(y^k + u^{k+1} - v^k) \\
+y^{k+1} &amp;amp;= y^k + u^{k+1} - v^k.
+\end{aligned}\]
+
+&lt;p&gt;Next, apply the change of variable $w^k := v^k - y^k$ to simplify the expressions. Substituting into each line gives:&lt;/p&gt;
+
+\[\begin{aligned}
+u^{k+1} &amp;amp;= \operatorname{prox}_{\beta \varphi_1}(v^k + w^k) \\
+v^{k+1} &amp;amp;= \operatorname{prox}_{\beta \varphi_2}(u^{k+1} - w^k) \\
+w^{k+1} &amp;amp;= w^k + v^{k+1} - u^{k+1}
+\end{aligned}\]
+
+&lt;p&gt;This is the form of DRS from which we will recover the ADMM updates.&lt;/p&gt;
+
+&lt;h2 id=&quot;recovering-admm&quot;&gt;Recovering ADMM&lt;/h2&gt;
+
+&lt;p&gt;We now show that the switched DRS iteration above, applied to the dual problem, is equivalent to ADMM on the original primal problem.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Step 1: optimality condition of the $u$-update.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Consider the optimality condition of $u^{k+1} = \operatorname{prox}_{\beta \varphi_1}(v^k + w^k)$. Recalling that $\varphi_1(\lambda) := f^{\ast}(-A^{\top} \lambda) + b^{\top} \lambda$, the proximal optimality condition reads:&lt;/p&gt;
+
+\[\begin{aligned}
+0 &amp;amp;\in \partial \varphi_1(u^{k+1}) + \tfrac{1}{\beta}(u^{k+1} - (v^k + w^k)) \\
+&amp;amp;= -A \, \partial f^{\ast}(-A^{\top} u^{k+1}) + b + \tfrac{1}{\beta}(u^{k+1} - (v^k + w^k))
+\end{aligned}\]
+
+&lt;p&gt;Then there exists $x^{k+1} \in \partial f^{\ast}(-A^{\top} u^{k+1})$, which by the conjugate subgradient relation implies $-A^{\top} u^{k+1} \in \partial f(x^{k+1})$, such that&lt;/p&gt;
+
+\[\begin{aligned}
+0 &amp;amp;= -Ax^{k+1} + b + \tfrac{1}{\beta}(u^{k+1} - (v^k + w^k)) \\
+(\Rightarrow) \quad u^{k+1} &amp;amp;= v^k + w^k + \beta(Ax^{k+1} - b)
+\end{aligned} \tag{1} \label{eq:u-update}\]
+
+&lt;p&gt;By $0 \in \partial f(x^{k+1}) + A^{\top} u^{k+1}$ and $\eqref{eq:u-update}$, we obtain&lt;/p&gt;
+
+\[0 \in \partial f(x^{k+1}) + A^{\top}(v^k + w^k) + \beta A^{\top}(Ax^{k+1} - b) \tag{2} \label{eq:x-opt}\]
+
+&lt;p&gt;&lt;strong&gt;Step 2: optimality condition of the $v$-update.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Consider the optimality condition of $v^{k+1} = \operatorname{prox}_{\beta \varphi_2}(u^{k+1} - w^k)$. Since $\varphi_2(\lambda) := g^{\ast}(-B^{\top} \lambda)$, we have&lt;/p&gt;
+
+\[\begin{aligned}
+0 &amp;amp;\in \partial \varphi_2(v^{k+1}) + \tfrac{1}{\beta}(v^{k+1} - (u^{k+1} - w^k)) \\
+&amp;amp;= -B \, \partial g^{\ast}(-B^{\top} v^{k+1}) + \tfrac{1}{\beta}(v^{k+1} - u^{k+1} + w^k)
+\end{aligned}\]
+
+&lt;p&gt;Then there exists $y^{k+1} \in \partial g^{\ast}(-B^{\top} v^{k+1})$, which implies $-B^{\top} v^{k+1} \in \partial g(y^{k+1})$, such that&lt;/p&gt;
+
+\[\begin{aligned}
+0 &amp;amp;= -By^{k+1} + \tfrac{1}{\beta}(v^{k+1} - u^{k+1} + w^k) \\
+(\Rightarrow) \quad v^{k+1} &amp;amp;= u^{k+1} - w^k + \beta B y^{k+1}
+\end{aligned} \tag{3} \label{eq:v-update}\]
+
+&lt;p&gt;From the update rule $w^{k+1} = w^k + v^{k+1} - u^{k+1}$, substituting $\eqref{eq:v-update}$ gives a useful identity:&lt;/p&gt;
+
+\[0 = -By^{k+1} + \tfrac{1}{\beta} w^{k+1} \tag{4} \label{eq:w-identity}\]
+
+&lt;p&gt;By $0 \in \partial g(y^{k+1}) + B^{\top} v^{k+1}$ and $\eqref{eq:v-update}$, we get&lt;/p&gt;
+
+\[0 \in \partial g(y^{k+1}) + B^{\top}(u^{k+1} - w^k) + \beta B^{\top} B y^{k+1} \tag{5} \label{eq:y-opt}\]
+
+&lt;p&gt;&lt;strong&gt;Step 3: Recover ADMM updates.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We are now ready to piece everything together. From $\eqref{eq:x-opt}$ and $\eqref{eq:w-identity}$, note that $w^k = \beta B y^k$ by applying $\eqref{eq:w-identity}$ at iteration $k$. Substituting into $\eqref{eq:x-opt}$:&lt;/p&gt;
+
+\[0 \in \partial f(x^{k+1}) + A^{\top} v^k + \beta A^{\top}(Ax^{k+1} - b + By^k),\]
+
+&lt;p&gt;which is precisely the optimality condition of the $x$-update of ADMM:&lt;/p&gt;
+
+\[x^{k+1} = \arg\min_x \left\{ f(x) + \langle v^k, Ax \rangle + \tfrac{\beta}{2} \| Ax + By^k - b \|^2 \right\}.\]
+
+&lt;p&gt;From $\eqref{eq:y-opt}$ and $\eqref{eq:w-identity}$, substituting $u^{k+1} - w^k + \beta B y^{k+1} = v^{k+1}$ from $\eqref{eq:v-update}$ gives:&lt;/p&gt;
+
+\[\begin{aligned}
+0 &amp;amp;\in \partial g(y^{k+1}) + B^{\top}(u^{k+1} - w^k + \beta B y^{k+1}) \\
+&amp;amp;= \partial g(y^{k+1}) + B^{\top}(v^k + \beta(Ax^{k+1} + By^{k+1} - b))
+\end{aligned} \tag{6} \label{eq:y-admm}\]
+
+&lt;p&gt;where the second equality follows from $\eqref{eq:u-update}$. This is exactly the optimality condition of the $y$-update of ADMM:&lt;/p&gt;
+
+\[y^{k+1} = \arg\min_y \left\{ g(y) + \langle v^k, By \rangle + \tfrac{\beta}{2} \| Ax^{k+1} + By - b \|^2 \right\}.\]
+
+&lt;p&gt;Finally, from $\eqref{eq:v-update}$ and $\eqref{eq:y-admm}$, we recover the dual update of ADMM:&lt;/p&gt;
+
+\[\begin{aligned}
+v^{k+1} &amp;amp;= u^{k+1} - w^k + \beta B y^{k+1} \\
+&amp;amp;= v^k + \beta(Ax^{k+1} + By^{k+1} - b).
+\end{aligned}\]
+
+&lt;p&gt;This completes the derivation: the switched DRS applied to the Fenchel dual is equivalent to ADMM on the primal problem.&lt;/p&gt;
 </description>
-        <pubDate>Sun, 21 Apr 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/04/21/This-is-Title/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/04/21/This-is-Title/</guid>
+        <pubDate>Thu, 05 Feb 2026 00:00:00 -0800</pubDate>
+        <link>http://localhost:4000/2026/02/05/From-DRS-to-ADMM/</link>
+        <guid isPermaLink="true">http://localhost:4000/2026/02/05/From-DRS-to-ADMM/</guid>
         
-        <category>Tylor</category>
+        <category>Optimization</category>
         
         
       </item>
     
       <item>
-        <title>Install TensorFlow-GPU by Anaconda (conda install tensorflow-gpu)</title>
-        <description>&lt;h1 id=&quot;install-tensorflow-gpu-by-anaconda-conda-install-tensorflow-gpu&quot;&gt;Install TensorFlow-GPU by Anaconda (conda install tensorflow-gpu)&lt;/h1&gt;
+        <title>Generating Lyapunov Functions for Gradient Descent by SDP</title>
+        <description>&lt;p&gt;This blog is the reading note of the following paper:&lt;/p&gt;
 
-&lt;h2 id=&quot;it-might-be-the-simplest-way-to-install-tensorflow-or-tensorflow-gpu-by-conda-install-in-the-conda-environment&quot;&gt;It might be the simplest way to install Tensorflow or Tensorflow-GPU by conda install in the conda environment&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;[1] Taylor, Adrien, Bryan Van Scoy, and Laurent Lessard. ‘‘Lyapunov functions for first-order methods: Tight automated convergence guarantees.” International Conference on Machine Learning. PMLR, 2018.&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;Nowadays, there are many tutorials that instruct how to install tensorflow or tensorflow-gpu. However, some people may feel it too complex just like me, because in those ways, you should download and install &lt;a href=&quot;https://www.nvidia.com/Download/index.aspx?lang=en-us&quot;&gt;NVIDIA drivers&lt;/a&gt;, and then download and install &lt;a href=&quot;https://developer.nvidia.com/cuda-downloads&quot;&gt;CUDA&lt;/a&gt; (users need to pay attention to the version), afterwards you may sign an agreement and download cuDNN in &lt;a href=&quot;https://developer.nvidia.com/cudnn&quot;&gt;NVIDIA Developer&lt;/a&gt;. Next, install python, and pip install tensorflow-gpu and so on. It’s not esay for developer to do these, let alone it might causes some other error such as &lt;strong&gt;version not match&lt;/strong&gt;, or &lt;strong&gt;conflict between other python libraries&lt;/strong&gt; and so on. Moreover, if you want to &lt;a href=&quot;https://www.tensorflow.org/install/gpu&quot;&gt;install tensorflow by compilation&lt;/a&gt;, it may take much more time.&lt;/p&gt;
+&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
 
-&lt;p&gt;Thus I strongly reconmend you not to do this, there’s a much easier way to install this. Please read the following article.&lt;/p&gt;
+&lt;p&gt;A key technique for proving the convergence of optimization algorithms is the  use of a Lyapunov function (also called a potential function). Such a function is designed to decrease (or contract) at every iteration, thereby establishing the algorithm’s convergence rate. However, constructing a suitable Lyapunov function is often nontrivial and typically requires expertise.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Main idea of the paper.&lt;/strong&gt; Paper [1] is among the earliest works on &lt;em&gt;automated&lt;/em&gt; Lyapunov function construction. It studies first-order methods (FOMs), including gradient descent, the heavy-ball method, and Nesterov’s accelerated gradient method, for minimizing $L$-smooth and $\mu$-strongly convex functions. The authors propose a semidefinite programming (SDP) formulation that automatically generates Lyapunov functions and provides linear convergence guarantees.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Scope of this blog.&lt;/strong&gt;  The paper presents the SDP formulation directly followed by proof of its equivalence to finding a valid Lyapunov function. However, I found the derivation of the SDP formulation somewhat non-intuitive. To better understand it, I attempted to reconstruct the derivation in the simplest setting: gradient descent.&lt;/p&gt;
+
+\[x_1 = x_0 - \alpha \nabla f (x_0)\]
+
+&lt;p&gt;&lt;strong&gt;About potential functions.&lt;/strong&gt; The potential function is defined on the state of the algorithm,&lt;/p&gt;
+
+\[\xi_k = (\mathbf{x}_k, \mathbf{g}_k, \mathbf{f}_k) := (x_k - x_{\star},
+   \nabla f (x_k), f (x_k) - f (x_{\star})),\]
+
+&lt;p&gt;and $\xi_{\star} = (0, 0, 0)$. The paper considers quadratic potential functions of the form&lt;/p&gt;
+
+\[\mathcal{V} (\xi_k) = \left[ \begin{array}{l}
+     \mathbf{x}_k\\
+     \mathbf{g}_k
+   \end{array} \right]^{\top} (P \otimes I_d) \left[ \begin{array}{l}
+     \mathbf{x}_k\\
+     \mathbf{g}_k
+   \end{array} \right] + q \mathbf{f}_k,\]
+
+&lt;p&gt;where $P \in \mathbb{S}^2, p \in \mathbb{R}$ are the coefficients to be determined, and $I_d$ denotes the $d \times d$ identity matrix. To prove linear convergence for gradient descent with rate $0 \leq \rho &amp;lt; 1$, the potential function must satisfy:&lt;/p&gt;
+
+&lt;p&gt;(1) $\mathcal{V} (\xi) \geq 0$ for all $\xi$,&lt;/p&gt;
+
+&lt;p&gt;(2) $\mathcal{V} (\xi) = 0$ if and only if $\xi = \xi_{\star}$,&lt;/p&gt;
+
+&lt;p&gt;(3) $\mathcal{V} (\xi) \rightarrow \infty$ as $| \xi | \rightarrow \infty$,&lt;/p&gt;
+
+&lt;p&gt;(4)  $\mathcal{V} (\xi_{k + 1}) \leq \rho^2  \mathcal{V} (\xi_k)$ for all $k$.&lt;/p&gt;
+
+&lt;p&gt;Under these conditions, linear convergence follows:&lt;/p&gt;
+
+\[\| x_k - x_{\star} \| = \mathcal{O} (\rho^k), \quad \| \nabla f (x_k) \| =
+   \mathcal{O} (\rho^k), \quad f (x_k) - f_{\star} = \mathcal{O} (\rho^{2 k})
+   .\]
+
+&lt;h2 id=&quot;given-rate-rho-find-the-potential-functions&quot;&gt;Given rate $\rho$, find the potential functions&lt;/h2&gt;
+
+&lt;p&gt;The problem is to find a feasible $\mathcal{V} (\xi)$. Formally,&lt;/p&gt;
+
+\[\text{find }P, p, \quad \text{subject to conditions (1)-(4) being satisfied}\]
+
+&lt;h3 id=&quot;translating-condition-4&quot;&gt;Translating condition (4)&lt;/h3&gt;
+
+&lt;p&gt;Condition (4) requires,&lt;/p&gt;
+
+\[\left[ \begin{array}{l}
+     \mathbf{x}_1\\
+     \mathbf{g}_1
+   \end{array} \right]^{\top} (P \otimes I_d) \left[ \begin{array}{l}
+     \mathbf{x}_1\\
+     \mathbf{g}_1
+   \end{array} \right] + q \mathbf{f}_1 \leq \rho^2 \left[ \begin{array}{l}
+     \mathbf{x}_0\\
+     \mathbf{g}_0
+   \end{array} \right]^{\top} (P \otimes I_d) \left[ \begin{array}{l}
+     \mathbf{x}_0\\
+     \mathbf{g}_0
+   \end{array} \right] + \rho^2 q \mathbf{f}_0.\]
+
+&lt;p&gt;Since the left- and right-hand sides are defined over different variables, we rewrite the inequality by introducing the stacked vector&lt;/p&gt;
+
+\[\mathbf{b} =
+\begin{bmatrix}
+\mathbf{x}_0 \\
+\mathbf{g}_0 \\
+\mathbf{g}_1 \\
+f_0 \\
+f_1
+\end{bmatrix}.\]
+
+&lt;p&gt;With appropriate selector matrices, we can write&lt;/p&gt;
+
+\[\begin{aligned}
+\begin{bmatrix}\mathbf{x}_1 \\ \mathbf{g}_1 \end{bmatrix}
+&amp;amp;= \Bigl( \begin{bmatrix} I^x_1 \\ I^g_1 \end{bmatrix} \otimes I_d \Bigr)\mathbf{b}, 
+&amp;amp;\quad f_1 &amp;amp;= I^f_1 \mathbf{b}, \\
+\begin{bmatrix}\mathbf{x}_0 \\ \mathbf{g}_0 \end{bmatrix}
+&amp;amp;= \Bigl( \begin{bmatrix} I^x_0 \\ I^g_0 \end{bmatrix} \otimes I_d \Bigr)\mathbf{b}, 
+&amp;amp;\quad f_0 &amp;amp;= I^f_0 \mathbf{b}.
+\end{aligned}\]
+
+&lt;p&gt;Therefore, condition (4) is equivalent to&lt;/p&gt;
+
+\[\mathbf{b}^{\top}
+\Biggl(
+\Bigl(
+\rho^2 
+\begin{bmatrix} I^x_0 \\ I^g_0 \end{bmatrix}^{\top} 
+P 
+\begin{bmatrix} I^x_0 \\ I^g_0 \end{bmatrix}
+-
+\begin{bmatrix} I^x_1 \\ I^g_1 \end{bmatrix}^{\top} 
+P 
+\begin{bmatrix} I^x_1 \\ I^g_1 \end{bmatrix}
+\Bigr)\otimes I_d
+\Biggr)\mathbf{b}
++ (\rho^2 q I^f_0 - q I^f_1)\mathbf{b}
+\geq 0.
+\tag{C4}\]
+
+&lt;p&gt;&lt;strong&gt;Using interpolation conditions.&lt;/strong&gt;  Inequality (C4) is difficult to verify directly. However, it becomes tractable once we use the interpolation properties of the function class. So far, we have not exploited the fact that the points $(x_0,g_0,f_0)$ and $(x_1,g_1,f_1)$ must lie on the same $L$-smooth, $\mu$-strongly convex function.&lt;/p&gt;
+
+&lt;p&gt;From interpolation theory, the following are equivalent:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;There exists $f \in \mathcal{F}_{\mu,L}$ such that&lt;/p&gt;
+
+\[g_k = \nabla f(x_k), \quad f_k = f(x_k), \quad \forall k \in \{0,1\};\]
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;For all $i,j \in {0,1,\star}$, the quadratic inequalities hold:&lt;/p&gt;
+
+\[\phi_{ij} := (L-\mu)(f_i - f_j)
++
+\begin{bmatrix}
+x_i \\ x_j \\ g_i \\ g_j
+\end{bmatrix}^{\top}
+(M^1 \otimes I_d)
+\begin{bmatrix}
+x_i \\ x_j \\ g_i \\ g_j
+\end{bmatrix}
+\geq 0,
+\tag{I}\]
+
+    &lt;p&gt;where $M^1 \in \mathbb{S}^4$ is a fixed symmetric matrix depending only on $L,\mu$.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(I) can be expressed in terms of $\mathbf{b}$ as&lt;/p&gt;
+
+\[\mathbf{b}^{\top}
+\Bigl(
+\underbrace{
+\begin{bmatrix} I^x_i \\ I^x_j \\ I^g_i \\ I^g_j \end{bmatrix}^{\top}
+M^1
+\begin{bmatrix} I^x_i \\ I^x_j \\ I^g_i \\ I^g_j \end{bmatrix}
+}_{M^1_{ij}}
+\otimes I_d
+\Bigr)\mathbf{b}
++
+\underbrace{(L-\mu)(I^f_i - I^f_j)}_{m_{ij}}\mathbf{b} \geq 0.\]
+
+&lt;p&gt;&lt;strong&gt;The SDP formulation.&lt;/strong&gt; Paper [1] shows that inequality (C) holds if and only if there exist nonnegative multipliers $\eta_{ij} \geq 0$ such that&lt;/p&gt;
+
+\[\begin{aligned}
+\sum_{i,j \in \mathcal{I}} \eta_{ij} M^1_{ij}
+&amp;amp;\;\preceq\;
+\rho^2
+\begin{bmatrix} I^x_0 \\ I^g_0 \end{bmatrix}^{\top} P \begin{bmatrix} I^x_0 \\ I^g_0 \end{bmatrix}
+-
+\begin{bmatrix} I^x_1 \\ I^g_1 \end{bmatrix}^{\top} P \begin{bmatrix} I^x_1 \\ I^g_1 \end{bmatrix}, 
+\\
+\sum_{i,j \in \mathcal{I}} \eta_{ij} m_{ij}
+&amp;amp;\;\leq\;
+\rho^2 q I^f_0 - q I^f_1.
+\end{aligned} \tag{SDP-1}\]
+
+&lt;h3 id=&quot;translating-condition-1&quot;&gt;Translating condition (1)&lt;/h3&gt;
+
+&lt;p&gt;Condition (1) requires&lt;/p&gt;
+
+\[\begin{bmatrix}
+\mathbf{x}_0 \\
+\mathbf{g}_0
+\end{bmatrix}^{\top}
+(P \otimes I_d)
+\begin{bmatrix}
+\mathbf{x}_0 \\
+\mathbf{g}_0
+\end{bmatrix}
++ q f_0 \;\;\geq\; 0,
+\quad \forall\, \mathbf{x}_0, \mathbf{g}_0, f_0.
+\tag{C1}\]
+
+&lt;p&gt;Using interpolation between $(x_0, g_0, f_0)$ and the reference point $(x_{\star}, g_{\star}, f_{\star}) = (0,0,0)$, we have&lt;/p&gt;
+
+\[\phi := (L-\mu)\, f_0 
++ 
+\begin{bmatrix}
+\mathbf{x}_0 \\
+\mathbf{g}_0
+\end{bmatrix}^{\top}
+(M^0 \otimes I_d)
+\begin{bmatrix}
+\mathbf{x}_0 \\
+\mathbf{g}_0
+\end{bmatrix}
+\;\;\geq 0,\]
+
+&lt;p&gt;where $M^0 \in \mathbb{S}^2$ is a fixed symmetric matrix depending only on $L,\mu$.&lt;/p&gt;
+
+&lt;p&gt;Therefore, inequality (C1) holds if there exists $\lambda \geq 0$ such that&lt;/p&gt;
+
+\[\begin{aligned}
+\lambda M^0 &amp;amp;\;\preceq\; P,  \\
+\lambda (L-\mu) &amp;amp;\;\leq\; q. 
+\end{aligned}\tag{SDP-2}\]
+
+&lt;p&gt;Conditions (2) and (3) are automatically ensured when (SDP-1) and (SDP-2) hold.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-complete-sdp-formulation&quot;&gt;The complete SDP formulation&lt;/h3&gt;
+
+&lt;p&gt;Putting everything together: given contraction ratio $\rho$, the SDP problem to find a quadratic potential function is&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;($\rho$-SDP)&lt;/strong&gt;: Find $P \in \mathbb{S}^2$, $q \in \mathbb{R}$, multipliers $\eta_{ij} \geq 0$ for $i,j \in {0,1,\star}$, and $\lambda \geq 0$ such that&lt;/p&gt;
+
+\[\begin{aligned}
+0 &amp;amp;\;\preceq\; 
+\rho^2 
+\begin{bmatrix} I^x_0 \\ I^g_0 \end{bmatrix}^{\top} 
+P 
+\begin{bmatrix} I^x_0 \\ I^g_0 \end{bmatrix}
+-
+\begin{bmatrix} I^x_1 \\ I^g_1 \end{bmatrix}^{\top} 
+P 
+\begin{bmatrix} I^x_1 \\ I^g_1 \end{bmatrix}
+- \sum_{i,j \in \mathcal{I}} \eta_{ij} M^1_{ij}, \\
+0 &amp;amp;\;\leq\; (\rho^2 q I^f_0 - q I^f_1) - \sum_{i,j \in \mathcal{I}} \eta_{ij} m_{ij}, \\
+0 &amp;amp;\;\preceq\; P - \lambda M^0, \\
+0 &amp;amp;\;\leq\; q - \lambda (L-\mu).
+\end{aligned}\]
+
+&lt;p&gt;Paper [1] proves that a quadratic potential function with contraction rate $\rho$ exists if and only if this SDP is feasible.&lt;/p&gt;
+
+&lt;h2 id=&quot;find-rho&quot;&gt;Find $\rho$&lt;/h2&gt;
+
+&lt;p&gt;Given $\rho$, we solve &lt;strong&gt;($\rho$-SDP)&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;If the problem is feasible, the algorithm admits a Lyapunov function with contraction rate at most $\rho$.&lt;/li&gt;
+  &lt;li&gt;If the problem is infeasible, the algorithm cannot contract at rate $\rho$.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To obtain the tightest convergence guarantee, we perform a bisection search on the interval $[0,1]$. Starting from the midpoint, we test feasibility:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;if feasible, we continue the search on the left subinterval;&lt;/li&gt;
+  &lt;li&gt;if infeasible, we continue on the right subinterval.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The procedure terminates when we identify the smallest $\rho$ for which &lt;strong&gt;($\rho$-SDP)&lt;/strong&gt; is feasible.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 06 Sep 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/09/06/AutoLyap/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/09/06/AutoLyap/</guid>
+        
+        <category>Optimization</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Travel Album | Hangzhou, Yichang, and Xi&apos;an</title>
+        <description>&lt;h2 id=&quot;hangzhou&quot;&gt;Hangzhou&lt;/h2&gt;
+
+&lt;p&gt;On May 10, I took a one-day trip with my family to Hangzhou, where we celebrated a special Mother’s Day by visiting West Lake and Lingyin Temple.&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;div style=&quot;display: flex; justify-content: center; gap: 10px;&quot;&gt;
+    &lt;img src=&quot;/img/Hangzhou/1.jpeg&quot; alt=&quot;Subfigure 1&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;/img/Hangzhou/2.jpeg&quot; alt=&quot;Subfigure 2&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;figcaption style=&quot;text-align: center; margin-top: 8px;&quot;&gt;
+    West Lake at sunset.
+  &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&quot;yichang&quot;&gt;Yichang&lt;/h2&gt;
+
+&lt;p&gt;In April, my friends and I went on a graduation trip to Yichang. Beyond the beautiful scenery, what touched me most was the hospitality of the local people. I hope I can share the same warmth with others I meet in the future. The following photos were taken by Chuwen.&lt;/p&gt;
+
+&lt;figure style=&quot;text-align: center;&quot;&gt;
+  &lt;img src=&quot;/img/Yichang/1.jpeg&quot; alt=&quot;test&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center; margin-top: 8px;&quot;&gt;A tea garden in the rain.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;figure style=&quot;text-align: center;&quot;&gt;
+  &lt;img src=&quot;/img/Yichang/3.jpeg&quot; alt=&quot;test&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;
+  &lt;figcaption style=&quot;text-align: center; margin-top: 8px;&quot;&gt;Qingjiang River 清江画廊&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id=&quot;xian&quot;&gt;Xi’an&lt;/h2&gt;
+
+&lt;p&gt;During the graduation break, I traveled to Xi’an with my sisters. Among all the sights we visited, my favorite was the lively pedestrian street beneath the city wall—where I also picked up a beautiful fan!&lt;/p&gt;
+
+&lt;figure&gt;
+  &lt;div style=&quot;display: flex; justify-content: center; gap: 10px;&quot;&gt;
+    &lt;img src=&quot;/img/Xian/1.jpeg&quot; alt=&quot;Subfigure 1&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+    &lt;img src=&quot;/img/Xian/2.jpeg&quot; alt=&quot;Subfigure 2&quot; style=&quot;max-width: 45%; height: auto;&quot; /&gt;
+  &lt;/div&gt;
+  &lt;figcaption style=&quot;text-align: center; margin-top: 8px;&quot;&gt;
+    书院门步行街里的店铺，和我的扇子
+  &lt;/figcaption&gt;
+&lt;/figure&gt;
+</description>
+        <pubDate>Fri, 01 Aug 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/08/01/HangZhou/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/08/01/HangZhou/</guid>
+        
+        <category>Travel✈️</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Collection | words that stay</title>
+        <description>&lt;p&gt;This blog is a collection of excerpts that have stayed with me—lines from poems, lyrics, and books. I’m not an expert in literature, but I write these notes to capture and share the personal connections I feel with these beautiful words.&lt;/p&gt;
 
 &lt;hr /&gt;
 
-&lt;h2 id=&quot;install-anaconda&quot;&gt;Install Anaconda&lt;/h2&gt;
+&lt;h2 id=&quot;flowers&quot;&gt;Flowers&lt;/h2&gt;
+
+&lt;p&gt;Lyrics by &lt;em&gt;Miley Cyrus&lt;/em&gt;&lt;/p&gt;
+
 &lt;blockquote&gt;
-  &lt;p&gt;&lt;a href=&quot;https://www.anaconda.com/&quot;&gt;Anaconda&lt;/a&gt; is a free and open-source distribution of the Python and R programming languages for scientific computing, that aims to simplify package management and deployment.&lt;/p&gt;
+  &lt;p&gt;I can buy myself flowers&lt;/p&gt;
+
+  &lt;p&gt;Write my name in the sand&lt;/p&gt;
+
+  &lt;p&gt;Talk to my self for hours&lt;/p&gt;
+
+  &lt;p&gt;Say things you don’t understand&lt;/p&gt;
+
+  &lt;p&gt;I can take myself dancing&lt;/p&gt;
+
+  &lt;p&gt;And I can hold my own hand&lt;/p&gt;
+
+  &lt;p&gt;Yeah, I can love me better than you can&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;strong&gt;You can download anaconda &lt;a href=&quot;https://www.anaconda.com/distribution/#download-section&quot;&gt;here&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;figure style=&quot;text-align: center;&quot;&gt;
+  &lt;img src=&quot;/img/flw.jpeg&quot; alt=&quot;test&quot; style=&quot;width: 60%; height: auto;&quot; /&gt;
+  &lt;figcaption style=&quot;font-size: 0.9em; color: #555;&quot;&gt;Literally, buying meself flowers.&lt;/figcaption&gt;
+&lt;/figure&gt;
 
-&lt;p&gt;One of the advantage of anaconda is that it can create &lt;strong&gt;isolated environment&lt;/strong&gt; in your device, and you can configure any libraries and toolkits in the ‘env’ without affect other environment. Once you are nor satisfied of your configuration, you can simplily delete the environment.&lt;/p&gt;
+&lt;h2 id=&quot;possibilities&quot;&gt;Possibilities&lt;/h2&gt;
 
-&lt;p&gt;Note that in you are in &lt;strong&gt;China&lt;/strong&gt;, download anaconda might take a long time due to some resons that cannot say. Instead, you can download it from &lt;a href=&quot;https://mirror.tuna.tsinghua.edu.cn/help/anaconda/&quot;&gt;&lt;strong&gt;Tsinghua mirror&lt;/strong&gt;&lt;/a&gt;, and install it &lt;strong&gt;manually&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Poem by &lt;em&gt;Wislawa Szymborska&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;After downloading this successfully, try to run the installation file.
-For example, if you use ubuntu, you can cd to the path of the sh file and run the following command:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;I prefer exceptions&lt;/p&gt;
 
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./Anaconda3-5.3.1-Linux-x86_64.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;Attention that you should change the command above to your own installation file name.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+  &lt;p&gt;I prefer to leave early&lt;/p&gt;
 
-&lt;p&gt;Then you will successfully install Anaconda!&lt;/p&gt;
+  &lt;p&gt;I prefer talking to doctors about something else&lt;/p&gt;
 
-&lt;h2 id=&quot;create-new-environment-by-conda&quot;&gt;Create new environment by conda&lt;/h2&gt;
+  &lt;p&gt;I prefer the absurdity of writing poems&lt;/p&gt;
 
-&lt;p&gt;If you are unwilling to create conda environment (maybe because of lazy), you can skip this section. However, I strongly reconmend you to create this &lt;strong&gt;for the convience in the future&lt;/strong&gt;.&lt;/p&gt;
+  &lt;p&gt;to the absurdity of not writing poems&lt;/p&gt;
 
-&lt;p&gt;Run the command below:&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda create &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; tf
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/20190328post.jpg&quot; alt=&quot;picture1&quot; /&gt;&lt;/p&gt;
+  &lt;p&gt;I prefer, where love’s concerned, nonspecific anniversaries&lt;/p&gt;
 
-&lt;p&gt;‘tf’ is the name of your new conda environment, you can try other names as your own interest.&lt;/p&gt;
+  &lt;p&gt;that can be celebrated every day&lt;/p&gt;
 
-&lt;p&gt;For other management you conda env, you can read &lt;a href=&quot;https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html?highlight=environment&quot;&gt;this&lt;/a&gt;.&lt;/p&gt;
+  &lt;p&gt;I prefer zeros on the loose&lt;/p&gt;
 
-&lt;h2 id=&quot;install-tensorflow&quot;&gt;Install Tensorflow&lt;/h2&gt;
+  &lt;p&gt;to those lined up behind a cipher&lt;/p&gt;
 
-&lt;p&gt;First, you need to change to the env you have just built by conda:&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;activete tf
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/20190328post2.jpg&quot; alt=&quot;picture2&quot; /&gt;&lt;/p&gt;
+  &lt;p&gt;I prefer keeping in mind even the possibility&lt;/p&gt;
 
-&lt;p&gt;For Chinese users, before starting the installation, you may change the source of conda as the same reason before. For more details, read the webcite of &lt;a href=&quot;https://mirror.tuna.tsinghua.edu.cn/help/anaconda/&quot;&gt;Tsinghua Mirror&lt;/a&gt;.
-Chinese users should type in this:&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda config &lt;span class=&quot;nt&quot;&gt;--add&lt;/span&gt; channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-conda config &lt;span class=&quot;nt&quot;&gt;--add&lt;/span&gt; channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-conda config &lt;span class=&quot;nt&quot;&gt;--set&lt;/span&gt; show_channel_urls &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+  &lt;p&gt;that existence has its own reason for being&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;Afterwards, type in the command to install TensorFlow you need:&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;tensorflow-gpu
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;/img/20190328post3.jpg&quot; alt=&quot;picture3&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;I first encountered this poem in an elective course on Nobel Prize in Literature, taught by Prof. Dong Ding at SUFE. For our final assignment, she asked each of us to write our own &lt;em&gt;Possibilities&lt;/em&gt;. Later, she compiled our poems into a collective version, &lt;em&gt;Possibilities for Class 2023&lt;/em&gt;.&lt;/p&gt;
 
-&lt;p&gt;If you want to install a specific version of tensorflow-gpu or cpu veison, you can change the command like this:&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;tensorflow-gpu&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.10.0  &lt;span class=&quot;c&quot;&gt;#if you want to install 1.10.0 version&lt;/span&gt;
-conda &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;tensorflow  &lt;span class=&quot;c&quot;&gt;#if you want to install cpu version&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;After anaconda solve the environment, you just need to type in ‘y’ to confirm the installation.&lt;/p&gt;
+&lt;p&gt;This poem is both accessible and powerful, especially when it resonates within a diverse group of people. I still think back to that class as one of the most rewarding experiences in my undergraduate years. If you’re a SUFE student, I highly recommend taking it.&lt;/p&gt;
 
-&lt;h2 id=&quot;anaconda-will-automatically-install-other-libs-and-toolkits-needed-by-tensorfloweg-cuda-and-cudnn-so-you-have-no-need-to-worry-about-this&quot;&gt;Anaconda will &lt;strong&gt;automatically&lt;/strong&gt; install other libs and toolkits needed by tensorflow(e.g. CUDA, and cuDNN), so you have no need to worry about this.&lt;/h2&gt;
+&lt;h2 id=&quot;zen-mind-beginners-mind&quot;&gt;Zen Mind, Beginner’s Mind&lt;/h2&gt;
 
-&lt;p&gt;Type in &lt;code class=&quot;highlighter-rouge&quot;&gt;python&lt;/code&gt; to enter the python environment.&lt;/p&gt;
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;tensorflow&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;tf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__version__&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;When you see the version of tensorflow, such as 1.10.0, you have successfully install it.&lt;/p&gt;
+&lt;p&gt;Book by &lt;em&gt;Shunryu Suzuki&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;That’s all, Thank you.&lt;/p&gt;
+&lt;p&gt;The idea of keeping a &lt;em&gt;beginner’s mind&lt;/em&gt; is similar to the saying, “stay hungry, stay foolish.” At any moment, we can return to being beginners—free from the weight of past achievements and unburdened by desire or fear for the future.&lt;/p&gt;
 
-&lt;p&gt;If you encounter any problems, you can open an issue in the &lt;strong&gt;Comment area&lt;/strong&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;If your mind is empty, it is always ready for anything; it is open to everything. In the beginner’s mind there are many possibilities; in the expert’s mind there are few. In the beginner’s mind there is no thought, “I have attained something.” All self-centered thoughts limit our vast mind. When we have no thought of achievement, no thought of self, we are true beginners.&lt;/p&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;Good books often echo this common truth. You can find the same spirit of beginner’s mind in &lt;em&gt;The Power of Now&lt;/em&gt;, &lt;em&gt;Siddhartha&lt;/em&gt;, and in yoga practice, though expressed in different language.&lt;/p&gt;
+
+&lt;p&gt;As a beginner, you listen carefully without comparing to what you already know; you keep doing without clinging to goals; and you forget yourself in the process:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;When you do something, you should burn yourself completely, as a good bonfire, leaving no trace of yourself.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;a-room-of-ones-own&quot;&gt;A Room of One’s Own&lt;/h2&gt;
+
+&lt;p&gt;Book by &lt;em&gt;Virginia Woolf&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;This book explores the relationship between women and fiction. It is often regarded as a cornerstone of feminist writing. The book doesn’t try to provide final answers, but I found that many of Woolf’s ideas resonate with my own reflections on gender and research.&lt;/p&gt;
+
+&lt;p&gt;As a woman in academia, I often enter rooms filled mostly with male researchers. It is hard not to wonder why this imbalance exists, and easy to slip into the mindset of “fighting for women in academia.” But my personal belief is that research itself has no gender. To carry the weight of “sexual awareness” into research can risk distorting its purity. Woolf articulated this with clarity:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The very first sentence that I would write here, I said, crossing over to the writing-table and taking up the page headed Women and Fiction, is that it is fatal for anyone who writes to think of their sex. It is fatal to be a man or woman pure and simple; one must be woman-manly or man-womanly.&lt;/p&gt;
+&lt;/blockquote&gt;
+
 </description>
-        <pubDate>Fri, 29 Mar 2019 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2019/03/29/Install-TensorFlow-GPU-by-Anaconda(conda-install-tensorflow-gpu)/</link>
-        <guid isPermaLink="true">http://localhost:4000/2019/03/29/Install-TensorFlow-GPU-by-Anaconda(conda-install-tensorflow-gpu)/</guid>
+        <pubDate>Sun, 13 Jul 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/07/13/poems/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/07/13/poems/</guid>
         
-        <category>ubuntu</category>
+        <category>Literature</category>
         
-        <category>TensorFlow</category>
         
-        <category>深度学习</category>
+      </item>
+    
+      <item>
+        <title>Reflections from My First Academic Talk</title>
+        <description>&lt;p&gt;I just gave my first academic talk at a conference at SJTU IIC yesterday. I presented an ongoing project, and I had hesitated for a long time about whether to give a talk on an “incomplete” work. It turns out much of my nervousness was unnecessary—I received a lot of helpful feedback from the audience. So I’m writing this post to summarize some lessons I’ve learned during this journey. Many of them echo the insights from &lt;em&gt;Paths to Research&lt;/em&gt; by Christopher Ryan and Runshan Fu (which I highly recommend!): &lt;a href=&quot;https://christopher-thomas-ryan.github.io/papers/Paths_to_Research.pdf&quot;&gt;Paths to Research (PDF)&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;be-confident&quot;&gt;Be confident&lt;/h2&gt;
+
+&lt;p&gt;In my first draft of the slides, I presented the results with a negative tone. I said things like “we use this &lt;em&gt;strong&lt;/em&gt; assumption” or “this technique &lt;em&gt;might&lt;/em&gt; be helpful.” I did this because I was afraid that some smart audience member would immediately identify the limitations and criticize my work, so I tried to preempt them by pointing out the weaknesses myself.&lt;/p&gt;
+
+&lt;p&gt;It was my collaborator who reminded me to be confident—especially when presenting to others. If your entire talk focuses on what &lt;em&gt;doesn’t&lt;/em&gt; work, the audience might wonder why they’re even there. Even if someone in the room is an expert, they haven’t spent 30+ hours a week thinking about your specific research question. You are the person who knows the most about your work, and that alone is reason enough to speak with confidence.&lt;/p&gt;
+
+&lt;h2 id=&quot;on-the-purpose-of-a-talk&quot;&gt;On the purpose of a talk&lt;/h2&gt;
+
+&lt;p&gt;Here’s my personal understanding of what a talk is for:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;It’s an advertisement for your work. You’re not there to explain every technical detail. Your goal is to highlight the most compelling parts—motivation and key results—and spark enough interest that the audience will look up your paper afterward.&lt;/li&gt;
+  &lt;li&gt;It’s a chance to collect feedback. In this sense, presenting an ongoing or incomplete project is actually &lt;em&gt;better&lt;/em&gt;. Since it’s not published yet, you can still revise it freely. I got many valuable suggestions this way—it’s honestly one of the most efficient forms of peer review, better than sending a draft to other researchers.&lt;/li&gt;
+  &lt;li&gt;It’s an opportunity to connect with people. Beyond the Q&amp;amp;A, audience members might approach you afterward to talk. One PhD student came up to me and said how happy she was that she finally understood an optimization talk—she works in Operations Management and usually gets lost. Her words reminded me of the importance of making my talk accessible. If someone gets lost early on, they may spend the rest of the talk feeling uncomfortable or even doubting themselves.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;prepare-for-questions&quot;&gt;Prepare for questions&lt;/h2&gt;
+
+&lt;p&gt;I didn’t prepare for the Q&amp;amp;A at all. I figured, “It’s the last talk of the conference—who’s going to ask questions?” Big mistake. I got so nervous that I didn’t fully understand the question and gave an off-topic answer. That moment cost me the chance to explain my work more clearly and in greater depth.&lt;/p&gt;
+
+&lt;p&gt;Luckily, I later found the questioners and had some great follow-up conversations. But I learned the hard way that anticipating possible questions—and rehearsing your answers—is absolutely worth the effort.&lt;/p&gt;
+
+&lt;p&gt;Finally, I’m deeply grateful to my collaborator for helping me rehearse, and to everyone in the audience for being there and offering feedback. Their encouragement gave me a big boost of confidence for my future research journey.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 07 Jul 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/07/07/FirstTalk/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/07/07/FirstTalk/</guid>
         
-        <category>CUDA</category>
+        <category>Tips</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Helpful Resources in Grad School</title>
+        <description>&lt;p&gt;I’ve benefited greatly from reading advice posts—especially during my graduate school application. In this post, I’ve collected some of the most helpful resources I’ve come across, covering both graduate school applications and research life. I will continue to update this list as I discover new and insightful advice.&lt;/p&gt;
+
+&lt;p&gt;As a gentle disclaimer, I’ll borrow a word of caution from &lt;em&gt;Carl Sandburg&lt;/em&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Beware of advice, even this.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;applying-to-graduate-school&quot;&gt;Applying to Graduate School&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://csrankings.org/advice.html&quot;&gt;Advice on Applying to Grad School in Computer Science&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/how-to-apply-and-get-in-to-graduate-school-in-science-mathematics-engineering-or-computer-science/&quot;&gt;HOWTO: Get into grad school for science, engineering, math and computer science&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/how-to-recommendation-letter/&quot;&gt;How to get a great letter of recommendation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://bldavies.com/blog/applying-economics-phd-programs/#interviews&quot;&gt;Applying to economics PhD programs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cs-sop.notion.site/CS-PhD-Statements-of-Purpose-df39955313834889b7ac5411c37b958d&quot;&gt;CS PhD Statements of Purpose&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cs.cmu.edu/~pavlo/blog/2015/10/how-to-write-a-bad-statement-for-a-computer-science-phd-admissions-application.html&quot;&gt;How to Write a Bad Statement for a Computer Science Ph.D. Admissions Application&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;giving-talks&quot;&gt;Giving Talks&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://graphics.stanford.edu/~kayvonf/misc/cleartalktips.pdf&quot;&gt;Tips for Giving Clear Talks&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/academic-presentation-tips/&quot;&gt;10 tips for academic talks&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cs.jhu.edu/~jason/advice/how-to-give-a-talk.html&quot;&gt;How to Prepare a Talk&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://christopher-thomas-ryan.github.io/papers/Paths_to_Research.pdf&quot;&gt;(Highly Recommend!) Paths to Research, Chapter 10&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;writing-cvs&quot;&gt;Writing CVs&lt;/h2&gt;
+
+&lt;p&gt;Tips from Course ESOLLANG 697 at Stanford:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Do &lt;em&gt;not&lt;/em&gt; include photo, race, religion, nationality, birthday, gender, etc.&lt;/li&gt;
+  &lt;li&gt;Highlight the last name. If your name is Zhang San in Chinese pinyin, then use (Zhang, San / San ZHANG). If it’s scary to use all caps, use &lt;em&gt;small cap&lt;/em&gt; instead. In LaTex, it’s (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;San \textsc{Zhang}&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;Include mailing address, phone number, and email address.&lt;/li&gt;
+  &lt;li&gt;Do &lt;em&gt;not&lt;/em&gt; include experience prior to college.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;writing-emails&quot;&gt;Writing Emails&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://lauraportwoodstacer.com/how-to-email-your-professor-without-being-annoying-af&quot;&gt;How to Email Your Professor (without being annoying AF)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Tips from Course ESOLLANG 697 at Stanford:&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;Start with your request, or who you are if this is your first time emailing that person, rather than “I hope this email finds you well”.&lt;/li&gt;
+      &lt;li&gt;Be short.&lt;/li&gt;
+      &lt;li&gt;Salutation: start with “Dear Professor [Last Name]”, and switch to “Hello [First Name]” when you have close collaboration with him/her.&lt;/li&gt;
+      &lt;li&gt;The larger the request, the more polite the language. Use “I wonder”, “if you might be willing to” or past tense to create distance and politeness. Also remember to give the receiver options and not to impose.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;technical-writing&quot;&gt;Technical Writing&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cs.ubc.ca/~schmidtm/Courses/Notes/writing.pdf&quot;&gt;Some Notes on Writing, by Prof. Mark Schmidt&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;professional-research-advice&quot;&gt;Professional Research Advice&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cs.jhu.edu/~jason/advice/&quot;&gt;Advice for Research Students, by Prof. Jason Eisner&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/&quot;&gt;Blog of Prof. Matt Might&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://homes.cs.washington.edu/~mernst/advice/agre-networking-on-the-network-20050814.html&quot;&gt;Networking on the Network:  A Guide to Professional Skills for PhD Students, by Prof. Phil Agre&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://christopher-thomas-ryan.github.io/papers/Paths_to_Research.pdf&quot;&gt;Book: Paths to Research, by Christopher Thomas Ryan and Runshan Fu&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;miscellaneous&quot;&gt;Miscellaneous&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;A Science History Blog: &lt;a href=&quot;https://etherwave.wordpress.com/about/&quot;&gt;Ether Wave Propaganda: a history of science blog, by Will Thomas and Christopher Donohue&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Tips for Project Framing: &lt;a href=&quot;https://stanfordh4d.substack.com/p/technology-transfer-for-defense-leveraging&quot;&gt;Leveraging the Heilmeier Catechism: A Blueprint for Effective Project Framing&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Fun: &lt;a href=&quot;https://xkcd.com&quot;&gt;xkcd: A webcomic of romance, sarcasm, math, and language&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Sun, 22 Jun 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/06/22/Resource/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/06/22/Resource/</guid>
+        
+        <category>Tips</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Routines for Setting Up a New Server</title>
+        <description>&lt;p&gt;Lately, I’ve been running deep learning experiments across different computing clusters. Every time I switch to a new server, I have to go through a series of setup steps to get my environment ready. To avoid repeating the same work from scratch each time, I decided to document my routine here. This post mainly serves as a personal checklist, but it might also be useful to others facing similar tasks. I’ll keep it updated whenever I add new steps to the routine.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[!NOTE]&lt;/p&gt;
+
+  &lt;p&gt;[Updated 10/25] Recently, I found a useful AI tool built in the Mac Terminal - &lt;a href=&quot;https://www.warp.dev/&quot;&gt;Warp&lt;/a&gt;. I can use it to generate commands and scripts, check the environment of a new server, analyze errors, and automate pipeline. It is particularly helpful when using the remote server. So the routines in this post has been replaced by this wonderful AI tool. I also recommend you giving it a try!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;connect-to-github-account&quot;&gt;Connect to GitHub Account&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Generate an SSH key&lt;/p&gt;
+
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh-keygen &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; ed25519 &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;your_email@example.com&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;After generating the key, display it with:&lt;/p&gt;
+
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.ssh/id_ed25519.pub
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Add the public key to GitHub.&lt;/p&gt;
+
+    &lt;p&gt;Navigate to &lt;strong&gt;Settings &amp;gt; SSH and GPG keys&lt;/strong&gt;&lt;/p&gt;
+
+    &lt;p&gt;Click &lt;strong&gt;“New SSH key”&lt;/strong&gt;, then paste the copied content&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Testing SSH connection.&lt;/p&gt;
+
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh &lt;span class=&quot;nt&quot;&gt;-T&lt;/span&gt; git@github.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;If prompted, type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yes&lt;/code&gt; and press Enter.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;set-up-a-conda-environment&quot;&gt;Set Up a Conda Environment&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create a new environment.&lt;/p&gt;
+
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda create &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; myenv &lt;span class=&quot;nv&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Use a faster pip mirror&lt;/p&gt;
+
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip config &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+pip config &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;install.trusted-host pypi.tuna.tsinghua.edu.cn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;set-up-hugging-face-mirror&quot;&gt;Set Up Hugging Face Mirror&lt;/h2&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HF_ENDPOINT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://hf-mirror.com&quot;&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;export HF_ENDPOINT=&quot;https://hf-mirror.com&quot;&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Then reload your shell:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Fri, 23 May 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/05/23/ServerEnv/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/23/ServerEnv/</guid>
+        
+        <category>Tips</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Optimizing EPLB by Integer (Conic) Linear Programming</title>
+        <description>&lt;p&gt;In the last post, I reviewed the code of &lt;a href=&quot;https://github.com/deepseek-ai/EPLB&quot;&gt;EPLB&lt;/a&gt; (Expert Parallelism Load Balancer). As a quick recap, EPLB is a toolbox for expert load balancing in the MoE architecture, it outputs the expert replication plan, grouping plan, and reallocation plan. The main idea of the whole algorithm is to decompose the joint decision problems into three subproblems and solve each by greedy methods.&lt;/p&gt;
+
+&lt;p&gt;The main algorithms used are &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;balanced expert replication&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;balanced packing&lt;/code&gt;. In EPLB, they are all solved by greedy algorithms (see my last post for the pseudocode). In this post, I will present how to solve these problems by optimization, in particular, by integer (conic) linear programming. Besides optimization formulation, I also implemented these algorithms in Python. The interface is the same as EPLB, and I termed it as IPLB (Integer Programming based Load Balancer). I have opensourced the algorithm on Github:&lt;/p&gt;
+
+&lt;div align=&quot;center&quot;&gt;
+  &lt;a href=&quot;https://github.com/zwyhahaha/IPLB&quot;&gt;https://github.com/zwyhahaha/IPLB&lt;/a&gt;
+&lt;/div&gt;
+&lt;p&gt;Any feedback is welcome!&lt;/p&gt;
+
+&lt;h2 id=&quot;function-replica_experts&quot;&gt;Function: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replica_experts&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Input&lt;/strong&gt;: weights(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_layers&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_log_experts&lt;/code&gt;), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_phy_experts&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Objective&lt;/strong&gt;: replicate experts, for each layer, minimize the maximal workload.&lt;/p&gt;
+
+&lt;p&gt;For each layer $l$, the weight (workload) is $w_l = (w_{l1}, …, w_{le})$, the number of physical experts (replicas) is $c$. The decision variable is the number of replicas for each logical expert, $r_l = (r_{l1}, …, r_{le})$. The optimization problem is,&lt;/p&gt;
+
+\[\begin{array}{rcl}
+  \min_{r_l} &amp;amp; \max_{1 \leq j \leq e}  \frac{w_{l
+  j}}{r_{l j}} &amp;amp; \\
+  \text{s.t.} &amp;amp; \sum_{j = 1}^e r_{l j} \leq c &amp;amp; \\
+  &amp;amp; r_{l j} \in \mathbb{Z}_+ &amp;amp; 
+\end{array}\]
+
+&lt;p&gt;After reformulation,&lt;/p&gt;
+
+\[\begin{array}{rcl}
+  \min_{\alpha, {\mathbf{r}}_l} &amp;amp; \alpha &amp;amp; \\
+  \text{s.t.} &amp;amp; w_{l j} \leq \alpha r_{l j} &amp;amp; \forall 1 \leq j \leq e\\
+  &amp;amp; \sum_{j = 1}^e r_{l j} \leq c &amp;amp; \\
+  &amp;amp; r_{l j} \in \mathbb{Z}_+ &amp;amp; 
+\end{array}\]
+
+&lt;p&gt;The constraint that, $w_{l j} \leq \alpha r_{l j}$ is bilinear. However, since $\alpha$ and $r_{l j}$ are both positive, this constraint is actually convex and is semidefinite cone or second-order cone.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;semidefinite cone&lt;/li&gt;
+&lt;/ol&gt;
+
+\[\left(\begin{array}{cc}
+     \alpha &amp;amp; \sqrt{w_{l j}}\\
+     \sqrt{w_{l j}} &amp;amp; r_{l j}
+   \end{array}\right) \succcurlyeq 0\]
+
+&lt;p&gt;which is equivalent to $\alpha \geq 0, r \geq 0,$$w_{l j} \leq \alpha r_{l 
+j}$.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Second order cone.&lt;/li&gt;
+&lt;/ol&gt;
+
+\[\left(\begin{array}{c}
+     \alpha\\
+     r_{l j}\\
+     \sqrt{2 w_{l j}}
+   \end{array}\right) \in \mathcal{Q}_r^3\]
+
+&lt;p&gt;where $\mathcal{Q}_r^3 = { (x, y, z) \in \mathbb{R}^3 : 2 x y \geq z^2, x 
+\geq 0, y \geq 0 }$ represents rotated second-order cone. Equivalently, this is a second-order cone after linear transformation:&lt;/p&gt;
+
+\[\left(\begin{array}{c}
+     \alpha\\
+     \frac{r_{l j} - \sqrt{2 w_{l j}}}{2}\\
+     \frac{r_{l j} + \sqrt{2 w_{l j}}}{2}
+   \end{array}\right) \in \mathcal{Q}^3\]
+
+&lt;p&gt;where $\mathcal{Q}^3 = { (x, y, z) \in \mathbb{R}^3 : z^2 \geq x^2 + y^2 }$.&lt;/p&gt;
+
+&lt;p&gt;Therefore, the problem &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replica_experts&lt;/code&gt; can be solved by &lt;em&gt;integer conic linear programming&lt;/em&gt;, which is supported by &lt;strong&gt;GUROBI&lt;/strong&gt; and &lt;strong&gt;COPT&lt;/strong&gt;!&lt;/p&gt;
+
+&lt;h2 id=&quot;function-balanced_packing&quot;&gt;Function: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;balanced_packing&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;Input&lt;/strong&gt;: weights(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_layers&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_obj&lt;/code&gt;), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_packs&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Objective&lt;/strong&gt;: assign &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_obj&lt;/code&gt; objects to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_packs&lt;/code&gt; packs, for each layer, minimize the maximal workload among packs.&lt;/p&gt;
+
+&lt;p&gt;For each layer $l$, the weight is ${\mathbf{w}} = (w_1, …, w_n)$. The decision variable is, the assignment from objects to packs $a_{i j}$. The optimization problem is,&lt;/p&gt;
+
+\[\begin{array}{rcl}
+  \min_{ a } &amp;amp; \max_{1 \leq j \leq m}  \sum_{i = 1}^n w_i a_{i j} &amp;amp; \\
+  \text{s.t.} &amp;amp; \sum_{j = 1}^m a_{i j} = 1 &amp;amp; \\
+   &amp;amp; \sum_{i = 1}^n a_{i j} \leq  \frac{n}{m} &amp;amp; \\
+   &amp;amp; a_{i j} \in \{ 0, 1 \} &amp;amp; 
+\end{array}\]
+
+&lt;p&gt;After reformulation,&lt;/p&gt;
+
+\[\begin{array}{rcl}
+  \min_{a} &amp;amp; \alpha &amp;amp; \\
+  \text{s.t.} &amp;amp; \alpha \geq \sum_{i = 1}^n w_i a_{i j} &amp;amp; \forall 1 \leq j \leq m\\
+  &amp;amp; \sum_{j = 1}^m a_{i j} = 1 &amp;amp; \\
+  &amp;amp; \sum_{i = 1}^n a_{i j} \leq  \frac{n}{m} &amp;amp; \\
+  &amp;amp; a_{i j} \in \{ 0, 1 \} &amp;amp; 
+\end{array}\]
+
+&lt;p&gt;which is a standard &lt;em&gt;integer linear programming&lt;/em&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 19 May 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/05/19/IPLB/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/19/IPLB/</guid>
+        
+        <category>Optimization</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Code Review | Expert Parallelism Load Balancer</title>
+        <description>&lt;p&gt;DeepSeek recently released a simple yet effective toolbox for load balancing in Mixture of Experts (MoE) architectures. The &lt;a href=&quot;https://github.com/deepseek-ai/EPLB&quot;&gt;EPLB toolbox&lt;/a&gt; consists of only one Python file and has already received 1.2k stars on GitHub. The algorithm is heuristic, straightforward, and influential. However, it is described only in the README file—there’s no accompanying paper or technical report. So I spent about an hour reading through its ~160 lines of code and summarized the workflow in this blog.&lt;/p&gt;
+
+&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;If you’re unfamiliar with the MoE architecture, the following resources may be helpful:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://huggingface.co/blog/moe&quot;&gt;Blog by HuggingFace: Mixture of Experts Explained&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2401.06066&quot;&gt;Paper by DeepSeek: DeepSeekMoE&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2412.19437v1&quot;&gt;DeepSeek-V3 Technical Report&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;MoE models activate only a few experts for each input instead of passing the data through the entire network. This allows for scaling up model parameters without significantly increasing computation. In short, an MoE layer includes a router and an expert layer. For each input state, the router assigns an affinity score to each expert. Then, a top-K strategy selects the top K experts to compute the output.&lt;/p&gt;
+
+&lt;p&gt;Despite their success, MoE models often suffer from &lt;strong&gt;unbalanced expert workloads&lt;/strong&gt;. This imbalance can lead to router collapse and reduced computational efficiency. To address this, researchers have proposed solutions like:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Adding auxiliary load-balancing loss when training the router,&lt;/li&gt;
+  &lt;li&gt;Introducing bias when selecting top-K experts,&lt;/li&gt;
+  &lt;li&gt;Solving an integer programming problem for load balancing.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;EPLB (Expert Parallelism Load Balancer) is DeepSeek’s Python-based tool that helps replicate and allocate experts to GPUs across different nodes. It aims to balance the workload at three levels: nodes, GPUs, and experts.&lt;/p&gt;
+
+&lt;h2 id=&quot;algorithm-explained&quot;&gt;Algorithm explained&lt;/h2&gt;
+
+&lt;p&gt;The core idea of EPLB involves two main steps:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Decomposing&lt;/strong&gt; the joint decision problem (replication and reallocation) into three smaller subproblems.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Greedily&lt;/strong&gt; solving each subproblem.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Here’s how the problem and algorithm are structured.&lt;/p&gt;
+
+&lt;p&gt;To aid understanding, the figure below shows an example setup. Each MoE layer includes 16 physical experts (representing 12 logical experts), distributed across 2 computing nodes (each with 4 GPUs). These 16 experts are grouped into 8 sets, which are then assigned to GPUs.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/EPLB/example.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;EPLB aims to balance the workload across nodes, groups, and experts by replicating and reallocating experts to GPUs. Because this is a complex joint decision problem, EPLB breaks it into the following subproblems:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Given current groups, allocate these groups to nodes.
+    &lt;ul&gt;
+      &lt;li&gt;Objective: balance the workload between nodes.&lt;/li&gt;
+      &lt;li&gt;Algorithm: Balanced Packing&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;In each node, replicate the experts.
+    &lt;ul&gt;
+      &lt;li&gt;Objective: balance the workload between experts.&lt;/li&gt;
+      &lt;li&gt;Algorithm: Balanced Replication.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;In each node, allocate experts to groups.
+    &lt;ul&gt;
+      &lt;li&gt;Objective: balance the workload between groups.&lt;/li&gt;
+      &lt;li&gt;Algorithm: Balanced Packing&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Note that steps 1 and 3 both use the same packing algorithm, while step 2 uses a different replication algorithm. EPLB applies greedy strategies to solve both. Here I summarized the pseudocode used in EPLB:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/EPLB/code.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;heuristic-or-optimization&quot;&gt;Heuristic or Optimization?&lt;/h2&gt;
+
+&lt;p&gt;EPLB relies on a series of heuristics—specifically, hierarchical load balancing and greedy algorithms. Still, the approach is impactful in the AI community. Nowadays, efficient and intuitive algorithms are often preferred, as they are usually good enough for practical use.&lt;/p&gt;
+
+&lt;p&gt;In contrast, seeking an optimal solution may require significantly more computational resources and can even lead to “overfitting”—not just in the training/testing sense, but also with respect to the optimization objective itself versus other goals that are not explicitly optimized.&lt;/p&gt;
+
+&lt;p&gt;As someone who has worked in optimization, I believe it’s increasingly important to improve computational efficiency for finding the optimal solution and, at times, embrace heuristics :)&lt;/p&gt;
+</description>
+        <pubDate>Sat, 17 May 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/05/17/EPLB/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/17/EPLB/</guid>
+        
+        <category>Optimization</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Writing LaTeX Locally on macOS</title>
+        <description>&lt;p&gt;Previously, I used Overleaf to write &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tex&lt;/code&gt; files. It’s convenient, beginner-friendly, and great for collaboration. However, it only works online, which means you can’t draft your paper on a flight (maybe it’s a good thing). That’s why I’ve started transitioning to writing and compiling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tex&lt;/code&gt; files locally on macOS.&lt;/p&gt;
+
+&lt;p&gt;This post is a collection of helpful resources for setting up a local LaTeX environment.&lt;/p&gt;
+
+&lt;h2 id=&quot;introductory-latex-resources&quot;&gt;Introductory LaTeX resources&lt;/h2&gt;
+
+&lt;p&gt;There are some excellent beginner-friendly Chinese docs:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://oi-wiki.org/tools/latex/&quot;&gt;A quick guide on LaTeX syntax from OI-wiki&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://liam.page/2014/09/08/latex-introduction/&quot;&gt;A more approachable blog from Liam Huang&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;(Here I’d like to recommend &lt;a href=&quot;https://liam.page/categories/LaTeX/&quot;&gt;Liam Huang’s blog on LaTeX&lt;/a&gt;, where you can find almost everything you need to know!)&lt;/p&gt;
+
+&lt;p&gt;More comprehensive official documentation in English:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://tug.org/texinfohtml/latex2e.html&quot;&gt;LaTeX2e: An unofficial reference manual&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.learnlatex.org/&quot;&gt;Learn LaTeX tutorial (available in many languages)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;getting-started&quot;&gt;Getting started&lt;/h2&gt;
+
+&lt;p&gt;To set up a local LaTeX environment similar to Overleaf, you’ll need:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;TeX distribution&lt;/strong&gt;: This is the core engine and format bundle. On macOS, people usually use &lt;strong&gt;MacTeX&lt;/strong&gt; (a TeX Live distribution for Mac).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Editor&lt;/strong&gt;: You can use the default TeXShop editor or other text/code editors like VS Code or Sublime Text.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Let’s go through the installation step-by-step.&lt;/p&gt;
+
+&lt;h2 id=&quot;install-tex-live-mactex&quot;&gt;Install TeX Live (MacTex)&lt;/h2&gt;
+
+&lt;p&gt;Be prepared — downloading MacTeX can take a few hours, so it’s often better to use mirror sites.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;TeX Live (Windows): &lt;a href=&quot;https://tug.org/texlive/windows.html&quot;&gt;Official&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;MacTeX (Macs): &lt;a href=&quot;https://tug.org/mactex/mactex-download.html&quot;&gt;Official&lt;/a&gt; , &lt;a href=&quot;https://mirrors.sjtug.sjtu.edu.cn/ctan/systems/mac/mactex/MacTeX.pkg&quot;&gt;SJTU mirrors&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Reference: &lt;a href=&quot;https://liam.page/texlive/&quot;&gt;Installation guide in Chinese by Liam Huang&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;install-editors&quot;&gt;Install editors&lt;/h2&gt;
+
+&lt;p&gt;For a quick start, you can launch &lt;strong&gt;TeXShop&lt;/strong&gt;, which comes with MacTeX. You’ll see a simple blank window — this is your editor. Insert a LaTeX template, click compile, and the resulting PDF appears in a separate window. Clean and elegant, right?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/tex/texshop.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If this default setup works for you, great! You’re all set.
+ However, if you want more features or flexibility, you can try other editors like &lt;strong&gt;VS Code&lt;/strong&gt; or &lt;strong&gt;Sublime Text&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;vs-code-configuration&quot;&gt;VS Code configuration&lt;/h3&gt;
+
+&lt;p&gt;You can follow &lt;a href=&quot;https://latex.lierhua.top/docs/Configuration-of-VS-Code-Mac-Version/&quot;&gt;this tutorial&lt;/a&gt; to configure VS Code. However, I encountered a couple of issues during setup. Here’s how I resolved them:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chktex could not be found&lt;/code&gt; warning&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Solution: Disable the linter by adding this to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;settings.json&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;&quot;latex.linter.enabled&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Error: spawn pdflatex ENOENT&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;This indicates the LaTeX binary isn’t found. Add the correct environment path to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;settings.json&lt;/code&gt; (specific to macOS):&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;&quot;latex-workshop.latex.tools&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pdflatex&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;command&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pdflatex&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;args&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-synctex=1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-interaction=nonstopmode&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-file-line-error&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;%DOC%&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Start:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;newly&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;added&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;env&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;PATH&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/Library/TeX/texbin:/usr/local/bin:/opt/homebrew/bin:${env:PATH}&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;End:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;newly&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;added&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;🔧 Make sure to set the environment path for &lt;strong&gt;each tool&lt;/strong&gt; (e.g., &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pdflatex&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xelatex&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;latexmk&lt;/code&gt;) under &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;latex-workshop.latex.tools&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;With all problems settled down, the compiler should work smoothly. The result looks quite polished:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/tex/vscode.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;sublime-text-configuration&quot;&gt;Sublime Text configuration&lt;/h3&gt;
+
+&lt;p&gt;I hadn’t used Sublime Text before writing this post, but it seems to be a powerful and customizable editor. I’m looking forward to exploring it further.&lt;/p&gt;
+
+&lt;p&gt;Helpful guides I used:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://liam.page/2013/11/11/Sublime-elegant/&quot;&gt;Sublime Text installation and introduction (Chinese)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://liam.page/2013/11/13/Sublime-with-LaTeX/&quot;&gt;Sublime Text + LaTex for Windows (Chinese)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://latex.lierhua.top/docs/Setting-up-Sublime-Text-Windows-version/&quot;&gt;Sublime Text + LaTex for Windows (EN/CH)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://latex.lierhua.top/docs/Settings-for-Sublime-Text-Mac-Version/&quot;&gt;Sublime Text + LaTex for Macs (EN/CH)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;After following the instructions, your setup will look like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/tex/st.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 01 May 2025 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2025/05/01/TeX/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/01/TeX/</guid>
+        
+        <category>Tips</category>
         
         
       </item>

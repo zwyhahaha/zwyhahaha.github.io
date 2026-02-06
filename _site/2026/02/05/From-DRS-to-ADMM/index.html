@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                inlineMath: [['$','$']]
+                }
+            });
+        </script>
+    </head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords"  content="Blog">
+    <meta name="theme-color" content="#000000">
+    
+    <title>A step-by-step derivation from DRS to ADMM - Wanyu Zhang</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2026/02/05/From-DRS-to-ADMM/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Over the Rainbow</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About Me</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      tags: 'ams',
+      packages: {'[+]': ['bm']}
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+    }
+  };
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/zion.jpg')
+    }
+
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, );
+    }
+
+    .tags {
+        margin-bottom: 20px; /* 调整标签与标题之间的间距 */
+    }
+
+    .tag {
+        display: inline-block;
+        margin: 0 5px;
+        padding: 5px 10px;
+        border-radius: 3px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .tag:hover {
+        background-color: #dee2e6;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    h2.subheading {
+        font-size: 1.5rem;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .meta {
+        font-size: 1rem;
+    }
+
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Optimization" title="Optimization">Optimization</a>
+                        
+                    </div>
+                    <h1>A step-by-step derivation from DRS to ADMM</h1>
+                    
+                    <span class="meta">Posted by Wanyu Zhang on February 5, 2026</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<p>In this note, we present a step-by-step derivation of the Alternating Direction Method of Multipliers (ADMM) from Douglas-Rachford Splitting (DRS). This derivation is adapted from the book below and fills in the intermediate steps that were skipped in the original exposition.</p>
+
+<blockquote>
+  <p>Reference: <a href="https://link.springer.com/content/pdf/10.1007/978-981-16-9840-8_2">Convex Optimization: Algorithms and Complexity</a>, Chapter 2.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="problem-setup">Problem Setup</h2>
+
+<p>Consider using ADMM to solve the following linearly constrained problem:</p>
+
+\[\min_{x, y} \; f(x) + g(y) \quad \text{s.t.} \; Ax + By = b\]
+
+<p>The standard ADMM update consists of alternating minimization over the primal variables followed by a dual ascent step:</p>
+
+\[\begin{aligned}
+x^{k+1} &amp;= \arg\min_x \left\{ f(x) + \langle v^k, Ax \rangle + \tfrac{\beta}{2} \| Ax + By^k - b \|^2 \right\} \\
+y^{k+1} &amp;= \arg\min_y \left\{ g(y) + \langle v^k, By \rangle + \tfrac{\beta}{2} \| Ax^{k+1} + By - b \|^2 \right\} \\
+v^{k+1} &amp;= v^k + \beta (Ax^{k+1} + By^{k+1} - b)
+\end{aligned}\]
+
+<p>Our goal in this note is to derive the ADMM update from DRS applied to a suitable reformulation of the problem. To set the stage, consider the Fenchel dual problem:</p>
+
+\[\min_{\lambda} \; \underbrace{f^{\ast}(-A^{\top} \lambda) + b^{\top} \lambda}_{\varphi_1(\lambda)} + \underbrace{g^{\ast}(-B^{\top} \lambda)}_{\varphi_2(\lambda)}\]
+
+<p>This is an unconstrained minimization of the sum of two convex functions $\varphi_1$ and $\varphi_2$, which is precisely the form to which DRS applies. Applying DRS to the dual problem yields the following iteration:</p>
+
+\[\begin{aligned}
+v^k &amp;= \operatorname{prox}_{\beta \varphi_2}(y^k) \\
+u^{k+1} &amp;= \operatorname{prox}_{\beta \varphi_1}(2v^k - y^k) \\
+y^{k+1} &amp;= y^k + u^{k+1} - v^k
+\end{aligned}\]
+
+<h2 id="switched-drs">Switched DRS</h2>
+
+<p>To connect DRS with ADMM, we first rewrite the iteration in a more convenient form. Consider the start of the next DRS iteration:</p>
+
+\[v^{k+1} = \operatorname{prox}_{\beta \varphi_2}(y^{k+1}) = \operatorname{prox}_{\beta \varphi_2}(y^k + u^{k+1} - v^k)\]
+
+<p>Then consider the DRS iteration $(u^{k+1}, y^{k+1}, v^{k+1})$ and switch the order of the $y^{k+1}$ and $v^{k+1}$ updates. Since $v^{k+1}$ depends on $y^{k+1}$ only through $y^k + u^{k+1} - v^k$, which is already determined before the switch, we derive an equivalent algorithm:</p>
+
+\[\begin{aligned}
+u^{k+1} &amp;= \operatorname{prox}_{\beta \varphi_1}(2v^k - y^k) \\
+v^{k+1} &amp;= \operatorname{prox}_{\beta \varphi_2}(y^k + u^{k+1} - v^k) \\
+y^{k+1} &amp;= y^k + u^{k+1} - v^k.
+\end{aligned}\]
+
+<p>Next, apply the change of variable $w^k := v^k - y^k$ to simplify the expressions. Substituting into each line gives:</p>
+
+\[\begin{aligned}
+u^{k+1} &amp;= \operatorname{prox}_{\beta \varphi_1}(v^k + w^k) \\
+v^{k+1} &amp;= \operatorname{prox}_{\beta \varphi_2}(u^{k+1} - w^k) \\
+w^{k+1} &amp;= w^k + v^{k+1} - u^{k+1}
+\end{aligned}\]
+
+<p>This is the form of DRS from which we will recover the ADMM updates.</p>
+
+<h2 id="recovering-admm">Recovering ADMM</h2>
+
+<p>We now show that the switched DRS iteration above, applied to the dual problem, is equivalent to ADMM on the original primal problem.</p>
+
+<p><strong>Step 1: optimality condition of the $u$-update.</strong></p>
+
+<p>Consider the optimality condition of $u^{k+1} = \operatorname{prox}_{\beta \varphi_1}(v^k + w^k)$. Recalling that $\varphi_1(\lambda) := f^{\ast}(-A^{\top} \lambda) + b^{\top} \lambda$, the proximal optimality condition reads:</p>
+
+\[\begin{aligned}
+0 &amp;\in \partial \varphi_1(u^{k+1}) + \tfrac{1}{\beta}(u^{k+1} - (v^k + w^k)) \\
+&amp;= -A \, \partial f^{\ast}(-A^{\top} u^{k+1}) + b + \tfrac{1}{\beta}(u^{k+1} - (v^k + w^k))
+\end{aligned}\]
+
+<p>Then there exists $x^{k+1} \in \partial f^{\ast}(-A^{\top} u^{k+1})$, which by the conjugate subgradient relation implies $-A^{\top} u^{k+1} \in \partial f(x^{k+1})$, such that</p>
+
+\[\begin{aligned}
+0 &amp;= -Ax^{k+1} + b + \tfrac{1}{\beta}(u^{k+1} - (v^k + w^k)) \\
+(\Rightarrow) \quad u^{k+1} &amp;= v^k + w^k + \beta(Ax^{k+1} - b)
+\end{aligned} \tag{1} \label{eq:u-update}\]
+
+<p>By $0 \in \partial f(x^{k+1}) + A^{\top} u^{k+1}$ and $\eqref{eq:u-update}$, we obtain</p>
+
+\[0 \in \partial f(x^{k+1}) + A^{\top}(v^k + w^k) + \beta A^{\top}(Ax^{k+1} - b) \tag{2} \label{eq:x-opt}\]
+
+<p><strong>Step 2: optimality condition of the $v$-update.</strong></p>
+
+<p>Consider the optimality condition of $v^{k+1} = \operatorname{prox}_{\beta \varphi_2}(u^{k+1} - w^k)$. Since $\varphi_2(\lambda) := g^{\ast}(-B^{\top} \lambda)$, we have</p>
+
+\[\begin{aligned}
+0 &amp;\in \partial \varphi_2(v^{k+1}) + \tfrac{1}{\beta}(v^{k+1} - (u^{k+1} - w^k)) \\
+&amp;= -B \, \partial g^{\ast}(-B^{\top} v^{k+1}) + \tfrac{1}{\beta}(v^{k+1} - u^{k+1} + w^k)
+\end{aligned}\]
+
+<p>Then there exists $y^{k+1} \in \partial g^{\ast}(-B^{\top} v^{k+1})$, which implies $-B^{\top} v^{k+1} \in \partial g(y^{k+1})$, such that</p>
+
+\[\begin{aligned}
+0 &amp;= -By^{k+1} + \tfrac{1}{\beta}(v^{k+1} - u^{k+1} + w^k) \\
+(\Rightarrow) \quad v^{k+1} &amp;= u^{k+1} - w^k + \beta B y^{k+1}
+\end{aligned} \tag{3} \label{eq:v-update}\]
+
+<p>From the update rule $w^{k+1} = w^k + v^{k+1} - u^{k+1}$, substituting $\eqref{eq:v-update}$ gives a useful identity:</p>
+
+\[0 = -By^{k+1} + \tfrac{1}{\beta} w^{k+1} \tag{4} \label{eq:w-identity}\]
+
+<p>By $0 \in \partial g(y^{k+1}) + B^{\top} v^{k+1}$ and $\eqref{eq:v-update}$, we get</p>
+
+\[0 \in \partial g(y^{k+1}) + B^{\top}(u^{k+1} - w^k) + \beta B^{\top} B y^{k+1} \tag{5} \label{eq:y-opt}\]
+
+<p><strong>Step 3: Recover ADMM updates.</strong></p>
+
+<p>We are now ready to piece everything together. From $\eqref{eq:x-opt}$ and $\eqref{eq:w-identity}$, note that $w^k = \beta B y^k$ by applying $\eqref{eq:w-identity}$ at iteration $k$. Substituting into $\eqref{eq:x-opt}$:</p>
+
+\[0 \in \partial f(x^{k+1}) + A^{\top} v^k + \beta A^{\top}(Ax^{k+1} - b + By^k),\]
+
+<p>which is precisely the optimality condition of the $x$-update of ADMM:</p>
+
+\[x^{k+1} = \arg\min_x \left\{ f(x) + \langle v^k, Ax \rangle + \tfrac{\beta}{2} \| Ax + By^k - b \|^2 \right\}.\]
+
+<p>From $\eqref{eq:y-opt}$ and $\eqref{eq:w-identity}$, substituting $u^{k+1} - w^k + \beta B y^{k+1} = v^{k+1}$ from $\eqref{eq:v-update}$ gives:</p>
+
+\[\begin{aligned}
+0 &amp;\in \partial g(y^{k+1}) + B^{\top}(u^{k+1} - w^k + \beta B y^{k+1}) \\
+&amp;= \partial g(y^{k+1}) + B^{\top}(v^k + \beta(Ax^{k+1} + By^{k+1} - b))
+\end{aligned} \tag{6} \label{eq:y-admm}\]
+
+<p>where the second equality follows from $\eqref{eq:u-update}$. This is exactly the optimality condition of the $y$-update of ADMM:</p>
+
+\[y^{k+1} = \arg\min_y \left\{ g(y) + \langle v^k, By \rangle + \tfrac{\beta}{2} \| Ax^{k+1} + By - b \|^2 \right\}.\]
+
+<p>Finally, from $\eqref{eq:v-update}$ and $\eqref{eq:y-admm}$, we recover the dual update of ADMM:</p>
+
+\[\begin{aligned}
+v^{k+1} &amp;= u^{k+1} - w^k + \beta B y^{k+1} \\
+&amp;= v^k + \beta(Ax^{k+1} + By^{k+1} - b).
+\end{aligned}\]
+
+<p>This completes the derivation: the switched DRS applied to the Fenchel dual is equivalent to ADMM on the primal problem.</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2025/09/06/AutoLyap/" data-toggle="tooltip" data-placement="top" title="Generating Lyapunov Functions for Gradient Descent by SDP">
+                        Previous<br>
+                        <span>Generating Lyapunov Functions for Gradient Descent by SDP</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Optimization" title="Optimization" rel="11">
+                                    Optimization
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Tips" title="Tips" rel="8">
+                                    Tips
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Travel✈️" title="Travel✈️" rel="3">
+                                    Travel✈️
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/zwyhahaha">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                            <li>
+                                <a target="_blank" href="https://scholar.google.com/citations?user=Xt9MRH8AAAAJ&hl">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/zwanyu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Over the Rainbow 2026
+                    <br>
+                    Theme on <a href="https://github.com/zwyhahaha/zwyhahaha.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zwyhahaha&repo=zwyhahaha.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

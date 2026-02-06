@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                inlineMath: [['$','$']]
+                }
+            });
+        </script>
+    </head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords"  content="Blog">
+    <meta name="theme-color" content="#000000">
+    
+    <title>High Probability Analysis for SGD - Wanyu Zhang</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2025/04/10/SGD/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Over the Rainbow</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About Me</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      tags: 'ams',
+      packages: {'[+]': ['bm']}
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+    }
+  };
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/plant2.png')
+    }
+
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, );
+    }
+
+    .tags {
+        margin-bottom: 20px; /* 调整标签与标题之间的间距 */
+    }
+
+    .tag {
+        display: inline-block;
+        margin: 0 5px;
+        padding: 5px 10px;
+        border-radius: 3px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .tag:hover {
+        background-color: #dee2e6;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    h2.subheading {
+        font-size: 1.5rem;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .meta {
+        font-size: 1rem;
+    }
+
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Optimization" title="Optimization">Optimization</a>
+                        
+                    </div>
+                    <h1>High Probability Analysis for SGD</h1>
+                    
+                    <h2 class="subheading">Beyond Bounded Domain and Bounded Gradients</h2>
+                    
+                    <span class="meta">Posted by Wanyu Zhang on April 10, 2025</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<p>Long time no see! This one is the longest post I have written so far—so grab a drink, it will take a little time to read! For better readability, you can refer to the <a href="https://drive.google.com/file/d/1eBcgi6hOCLBYUpo4LV8Kmh0Q4dhaTwyK/view?usp=sharing">pdf version</a>.</p>
+
+<p>I am learning how to derive high probability bounds for stochastic optimization algorithms. This is my learning note when reading the following wonderful papers:</p>
+
+<ol>
+  <li>Attia, Amit, and Tomer Koren. ‘‘A note on high-probability analysis of algorithms with exponential, sub-gaussian, and general light tails.”<em>arXiv preprint arXiv:2403.02873</em>(2024).</li>
+  <li>Attia, Amit, and Tomer Koren. ‘‘SGD with AdaGrad stepsizes: Full adaptivity with high probability to unknown parameters, unbounded gradients and affine variance.”<em>International Conference on Machine Learning</em>. PMLR, 2023.</li>
+</ol>
+
+<p>As these notes are not targeted at SGD, I reorganized the problem settings and completed the proofs for SGD under different assumptions by adapting proof techniques in these notes.</p>
+
+<h2 id="problem-setup">Problem Setup</h2>
+
+<p>Consider the following optimization problem:</p>
+
+\[\min_{x \in \mathcal{X}} f (x)\]
+
+<p>We may have different assumptions for the problem. In this note, we assume $f$ is convex, and admits a minimizer $x_{\star}$, and we consider the following two settings.</p>
+
+<ul>
+  <li><strong>F1.</strong> (Lipschitz) Let $\mathcal{X}$ be a convex set with diameter $D$. $f$ is $G$-Lipschitz.</li>
+  <li><strong>F2.</strong> (smooth) $\mathcal{X}$ is $\mathbb{R}^n$. $f$ is $L$-smooth.</li>
+</ul>
+
+<p>We use stochastic gradient descent (SGD) to solve this problem. In each iteration, we query a stochastic gradient oracle and update:</p>
+
+\[x_{t + 1} = x_t - \eta \nabla f (x_t, \xi_t) .\]
+
+<p>In this note, we assume that the stochastic oracle is unbiased, <em>i.e.</em>, $\mathbb{E}_{\xi} [\nabla f (x, \xi)] = \nabla f (x)$. We further consider two 
+setups:</p>
+
+<ul>
+  <li><strong>G1.</strong> (bounded noise) $| \nabla f (x, \xi) - \nabla f (x) | \leq B$.</li>
+  <li><strong>G2.</strong> (affine noise) $| \nabla f (x, \xi) - \nabla f (x) | \leq 
+\sqrt{\sigma_0^2 + \sigma_1^2 |\nabla f (x) |^2}$.</li>
+</ul>
+
+<p>We focus on deriving high probability bounds for SGD with different combinations of the above assumptions about the objective function (<strong>F</strong>) and the stochastic gradient oracles (<strong>G</strong>).</p>
+
+<h2 id="concentration-inequalities">Concentration inequalities</h2>
+
+<p>In the high probability analysis of SGD, one important component is to give a high probability upper bound for the sum of martingale difference sequence (MDS). We present some frequently used concentration inequalities here and show how to use them in the following sections.</p>
+
+<p>Let $Z_0, \ldots, Z_{T - 1}$ be an MDS:</p>
+
+<ul>
+  <li><strong>L1.</strong> (Azuma’s Inequality) If $| Z_t | \leq B$ for all $t$ almost surely, then for every $\delta \in (0, 1)$,</li>
+</ul>
+
+\[\Pr \left( \sum_{t = 0}^{T - 1} Z_t \geq B \sqrt{2 T \log \frac{1}{\delta}}
+   \right) \leq \delta .\]
+
+<ul>
+  <li><strong>L2.</strong> (Empirical Bernstein Concentration Inequality) If $| Z_t | \leq 1$ for all $t$ w.p. 1. Then for every $\delta \in (0, 1)$, and any $\hat Z_t \in \mathcal{F}_{t - 1}$ such that $| \hat{Z}_t | \leq 1$ w.p. 1,</li>
+</ul>
+
+\[\Pr \left( \exists t, \left| \sum_{s = 0}^{t - 1} Z_s -\mathbb{E} [Z_s \mid
+   \mathcal{F}_{s - 1}] \right| \geq \sqrt{A_t (\delta) \sum_{s = 0}^{t - 1}
+   (Z_s - \hat{Z}_s)^2 + B_t (\delta)} \right) \leq \delta,\]
+
+<p>where $A_t (\delta) = 16 \log \left( \frac{60 \log (6 t)}{\delta} \right)$ and   $B_t (\delta) = 16 \log^2 \left( \frac{60 \log (6 t)}{\delta} \right)$.</p>
+
+<ul>
+  <li><strong>L3.</strong>  If $\mathbb{E} [\exp (Z_t^2 / \sigma_t^2) \mid \mathcal{F}_{t - 1}] 
+\leq \exp(1)$ for all $t$. Then, for any fixed $\lambda &gt; 0$ and $\delta 
+\in (0, 1)$,</li>
+</ul>
+
+\[\Pr \left( \sum_{t = 0}^{T - 1} Z_t \geq \frac{3}{4} \lambda \sum_{t =
+   0}^{T - 1} \sigma_t^2 + \frac{1}{\lambda} \log \frac{1}{\delta} \right)
+   \leq \delta .\]
+
+<h2 id="lipschitz-bounded-noise">Lipschitz, bounded noise</h2>
+
+<p>First, we use Assumption <strong>F1</strong>, <strong>G1</strong> to illustrate the basic ideas of high probability analysis.</p>
+
+<p>Since $f$ is convex, we use function value gap as the performance measure.</p>
+
+\[\begin{array}{rcl}
+  f (x_t) - f (x_{\star}) &amp; \leq &amp; \langle \nabla f (x_t), x_t - x_{\star}
+  \rangle\\
+  &amp; = &amp; \underbrace{\langle \nabla f (x_t, \xi_t), x_t - x_{\star}
+  \rangle}_{(\ast)} + \underbrace{\langle \nabla f (x_t) - \nabla f (x_t,
+  \xi_t), x_t - x_{\star} \rangle}_{(\ast \ast)}
+\end{array}\]
+
+<p><strong>Note:</strong> in subsequent sections, we continue using such decomposition.</p>
+
+<p>For the first part $(\ast)$,</p>
+
+\[\begin{array}{rcl}
+  \langle \nabla f (x_t, \xi_t), x_t - x_{\star} \rangle &amp; = &amp; \frac{1}{\eta}
+  \langle x_t - x_{t + 1}, x_t - x_{\star} \rangle\\
+  &amp; = &amp; \frac{1}{2 \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} - x_{\star}
+  \|^2 + \| x_t - x_{t + 1} \|^2]\\
+  &amp; = &amp; \frac{1}{2 \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} - x_{\star}
+  \|^2] + \frac{\eta}{2} \| \nabla f (x_t, \xi_t) \|^2\\
+  &amp; \leq &amp; \frac{1}{2 \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} -
+  x_{\star} \|^2] + \eta [\| \nabla f (x_t) \|^2 + \| \nabla f (x_t, \xi_t) -
+  \nabla f (x_t) \|^2]\\
+  &amp; \leq &amp; \frac{1}{2 \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} -
+  x_{\star} \|^2] + \eta (G^2 + B^2)
+\end{array}\]
+
+<p>Telescope,</p>
+
+\[\begin{array}{rcl}
+  \sum_{t = 0}^{T - 1} \langle \nabla f (x_t, \xi_t), x_t - x_{\star} \rangle
+  &amp; \leq &amp; \frac{\| x_0 - x_{\star} \|^2}{2 \eta} + \eta (G^2 + B^2) T
+\end{array}\]
+
+<p>For deterministic gradient, the analysis is nearly complete - choose $\eta = 
+\frac{D}{\sqrt{2 (G^2 + B^2) T}}$ and we have,
+\(\begin{array}{rcl}
+  \frac{1}{T} \sum_{t = 0}^{T - 1} (\ast) = \frac{1}{T} \sum_{t = 0}^{T - 1} \langle \nabla f (x_t, \xi_t), x_t - x_{\star} \rangle &amp; \leq &amp; 2 D \sqrt{\frac{G^2 + B^2}{T}}
+\end{array}\)</p>
+
+<p>For stochastic gradient, we need to tackle the second part $(\ast \ast)$. Let $Z_t = \langle \nabla f (x_t) - \nabla f (x_t, \xi_t), x_t - 
+x_{\star}\rangle$, it is an MDS. The goal of the remaining proof is to give a high probability bound for $\sum_{t = 0}^{T - 1} Z_t$.</p>
+
+<p>Under Assumption <strong>F1</strong>, <strong>G1</strong>, $| Z_t | \leq D \cdot B$, so we apply Azuma’s inequality, w.p. $1 - \delta$,
+\(\begin{array}{rcl}
+  \frac{1}{T} \sum_{t = 0}^{T - 1} (\ast \ast) = \frac{1}{T}  \sum_{t = 0}^{T - 1} \langle\nabla f (x_t) - \nabla f (x_t, \xi_t), x_t - x_{\star}\rangle &amp; \leq &amp; D B \sqrt{\frac{2 \log \frac{1}{\delta}}{T}}
+\end{array}\)
+Combine $(\ast)$ and $(\ast \ast)$, and by Jensen’s inequality, w.p. $1 - 
+\delta$,
+\(\begin{array}{rcl}
+  f \left( \frac{1}{T} \sum_{t = 0}^{T - 1} x_t \right) - f (x_{\star})
+  &amp; \leq &amp; 2 D \sqrt{\frac{G^2 + B^2}{T}} + D B \sqrt{\frac{2 \log \frac{1}{\delta}}{T}}.
+\end{array}\)</p>
+
+<p><strong>Remarks.</strong> We can compare different analysis frameworks, and they mainly differ in how to tackle the second part $(\ast \ast)$.</p>
+
+<ul>
+  <li><strong>Expectation:</strong> $(\ast \ast)$ has conditional expectation 0. the final bound is $2 D \sqrt{\frac{G^2 + B^2}{T}}$.</li>
+  <li><strong>High probability:</strong> $(\ast \ast)$ has a high probability sublinear bound after telescoping. the final bound is $2 D \sqrt{\frac{G^2 + B^2}{T}} + D B 
+\sqrt{\frac{2 \log˙\frac{1}{\delta}}{T}}$.</li>
+  <li><strong>Worst case:</strong> $(\ast \ast)$ is a constant. the final bound is $2 D 
+\sqrt{\frac{G^2 + B^2}{T}} + D B$.</li>
+</ul>
+
+<h2 id="smooth-bounded-noise">Smooth, bounded noise</h2>
+
+<p>In this section, we use Assumption <strong>F2</strong>, <strong>G1</strong>.</p>
+
+<p>The analysis of the first part $(\ast)$ is very similar the previous section, except that we can not upper bound $| \nabla f (x_t) |^2$ by $G^2$,</p>
+
+\[\begin{array}{rcl}
+  \langle \nabla f (x_t, \xi_t), x_t - x_{\star} \rangle &amp; \leq &amp; \frac{1}{2
+  \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} - x_{\star} \|^2] + \eta [\|
+  \nabla f (x_t) \|^2 + \| \nabla f (x_t, \xi_t) - \nabla f (x_t) \|^2]\\
+  &amp; \leq &amp; \frac{1}{2 \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} - x_{\star} \|^2] + \eta B^2 + 2 \eta L (f (x_t) - f (x_{\star}))
+\end{array}\]
+
+<p>Choose $\eta = \min ( \frac{1}{4 L}, \frac{\alpha}{B \sqrt{T}})$,</p>
+
+\[\begin{array}{rcl}
+  \sum_{t = 0}^{T - 1} \langle \nabla f (x_t, \xi_t), x_t - x_{\star} \rangle
+  &amp; \leq &amp; \frac{\| x_0 - x_{\star} \|^2}{2 \eta} + \eta B^2 T + 2 \eta L
+  \sum_{t = 0}^{T - 1} (f (x_t) - f (x_{\star}))\\
+  &amp; \leq &amp; \| x_0 - x_{\star} \|^2 \left( 2 L + \frac{2 B \sqrt{T}}{\alpha}
+  \right) + \alpha B \sqrt{T} + \frac{1}{2} \sum_{t = 0}^{T - 1} (f (x_t) - f
+  (x_{\star}))\\
+  &amp; \leq &amp; 2 L \| x_0 - x_{\star} \|^2 + \left( \alpha + \frac{2 \| x_0 -
+  x_{\star} \|^2}{\alpha} \right) B \sqrt{T} + \frac{1}{2} \sum_{t = 0}^{T -
+  1} (f (x_t) - f (x_{\star}))
+\end{array}\]
+
+<p>Consider the second part $(\ast \ast)$. Let $Z_t = \langle \nabla f (x_t) - 
+\nabla f (x_t, \xi_t), x_t - x_{\star}˙\rangle$, it is an MDS because $\mathbb{E} [Z_t \mid \mathcal{F}_{t - 1}] = 0$. However, under Assumption <strong>F2</strong>, we cannot simply derive an upper bound for $Z_t$ because the domain is 
+unbounded. Here, we need to use a useful lemma:</p>
+
+<ul>
+  <li><strong>Lemma 1.</strong> Under Assumption <strong>F2</strong>, <strong>G1</strong>, $| x_t - x_{\star} | \leq D, 
+\forall t, \text{w.p.} 1 - \delta .$</li>
+</ul>
+
+<p>The definition of $D$ and the proof will be deferred to the end of this section.</p>
+
+<p>As a corollary of <strong>Lemma 1</strong>, $| Z_t | \leq D \cdot B$, so we apply Azuma’s inequality and union bound, w.p. $1 - 2 \delta$,</p>
+
+\[\frac{1}{T}  \sum_{t = 0}^{T - 1} (\nabla f (x_t) - \nabla f (x_t,
+   \xi_t))^{\top} (x_t - x_{\star}) \leq D B \sqrt{\frac{2 \log
+   \frac{1}{\delta}}{T}}\]
+
+<p>Combine the two parts, and by Jensen’s inequality, w.p. $1 - 2 \delta$,</p>
+
+\[f \left( \frac{1}{T} \sum_{t = 0}^{T - 1} x_t \right) - f (x_{\star}) \leq
+   \frac{4 L \| x_0 - x_{\star} \|^2}{T} + \left( 2 \alpha + \frac{4 \| x_0 -
+   x_{\star} \|^2}{\alpha} \right) \frac{B}{\sqrt{T}} + 2 D B \sqrt{\frac{2
+   \log \frac{1}{\delta}}{T}} .\]
+
+<p>This result does not rely on the bound of gradient norms and the diameter of the domain. We proceed to characterize $D$ in <strong>Lemma 1</strong>. Define $d_t = | x_t-x_{\star} |$, $\bar d_t = \max_{s \leq t} d_t$.</p>
+
+\[\begin{array}{rcl}
+  &amp;  &amp; \| x_{t + 1} - x_{\star} \|^2\\
+  &amp; = &amp; \| x_t - x_{\star} \|^2 - 2 \eta \langle \nabla f (x_t, \xi_t), x_t -
+  x_{\star} \rangle + \eta^2 \| \nabla f (x_t, \xi_t) \|^2\\
+  &amp; \leq &amp; \| x_t - x_{\star} \|^2 - 2 \eta \langle \nabla f (x_t), x_t -
+  x_{\star} \rangle + 2 \eta \langle \nabla f (x_t) - \nabla f (x_t, \xi_t),
+  x_t - x_{\star} \rangle + \eta^2 \| \nabla f (x_t, \xi_t) \|^2\\
+  &amp; \leq &amp; \| x_t - x_{\star} \|^2 - 2 \eta (1 - \eta L) (f (x_t) - f
+  (x_{\star})) + 2 \eta \langle \nabla f (x_t) - \nabla f (x_t, \xi_t), x_t -
+  x_{\star} \rangle\\
+  &amp; \leq &amp; \| x_t - x_{\star} \|^2 + 2 \eta \langle \nabla f (x_t) - \nabla f
+  (x_t, \xi_t), x_t - x_{\star} \rangle
+\end{array}\]
+
+<p>the last inequality holds because $\eta \leq \frac{1}{4 L}$. Then we have,
+\(\begin{array}{rcl}
+  \| x_{t + 1} - x_{\star} \|^2  \leq &amp; \| x_0 - x_{\star} \|^2 + 2 \eta \sum_{s = 0}^t \langle \nabla f (x_s) - \nabla f (x_s, \xi_s), x_s - x_{\star}  \rangle
+\end{array}\)
+To apply the Bernstein empirical concentration bound, we define</p>
+
+\[X_s = \frac{\langle \nabla f (x_s) - \nabla f (x_s, \xi_s), x_s - x_{\star}
+   \rangle}{B \bar{d}_{t - 1}}, \quad \hat{X}_s = 0\]
+
+<p>Note that $X_s \leq 1$ w.p. 1, and $\mathbb{E} [X_s \mid \mathcal{F}_{s - 1}] 
+= 0$. Then, for all $0 \leq t \leq T - 1$, and $\delta’ \in (0, 1)$, w.p. at least $1 - \delta’$,</p>
+
+\[\left| \sum_{s = 0}^t X_s \right| \leq \sqrt{A_t (\delta') \sum_{s = 0}^t X_s^2 + B_t (\delta')}\]
+
+<p>We can upper bound $X_s^2$ by 1. Then we return to the inequality, w.p. at least $1 - \delta’$,
+\(\begin{array}{rcl}
+  \| x_{t + 1} - x_{\star} \|^2 &amp; \leq &amp; \| x_0 - x_{\star} \|^2 + 2 \eta B
+  \bar{d}_t \sum_{s = 0}^t X_s\\
+  &amp; \leq &amp; \| x_0 - x_{\star} \|^2 + 2 \eta B \bar{d}_t  \sqrt{A_t (\delta')
+  (t + 1) + B_t (\delta')}\\
+  &amp; \leq &amp; \| x_0 - x_{\star} \|^2 + \frac{1}{2}  \bar{d}_t^2 + 2 \eta^2 B^2
+  (A_t (\delta') (t + 1) + B_t (\delta'))\\
+  &amp; \leq &amp; \frac{1}{2}  \bar{d}_t^2 + d_0^2 + 2 \frac{\alpha^2}{T} (A_t
+  (\delta') (t + 1) + B_t (\delta'))
+\end{array}\)</p>
+
+<p>Define $D^2 = 2 d_0^2 + 4 \alpha^2 A_T (\delta’) + 4 \frac{\alpha^2}{T} B_T 
+(\delta’)˙= \mathcal{O} (1)$, then $\bar{d}_{t + 1}^2 \leq 
+\frac{\bar{d}_t^2}{2} + \frac{D^2}{2}$. Rolling to $t = 0$, we have $\bar{d}_T 
+\leq D$. Therefore, $d_t \leq D$ for all $0 \leq t \leq T - 1$.</p>
+
+<h2 id="smooth-affine-noise">Smooth, affine noise</h2>
+
+<p>In this section, we use Assumption <strong>F2</strong>, <strong>G2</strong>. The setting with Assumption <strong>F1</strong>, <strong>G2</strong> is easier to tackle than this case, so we skip this setting.</p>
+
+<p>For the first part $(\ast)$,</p>
+
+\[\begin{array}{rcl}
+  \langle \nabla f (x_t, \xi_t), x_t - x_{\star} \rangle &amp; \leq &amp; \frac{1}{2
+  \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} - x_{\star} \|^2] + \eta [\|
+  \nabla f (x_t) \|^2 + \| \nabla f (x_t, \xi_t) - \nabla f (x_t) \|^2]\\
+  &amp; \leq &amp; \frac{1}{2 \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} -
+  x_{\star} \|^2] + \eta [\sigma_0^2 + (1 + \sigma_1^2) \| \nabla f (x_t)
+  \|^2]\\
+  &amp; \leq &amp; \frac{1}{2 \eta} [\| x_t - x_{\star} \|^2 - \| x_{t + 1} -
+  x_{\star} \|^2] + \eta [\sigma_0^2 + 2 (1 + \sigma_1^2) L (f (x_t) - f
+  (x_{\star}))]
+\end{array}\]
+
+<p>Choose $\eta = \min (\frac{1}{8 (1 + \sigma_1^2) L},\frac{\alpha}{\sigma_0\sqrt{T}})$, and telescope,</p>
+
+\[\begin{array}{rcl}
+  &amp;  &amp; \sum_{t = 0}^{T - 1} \langle \nabla f (x_t, \xi_t), x_t - x_{\star}
+  \rangle\\
+  &amp; \leq &amp; \frac{\| x_0 - x_{\star} \|^2}{2 \eta} + \eta \sigma_0^2 T + 2 (1
+  + \sigma_1^2) \eta L \sum_{t = 0}^{T - 1} (f (x_t) - f (x_{\star}))\\
+  &amp; \leq &amp; 4 (1 + \sigma_1^2) L \| x_0 - x_{\star} \|^2 + \left( \alpha +
+  \frac{2 \| x_0 - x_{\star} \|^2}{\alpha} \right) \sigma_0 \sqrt{T} +
+  \frac{1}{4} \sum_{t = 0}^{T - 1} (f (x_t) - f (x_{\star}))
+\end{array}\]
+
+<p>Consider the second part $(\ast \ast)$. Let $Z_t = \langle \nabla f (x_t) - \nabla f (x_t, \xi_t), x_t - x_{\star}\rangle$, it is an MDS. Here, we still need the existence of the upper bound on $| x_t - x_{\star} |$, but the uniformed bound on gradient noise does not exists. We use the following Lemma and delay the proof to the end.</p>
+
+<ul>
+  <li><strong>Lemma 2.</strong> Under Assumption <strong>F2</strong>, <strong>G2</strong>, $| x_t - x_{\star} | \leq D, 
+\forall t, \text{w.p.} 1 - 2 \delta .$</li>
+</ul>
+
+<p>With Lemma 2, we state that $| Z_t | \leq d_t \sqrt{\sigma_0^2 + \sigma_1^2 | 
+\nabla f (x_t) |^2}$, where $d_t = | x_t - x_{\star} |$. Apply inequality <strong>L3</strong>, w.p. $1 - \delta$,</p>
+
+\[\begin{array}{rcl}
+  \frac{1}{T} \sum_{t = 0}^{T - 1} Z_t &amp; \leq &amp; \frac{3}{4} \frac{\lambda}{T} \sum_{t = 0}^{T - 1} d_t^2 (\sigma_0^2 + \sigma_1^2 \| \nabla f (x_t) \|^2) + \frac{1}{\lambda T} \log \frac{1}{\delta}\\
+  &amp; \leq &amp; \frac{3}{4} \frac{\lambda}{T} \sum_{t = 0}^{T - 1} d_t^2 (\sigma_0^2 + 2 \sigma_1^2 L (f (x_t) - f (x_{\star}))) + \frac{1}{\lambda T} \log \frac{1}{\delta}
+\end{array}\]
+
+<p>Let $\lambda = \left( \sigma_0 D \sqrt{T / \log \frac{1}{\delta}} + 6 
+D^2˙\sigma_1^2 L \right)^{- 1}$, and by a union bound of <strong>Lemma 2</strong> and <strong>L3</strong>, w.p. $1 - 3 \delta$,</p>
+
+\[\begin{array}{rcl}
+  \frac{1}{T} \sum_{t = 0}^{T - 1} Z_t &amp; \leq &amp; \frac{3}{4} \frac{\bar{d}_T^2
+  \sigma_0}{D \sqrt{T / \log \frac{1}{\delta}}} + \frac{1}{4 T} \sum_{t =
+  0}^{T - 1} \frac{\bar{d}_T^2}{D^2} (f (x_t) - f (x_{\star})) + \frac{1}{T}
+  \log \frac{1}{\delta} \left( \sigma_0 D \sqrt{\frac{T}{\log
+  \frac{1}{\delta}}} + 6 D^2 \sigma_1^2 L \right)\\
+  &amp; \leq &amp; 2 D \sigma_0 \sqrt{\frac{\log \frac{1}{\delta}}{T}} + \frac{1}{4
+  T} \sum_{t = 0}^{T - 1} (f (x_t) - f (x_{\star})) + \frac{6 D^2 \sigma_1^2 L
+  \log \frac{1}{\delta}}{T}
+\end{array}\]
+
+<p>Combine the two parts, and by Jensen’s inequality, w.p. $1 - 3 \delta$,</p>
+
+\[f \left( \frac{1}{T} \sum_{t = 0}^{T - 1} x_t \right) - f (x_{\star}) \leq
+   \frac{\sigma_0 D}{\sqrt{T}} \left( \frac{1}{\alpha} + 2 \alpha + 4
+   \sqrt{\log \frac{1}{\delta}} \right) + \frac{D^2 L}{T} \left( 8 (1 +
+   \sigma_1^2) + 12 \sigma_1^2 \log \frac{1}{\delta} \right) .\]
+
+<p>Finally, we return to prove <strong>Lemma 2</strong>. Define $d_t = | x_t - x_{\star} |$, $\bar d_t = \max_{s \leq t} d_s$, $\Delta_t = f (x_t) - f (x_{\star})$, $\bar \Delta_t = \max_{s \leq t} \Delta_s$.</p>
+
+<p>The same as the previous section, we have,</p>
+
+\[\| x_{t + 1} - x_{\star} \|^2 \leq \| x_0 - x_{\star} \|^2 + 2 \eta \sum_{s
+   = 0}^t \langle \nabla f (x_s) - \nabla f (x_s, \xi_s), x_s - x_{\star}
+   \rangle.\]
+
+<p>To apply the Bernstein empirical concentration bound <strong>L2</strong>, we define</p>
+
+\[X_s = \frac{\langle \nabla f (x_s) - \nabla f (x_s, \xi_s), x_s - x_{\star}
+   \rangle}{\bar{d}_t \sqrt{\sigma_0^2 + 2 \sigma_1^2 L \bar{\Delta}_t^2}},
+   \quad \hat{X}_s = 0\]
+
+<p>Note that $X_s \leq 1$ w.p. 1, and $\mathbb{E} [X_s \mid \mathcal{F}_{s - 1}] 
+= 0$. Then, for all $0 \leq t \leq T - 1$, and $\delta’ \in (0, 1)$, w.p. at least $1 - \delta’$,</p>
+
+\[\| \sum_{s = 0}^{t} X_s \| \leq \sqrt{A_t (\delta') (t + 1) + B_t (\delta')}\]
+
+<p>Then we return to the inequality, w.p. at least $1 - \delta’$,
+\(\begin{array}{rcl}
+  \| x_{t + 1} - x_{\star} \|^2 &amp; \leq &amp; \| x_0 - x_{\star} \|^2 + 2 \eta
+  \bar{d}_t \sqrt{\sigma_0^2 + 2 \sigma_1^2 L \bar{\Delta}_t^2} \sum_{s = 0}^t
+  X_s\\
+  &amp; \leq &amp; d_0^2 + 2 \eta \bar{d}_t \sqrt{\sigma_0^2 + 2 \sigma_1^2 L
+  \bar{\Delta}_t^2}  \sqrt{A_t (\delta') (t + 1) + B_t (\delta')}\\
+  &amp; \leq &amp; d_0^2 + \frac{1}{2}  \bar{d}_t^2 + 2 \eta^2 (\sigma_0^2 + 2
+  \sigma_1^2 L \bar{\Delta}_t^2) (A_t (\delta') (t + 1) + B_t (\delta'))\\
+  &amp; \leq &amp; \frac{1}{2}  \bar{d}_t^2 + d_0^2 + 2 \frac{\alpha^2}{T}
+  \frac{\sigma_0^2 + 2 \sigma_1^2 L \bar{\Delta}_t^2}{\sigma_0^2} (A_t
+  (\delta') (t + 1) + B_t (\delta'))
+\end{array}\)</p>
+
+<p>Finally, we need to show that:</p>
+
+<ul>
+  <li><strong>Lemma 3</strong>. With probability at least $1 - \delta$, $\bar{\Delta}_T \leq 
+F$.</li>
+</ul>
+
+<p>Let $D^2 = 2 d_0^2 + 4 \frac{\alpha^2}{T} \frac{\sigma_0^2 + 2 \sigma_1^2 
+L˙F^2}{\sigma_0^2} (A_t (\delta’) (t + 1) + B_t (\delta’)) = \mathcal{O} (1)$ and apply a union bound with <strong>Lemma 3</strong> proves <strong>Lemma 2</strong>.</p>
+
+<p>We prove <strong>Lemma 3</strong> by induction. Suppose $\bar \Delta_t \leq F$, we show that $\bar \Delta_{t + 1} \leq F$. We begin with the L-smooth condition,</p>
+
+\[\begin{array}{rcl}
+  f (x_{t + 1}) &amp; = &amp; f (x_t) - \eta \nabla f (x_t, \xi_t)^{\top} \nabla f
+  (x_t) + \frac{L}{2} \eta^2 \| \nabla f (x_t, \xi_t) \|^2\\
+  &amp; \leq &amp; f (x_0) - \eta \sum_{s = 0}^t \left( \nabla f (x_s, \xi_s)^{\top}
+  \nabla f (x_s) + \frac{L}{2} \eta^2 \| \nabla f (x_s, \xi_s) \|^2 \right)
+\end{array}\]
+
+<p>We move to bound the first term on the r.h.s.,</p>
+
+\[\begin{array}{rcl}
+  - \sum_{s = 0}^t \nabla f (x_s, \xi_s)^{\top} \nabla f (x_s) &amp; = &amp; - \sum_{s
+  = 0}^t \| \nabla f (x_s) \|^2 + \sum_{s = 0}^t \langle \nabla f (x_s),
+  \nabla f (x_s) - \nabla f (x_s, \xi_s) \rangle
+\end{array}\]
+
+<p>Then apply the inequality <strong>L3</strong>, w.p. $1 - \delta$,</p>
+
+\[\begin{array}{rcl}
+  \sum_{s = 0}^t \langle \nabla f (x_s), \nabla f (x_s) - \nabla f (x_s,
+  \xi_s) \rangle &amp; \leq &amp; \frac{3}{4} \lambda \sum_{s = 0}^t \| \nabla f (x_s)
+  \|^2 (\sigma_0^2 + \sigma_1^2 \| \nabla f (x_s) \|^2) + \frac{1}{\lambda}
+  \log \frac{T}{\delta}\\
+  &amp; \leq &amp; \frac{3}{4} \lambda \sum_{s = 0}^t \| \nabla f (x_s) \|^2
+  (\sigma_0^2 + 2 \sigma_1^2 L F) + \frac{1}{\lambda} \log \frac{T}{\delta}
+\end{array}\]
+
+<p>Let $\lambda = \frac{2}{3 \sqrt{\sigma_0^2 + 2 \sigma_1^2 L F}} &lt; 1$,</p>
+
+\[\begin{array}{rcl}
+  \sum_{s = 0}^t \langle \nabla f (x_s), \nabla f (x_s) - \nabla f (x_s,
+  \xi_s) \rangle &amp; \leq &amp; \frac{\sum_{s = 0}^t \| \nabla f (x_s) \|^2}{2
+  \sqrt{\sigma_0^2 + 2 \sigma_1^2 L F}} + \frac{3 \sqrt{\sigma_0^2 + 2
+  \sigma_1^2 L F}}{2} \log \frac{T}{\delta}\\
+  &amp; \leq &amp; \frac{\sum_{s = 0}^t \| \nabla f (x_s) \|^2}{2 \sqrt{\sigma_0^2 +
+  2 \sigma_1^2 L F}} + \frac{9 (\sigma_0^2 + 2 \sigma_1^2 L F)}{16} + \log^2 
+  \frac{T}{\delta}
+\end{array}\]
+
+\[\begin{array}{rcl}
+  - \eta \sum_{s = 0}^t \nabla f (x_s, \xi_s)^{\top} \nabla f (x_s) &amp; \leq &amp;
+  \frac{9 \eta (\sigma_0^2 + 2 \sigma_1^2 L F)}{16} + \eta \log^2 
+  \frac{T}{\delta} \leq \frac{F}{2} + \frac{9 \alpha \sigma_0}{16 \sqrt{T}} +
+  \frac{\alpha \log^2  \frac{T}{\delta}}{\sigma_0 \sqrt{T}}
+\end{array}\]
+
+<p>We return to the inequality uses $L$-smooth condition,</p>
+
+\[\begin{array}{rcl}
+  f (x_{t + 1}) &amp; \leq &amp; f (x_0) - \eta \sum_{s = 0}^t \nabla f (x_s,
+  \xi_s)^{\top} \nabla f (x_s)\\
+  \bar{\Delta}_{t + 1} &amp; \leq &amp; \frac{F}{2} + \Delta_0 + \frac{9 \alpha
+  \sigma_0}{16 \sqrt{T}} + \frac{\alpha \log^2  \frac{T}{\delta}}{\sigma_0
+  \sqrt{T}}
+\end{array}\]
+
+<p>Let $F = 2 \left( \Delta_0 + \frac{9 \alpha \sigma_0}{16 \sqrt{T}} + 
+\frac{\alpha \log^2  \frac{T}{\delta}}{\sigma_0 \sqrt{T}} \right)$ would derive <strong>Lemma 3</strong>.</p>
+
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2025/03/12/jeju/" data-toggle="tooltip" data-placement="top" title="A Short Escape to Jeju">
+                        Previous<br>
+                        <span>A Short Escape to Jeju</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2025/04/14/BJ/" data-toggle="tooltip" data-placement="top" title="A Random Trip in Beijing">
+                        Next<br>
+                        <span>A Random Trip in Beijing</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Optimization" title="Optimization" rel="11">
+                                    Optimization
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Tips" title="Tips" rel="8">
+                                    Tips
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Travel✈️" title="Travel✈️" rel="3">
+                                    Travel✈️
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/zwyhahaha">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                            <li>
+                                <a target="_blank" href="https://scholar.google.com/citations?user=Xt9MRH8AAAAJ&hl">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/zwanyu">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Over the Rainbow 2026
+                    <br>
+                    Theme on <a href="https://github.com/zwyhahaha/zwyhahaha.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zwyhahaha&repo=zwyhahaha.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

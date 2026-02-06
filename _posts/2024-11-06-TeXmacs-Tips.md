@@ -22,6 +22,38 @@ In case you need help getting started, here are some tutorials that might be use
 
 Hope you enjoy using TeXmacs! :) I will keep updating this post whenever I find new tips!
 
+## Math typing tips
+
+- Use `option F` to create fraction numbers.
+
+- Type `shift [ + Tab` to create various brackets, which is much more convenient than `\langle \rangle`.
+
+- Select some content and type `\red` to mark it in red, which is faster than selecting color in the menu.
+
+- :star: **How to define Assumption environment or other theorem-like environment?**
+
+  Enter the preamble (Select `Document->Part->Show preamble`), and type
+
+  ```scheme
+  <new-theorem|assumption|Assumption>
+  ```
+
+  Then return to the file and type `\assumption` to define assumptions! Here are the references:
+
+  http://forum.texmacs.cn/t/how-do-i-add-a-new-environment-assumption/795/2
+
+  https://www.texmacs.org/tmdoc/main/styles/env/env-base-dtd.en.html
+
+- :crystal_ball: **Magic `right click`: Customized environment**
+
+  In the `Algorithm` environment, `right click->Preferences->Framed Programs` to add box on your algorithm block. Also, you can selected `named` environment. There are so many customized functions by `right click`. Also, in the `theorem` environment, you can `right click->Preferences->European Numbering Style` to seperately number the lemmas, theorems, etc.
+
+  In the bibliography macro, right click and you can rename the sections as `References`.
+
+- Insert multiple citations: [Here](https://lists.texmacs.org/wws/arc/texmacs-users/2023-02/msg00015.html?utm_source=chatgpt.com) is the source of solution. 
+
+  In the \cite macro, after inserting one citation, click on the right arrow  in the focus bar, and you will see one more argument for the second citation term. This is like adding columns in a table.
+
 ## How to fix TeXmacs crash
 
 Recently, I encountered a TeXmacs crash on my MacBook, which was quite frustrating since I couldn’t use it for note-taking. :( Here is a guide to help you fix it. The crash is likely caused by a full cache, and clearing it should resolve the issue.
@@ -55,30 +87,4 @@ open `~/.TeXmacs/progs/my-init-texmacs.scm`, and add the following code
 ```
 
 For Windows, refer to the repository instructions for setup details.
-
-## Math typing tips
-
-- Use `option F` to create fraction numbers.
-
-- Type `shift [ + Tab` to create various brackets, which is much more convenient than `\langle \rangle`.
-
-- Select some content and type `\red` to mark it in red, which is faster than selecting color in the menu.
-
-- :star: **How to define Assumption environment or other theorem-like environment?**
-
-  Enter the preamble (Select `Document->Part->Show preamble`), and type
-
-  ```scheme
-  <new-theorem|assumption|Assumption>
-  ```
-
-  Then return to the file and type `\assumption` to define assumptions! Here are the references:
-
-  http://forum.texmacs.cn/t/how-do-i-add-a-new-environment-assumption/795/2
-
-  https://www.texmacs.org/tmdoc/main/styles/env/env-base-dtd.en.html
-
-- :crystal_ball: **Magic `right click`: Customized environment**
-
-  In the `Algorithm` environment, `right click->Preferences->Framed Programs` to add box on your algorithm block. Also, you can selected `named` environment. There are so many customized functions by `right click`. Also, in the `theorem` environment, you can `right click->Preferences->European Numbering Style` to seperately number the lemmas, theorems, etc.
 

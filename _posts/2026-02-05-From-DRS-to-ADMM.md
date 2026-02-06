@@ -4,7 +4,7 @@ title:      A step-by-step derivation from DRS to ADMM
 subtitle:   
 date:       2026-02-05
 author:     Wanyu Zhang
-header-img: img/post-bg-coffee.jpeg
+header-img: img/zion.jpg
 catalog:    true
 tags:
     - Optimization
