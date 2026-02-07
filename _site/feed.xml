@@ -5,9 +5,147 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 06 Feb 2026 11:59:17 -0800</pubDate>
-    <lastBuildDate>Fri, 06 Feb 2026 11:59:17 -0800</lastBuildDate>
+    <pubDate>Fri, 06 Feb 2026 22:10:41 -0800</pubDate>
+    <lastBuildDate>Fri, 06 Feb 2026 22:10:41 -0800</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
+    
+      <item>
+        <title>Asymptotic Memoryless of Markov Chains</title>
+        <description>&lt;p&gt;This is the first post in a series of notes taken from the &lt;strong&gt;Stochastic Systems&lt;/strong&gt; class (MS&amp;amp;E 321) taught by Professor Peter Glynn. This series will be updated as the course progresses.&lt;/p&gt;
+
+&lt;p&gt;A fundamental property of Markov chains is that their long-run behavior “forgets” the initial state. More precisely, for a finite, irreducible, aperiodic Markov chain with transition matrix $P$, the $n$-step transition probabilities $P^n(x,y)$ converge to a stationary distribution $\pi(y)$ at a geometric rate. The key idea behind the proof is a clean algebraic decomposition $P^m = \delta \Lambda + (1-\delta)Q$, which separates a “memoryless” rank-1 component $\Lambda$ from a remainder $Q$. This decomposition admits a natural probabilistic interpretation via coupling, and extends to non-stationary transitions, infinite state spaces, and continuous state spaces through Doeblin’s condition.&lt;/p&gt;
+
+&lt;h2 id=&quot;setup&quot;&gt;Setup&lt;/h2&gt;
+
+&lt;p&gt;Consider a Markov chain (MC) with:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Finite state space: $\lvert S\rvert = d &amp;lt; \infty$&lt;/li&gt;
+  &lt;li&gt;Stationary transition matrix $P$&lt;/li&gt;
+  &lt;li&gt;$P$ is irreducible and aperiodic&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We begin with a technical lemma that connects irreducibility and aperiodicity to a uniform positivity condition on $P^m$.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Lemma 1.&lt;/strong&gt; Let $P$ be the transition matrix of an irreducible Markov chain on a finite state space $S$. Then $P$ is aperiodic if and only if there exists $m \geq 1$ such that $P^m(x,y) &amp;gt; 0$ for all $x, y \in S$.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Remark.&lt;/em&gt; This lemma guarantees the existence of $m$ such that $P^m \gg 0$ (all entries strictly positive), which is the starting point of the convergence analysis below. We will revisit the necessity of finiteness in Lemma 1 at the end of this note.&lt;/p&gt;
+
+&lt;h2 id=&quot;convergence-analysis&quot;&gt;Convergence Analysis&lt;/h2&gt;
+
+&lt;p&gt;We first consider the case $m = 1$, i.e., $P \gg 0$.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;1. Decomposition of $P$&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Let $\Lambda$ be a &lt;strong&gt;stochastic matrix&lt;/strong&gt; ($\Lambda \mathbf{e} = \mathbf{e}$) with &lt;strong&gt;identical rows&lt;/strong&gt;, i.e., $\Lambda = \begin{bmatrix} \lambda \\ \vdots \\ \lambda \end{bmatrix}$ where $\lambda\  \mathbf{e}= 1$.&lt;/p&gt;
+
+&lt;p&gt;Since $P \gg 0$, there exists $\delta \in (0,1)$ such that $P \geq \delta \Lambda$. Define&lt;/p&gt;
+
+\[P = \delta \Lambda + (1 - \delta) Q, \qquad Q = \frac{P - \delta \Lambda}{1 - \delta}.\]
+
+&lt;p&gt;Then $Q \geq 0$, and $Q$ is stochastic: $Q\mathbf{e} = \frac{P\mathbf{e} - \delta \Lambda\mathbf{e}}{1 - \delta}= \mathbf{e}$.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Remark.&lt;/em&gt; The parameter $\delta$ measures how much of $P$ can be “explained” by the memoryless component $\Lambda$. A larger $\delta$ means faster mixing.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;2. Computing powers of $P$&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;A key property: $R\Lambda = \Lambda$ for any stochastic matrix $R$, since $R\Lambda = R \mathbf{e} \lambda = \mathbf{e} \lambda = \Lambda$.&lt;/p&gt;
+
+&lt;p&gt;Expanding $P^2$:&lt;/p&gt;
+
+\[\begin{aligned}
+P^2 &amp;amp;= P(\delta \Lambda + (1 - \delta)Q) \\
+&amp;amp;= \delta \Lambda + (1 - \delta)PQ \\
+&amp;amp;= \delta \Lambda + (1 - \delta)(\delta \Lambda + (1 - \delta)Q)Q \\
+&amp;amp;= \delta \Lambda + (1 - \delta)\delta \Lambda Q + (1 - \delta)^2 Q^2
+\end{aligned}\]
+
+&lt;p&gt;By induction, the general formula is:&lt;/p&gt;
+
+\[P^n = \sum_{j=0}^{n-1}\delta(1 - \delta)^{j}\Lambda Q^{j} + (1-\delta)^n Q^n.\]
+
+&lt;p&gt;As $n \to \infty$, the remainder $(1-\delta)^n Q^n \to 0$, and:&lt;/p&gt;
+
+\[P^n \to \sum_{j=0}^{\infty} \delta(1 - \delta)^j \Lambda Q^j \quad \triangleq \quad \Pi.\]
+
+&lt;p&gt;&lt;strong&gt;3. Structure of $\Pi$&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;$\Pi$ is &lt;strong&gt;stochastic&lt;/strong&gt;: since $Q^j\mathbf{e} = \mathbf{e}$ for all $j$, we have $\Lambda Q^j\mathbf{e} = \Lambda\mathbf{e} = \mathbf{e}$, and the geometric series preserves row sums.&lt;/li&gt;
+  &lt;li&gt;$\Pi$ has &lt;strong&gt;identical rows&lt;/strong&gt;: since $\Lambda Q^j= \mathbf{e} (\lambda Q^j)$, every term in the series has identical rows.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Therefore $\Pi$ is a rank-1 stochastic matrix whose common row is the stationary distribution $\pi$.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;4. Rate of convergence&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Define the matrix operator norm induced by the $\ell_\infty$ vector norm. For any stochastic matrix $P$, $\lVert P\rVert = 1$. Then:&lt;/p&gt;
+
+\[\lVert P^n - \Pi\rVert = O\!\left((1 - \delta)^n\right) \qquad \text{(rate of mixing)}\]
+
+&lt;p&gt;&lt;strong&gt;5. Generalization to $m &amp;gt; 1$&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;By Lemma 1, for a finite irreducible aperiodic chain, there exists $m$ such that $P^m \gg 0$. Applying the $m=1$ argument to $P^m$ yields&lt;/p&gt;
+
+\[P^{m\,k} \to \Pi := \sum_{j=0}^\infty \delta(1-\delta)^j \Lambda Q^j,
+\qquad
+\lVert\,P^{m\,k}-\Pi\,\rVert = O\!\left((1-\delta)^k\right).\]
+
+&lt;p&gt;For general $n$, write $n=km+r$ with $0\le r&amp;lt;m$. Then $P^n = (P^m)^k P^r$. Since $\Pi$ has identical rows, $\Pi P^r = \Pi$, so:&lt;/p&gt;
+
+\[\lVert P^n-\Pi\rVert = \lVert(P^{mk}-\Pi)P^r\rVert \leq \lVert P^{mk}-\Pi\rVert= O\!\left((1-\delta)^k\right).\]
+
+&lt;h2 id=&quot;generalizations-and-doeblins-condition&quot;&gt;Generalizations and Doeblin’s Condition&lt;/h2&gt;
+
+&lt;p&gt;The convergence analysis relies entirely on the decomposition $P^m = \delta \Lambda + (1 - \delta) Q$. This decomposition admits a natural probabilistic interpretation and extends to several broader settings.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Probabilistic Interpretation (Coupling).&lt;/strong&gt; At each block of $m$ steps, with probability $\delta$, the chain “forgets” its past and transitions according to the memoryless kernel $\Lambda$; with probability $1-\delta$, it follows the residual kernel $Q$. The number of blocks until the first “reset” is geometric with parameter $\delta$, which directly gives the exponential mixing rate.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Non-Stationary Transitions.&lt;/strong&gt;
+Transition matrices $P(1), P(2), \ldots$ may vary over time, so we do &lt;strong&gt;not&lt;/strong&gt; expect a stationary equilibrium. However, if a &lt;strong&gt;uniform lower bound&lt;/strong&gt; holds:&lt;/p&gt;
+
+\[P(i, x, y) \geq \delta \lambda(y), \quad \forall\, x \in S,\; i \geq 1,\]
+
+&lt;p&gt;then each $P(i) = \delta \Lambda + (1 - \delta) Q_i$, and the same telescoping argument applies:&lt;/p&gt;
+
+\[\begin{aligned}
+P(1)P(2) &amp;amp;= P(1)\bigl(\delta \Lambda + (1 - \delta)Q_2\bigr) = \delta \Lambda + (1 - \delta) P(1) Q_2 \\
+&amp;amp;= \delta \Lambda + (1 - \delta)\delta \Lambda Q_2 + (1 - \delta)^2 Q_1 Q_2.
+\end{aligned}\]
+
+&lt;p&gt;In general, $\lVert P(1) \cdots P(n) - \text{(rank-1)}\rVert \to 0$ at a geometric rate, even without stationarity.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Infinite Discrete State Space.&lt;/strong&gt;
+For $\lvert S\rvert = \infty$, Lemma 1 may fail (see discussion below), so the decomposition $P^m \gg 0$ cannot be guaranteed. One must instead directly assume &lt;strong&gt;Doeblin’s condition&lt;/strong&gt;: there exist $m$, $\delta &amp;gt; 0$, and a probability measure $\lambda$ such that $P^m(x, \cdot) \geq \delta \lambda(\cdot)$ for all $x \in S$.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Continuous State Space.&lt;/strong&gt;
+Doeblin’s condition generalizes naturally: assume there exist $m$, $\delta &amp;gt; 0$, and a probability measure $\lambda$ on $(S, \mathcal{B})$ such that&lt;/p&gt;
+
+\[\mathbb{P}_x(X_m \in B) \geq \delta \lambda(B), \quad \forall\, x \in S,\; B \in \mathcal{B}.\]
+
+&lt;p&gt;Then $\lvert\mathbb{P}_x(X_n \in B) - \pi(B)\rvert = O(r^n)$ for some $r &amp;lt; 1$, where $\pi$ is the unique stationary measure.&lt;/p&gt;
+
+&lt;h2 id=&quot;discussion-on-lemma-1&quot;&gt;Discussion on Lemma 1&lt;/h2&gt;
+
+&lt;p&gt;Recall Lemma 1: &lt;em&gt;$P$ is irreducible and aperiodic on a finite state space if and only if $\exists\, m$ such that $P^m(x,y) &amp;gt; 0$ for all $x,y$.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;This equivalence relies critically on &lt;strong&gt;finiteness&lt;/strong&gt; of the state space. For infinite state spaces, an irreducible aperiodic chain may have no $m$ for which $P^m \gg 0$.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Counterexample: Birth-death chain.&lt;/strong&gt;
+Consider the chain on $\lbrace 0, 1, 2, \ldots\rbrace$ with nearest-neighbor transitions. Starting from state $s$, in any finite number of steps $m$, the chain can reach at most state $s + m$, so $P^m(s, s+m+1) = 0$ for all $m$. Hence no single $m$ makes $P^m$ uniformly positive, even though the chain is irreducible and aperiodic.&lt;/p&gt;
+
+&lt;p&gt;This is precisely why Doeblin’s condition must be imposed as an additional assumption in the infinite state space setting.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 06 Feb 2026 00:00:00 -0800</pubDate>
+        <link>http://localhost:4000/2026/02/06/Asymptotic-Memoryless/</link>
+        <guid isPermaLink="true">http://localhost:4000/2026/02/06/Asymptotic-Memoryless/</guid>
+        
+        <category>Lecture Notes</category>
+        
+        
+      </item>
     
       <item>
         <title>A Step-by-step Derivation of ADMM from DRS</title>
@@ -919,132 +1057,6 @@ j}$.&lt;/p&gt;
         <guid isPermaLink="true">http://localhost:4000/2025/05/17/EPLB/</guid>
         
         <category>Optimization</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Writing LaTeX Locally on macOS</title>
-        <description>&lt;p&gt;Previously, I used Overleaf to write &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tex&lt;/code&gt; files. It’s convenient, beginner-friendly, and great for collaboration. However, it only works online, which means you can’t draft your paper on a flight (maybe it’s a good thing). That’s why I’ve started transitioning to writing and compiling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.tex&lt;/code&gt; files locally on macOS.&lt;/p&gt;
-
-&lt;p&gt;This post is a collection of helpful resources for setting up a local LaTeX environment.&lt;/p&gt;
-
-&lt;h2 id=&quot;introductory-latex-resources&quot;&gt;Introductory LaTeX resources&lt;/h2&gt;
-
-&lt;p&gt;There are some excellent beginner-friendly Chinese docs:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://oi-wiki.org/tools/latex/&quot;&gt;A quick guide on LaTeX syntax from OI-wiki&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://liam.page/2014/09/08/latex-introduction/&quot;&gt;A more approachable blog from Liam Huang&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;(Here I’d like to recommend &lt;a href=&quot;https://liam.page/categories/LaTeX/&quot;&gt;Liam Huang’s blog on LaTeX&lt;/a&gt;, where you can find almost everything you need to know!)&lt;/p&gt;
-
-&lt;p&gt;More comprehensive official documentation in English:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tug.org/texinfohtml/latex2e.html&quot;&gt;LaTeX2e: An unofficial reference manual&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.learnlatex.org/&quot;&gt;Learn LaTeX tutorial (available in many languages)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;getting-started&quot;&gt;Getting started&lt;/h2&gt;
-
-&lt;p&gt;To set up a local LaTeX environment similar to Overleaf, you’ll need:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;TeX distribution&lt;/strong&gt;: This is the core engine and format bundle. On macOS, people usually use &lt;strong&gt;MacTeX&lt;/strong&gt; (a TeX Live distribution for Mac).&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Editor&lt;/strong&gt;: You can use the default TeXShop editor or other text/code editors like VS Code or Sublime Text.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Let’s go through the installation step-by-step.&lt;/p&gt;
-
-&lt;h2 id=&quot;install-tex-live-mactex&quot;&gt;Install TeX Live (MacTex)&lt;/h2&gt;
-
-&lt;p&gt;Be prepared — downloading MacTeX can take a few hours, so it’s often better to use mirror sites.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;TeX Live (Windows): &lt;a href=&quot;https://tug.org/texlive/windows.html&quot;&gt;Official&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;MacTeX (Macs): &lt;a href=&quot;https://tug.org/mactex/mactex-download.html&quot;&gt;Official&lt;/a&gt; , &lt;a href=&quot;https://mirrors.sjtug.sjtu.edu.cn/ctan/systems/mac/mactex/MacTeX.pkg&quot;&gt;SJTU mirrors&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Reference: &lt;a href=&quot;https://liam.page/texlive/&quot;&gt;Installation guide in Chinese by Liam Huang&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;install-editors&quot;&gt;Install editors&lt;/h2&gt;
-
-&lt;p&gt;For a quick start, you can launch &lt;strong&gt;TeXShop&lt;/strong&gt;, which comes with MacTeX. You’ll see a simple blank window — this is your editor. Insert a LaTeX template, click compile, and the resulting PDF appears in a separate window. Clean and elegant, right?&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/tex/texshop.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;If this default setup works for you, great! You’re all set.
- However, if you want more features or flexibility, you can try other editors like &lt;strong&gt;VS Code&lt;/strong&gt; or &lt;strong&gt;Sublime Text&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;vs-code-configuration&quot;&gt;VS Code configuration&lt;/h3&gt;
-
-&lt;p&gt;You can follow &lt;a href=&quot;https://latex.lierhua.top/docs/Configuration-of-VS-Code-Mac-Version/&quot;&gt;this tutorial&lt;/a&gt; to configure VS Code. However, I encountered a couple of issues during setup. Here’s how I resolved them:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chktex could not be found&lt;/code&gt; warning&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Solution: Disable the linter by adding this to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;settings.json&lt;/code&gt;:&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;&quot;latex.linter.enabled&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Error: spawn pdflatex ENOENT&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;This indicates the LaTeX binary isn’t found. Add the correct environment path to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;settings.json&lt;/code&gt; (specific to macOS):&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;&quot;latex-workshop.latex.tools&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pdflatex&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;command&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pdflatex&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;args&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-synctex=1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-interaction=nonstopmode&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-file-line-error&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;%DOC%&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Start:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;newly&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;added&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;env&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;PATH&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/Library/TeX/texbin:/usr/local/bin:/opt/homebrew/bin:${env:PATH}&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;End:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;newly&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;added&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;🔧 Make sure to set the environment path for &lt;strong&gt;each tool&lt;/strong&gt; (e.g., &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pdflatex&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xelatex&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;latexmk&lt;/code&gt;) under &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;latex-workshop.latex.tools&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;With all problems settled down, the compiler should work smoothly. The result looks quite polished:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/tex/vscode.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;sublime-text-configuration&quot;&gt;Sublime Text configuration&lt;/h3&gt;
-
-&lt;p&gt;I hadn’t used Sublime Text before writing this post, but it seems to be a powerful and customizable editor. I’m looking forward to exploring it further.&lt;/p&gt;
-
-&lt;p&gt;Helpful guides I used:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://liam.page/2013/11/11/Sublime-elegant/&quot;&gt;Sublime Text installation and introduction (Chinese)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://liam.page/2013/11/13/Sublime-with-LaTeX/&quot;&gt;Sublime Text + LaTex for Windows (Chinese)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://latex.lierhua.top/docs/Setting-up-Sublime-Text-Windows-version/&quot;&gt;Sublime Text + LaTex for Windows (EN/CH)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://latex.lierhua.top/docs/Settings-for-Sublime-Text-Mac-Version/&quot;&gt;Sublime Text + LaTex for Macs (EN/CH)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;After following the instructions, your setup will look like this:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/tex/st.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
-</description>
-        <pubDate>Thu, 01 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/01/TeX/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/01/TeX/</guid>
-        
-        <category>Tips</category>
         
         
       </item>

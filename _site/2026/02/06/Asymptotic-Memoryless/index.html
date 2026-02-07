@@ -20,7 +20,7 @@
     <meta name="keywords"  content="Blog">
     <meta name="theme-color" content="#000000">
     
-    <title>Code Review | Expert Parallelism Load Balancer - Wanyu Zhang</title>
+    <title>Asymptotic Memoryless of Markov Chains - Wanyu Zhang</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2025/05/17/EPLB/">
+    <link rel="canonical" href="http://localhost:4000/2026/02/06/Asymptotic-Memoryless/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -198,87 +198,140 @@
                 <div class="post-meta-header">
                     <div class="post-tags">
                         
-                        <a href="/tags/#Optimization" title="Optimization">Optimization</a>
+                        <a href="/tags/#Lecture Notes" title="Lecture Notes">Lecture Notes</a>
                         
                     </div>
-                    <h1>Code Review | Expert Parallelism Load Balancer</h1>
+                    <h1>Asymptotic Memoryless of Markov Chains</h1>
                     
-                    <span class="meta">Posted by Wanyu Zhang on May 17, 2025</span>
+                    <span class="meta">Posted by Wanyu Zhang on February 6, 2026</span>
                 </div>
 
-				<p>DeepSeek recently released a simple yet effective toolbox for load balancing in Mixture of Experts (MoE) architectures. The <a href="https://github.com/deepseek-ai/EPLB">EPLB toolbox</a> consists of only one Python file and has already received 1.2k stars on GitHub. The algorithm is heuristic, straightforward, and influential. However, it is described only in the README file—there’s no accompanying paper or technical report. So I spent about an hour reading through its ~160 lines of code and summarized the workflow in this blog.</p>
+				<p>This is the first post in a series of notes taken from the <strong>Stochastic Systems</strong> class (MS&amp;E 321) taught by Professor Peter Glynn. This series will be updated as the course progresses.</p>
 
-<h2 id="background">Background</h2>
+<p>A fundamental property of Markov chains is that their long-run behavior “forgets” the initial state. More precisely, for a finite, irreducible, aperiodic Markov chain with transition matrix $P$, the $n$-step transition probabilities $P^n(x,y)$ converge to a stationary distribution $\pi(y)$ at a geometric rate. The key idea behind the proof is a clean algebraic decomposition $P^m = \delta \Lambda + (1-\delta)Q$, which separates a “memoryless” rank-1 component $\Lambda$ from a remainder $Q$. This decomposition admits a natural probabilistic interpretation via coupling, and extends to non-stationary transitions, infinite state spaces, and continuous state spaces through Doeblin’s condition.</p>
 
-<p>If you’re unfamiliar with the MoE architecture, the following resources may be helpful:</p>
+<h2 id="setup">Setup</h2>
 
-<ul>
-  <li><a href="https://huggingface.co/blog/moe">Blog by HuggingFace: Mixture of Experts Explained</a></li>
-  <li><a href="https://arxiv.org/abs/2401.06066">Paper by DeepSeek: DeepSeekMoE</a></li>
-  <li><a href="https://arxiv.org/abs/2412.19437v1">DeepSeek-V3 Technical Report</a></li>
-</ul>
-
-<p>MoE models activate only a few experts for each input instead of passing the data through the entire network. This allows for scaling up model parameters without significantly increasing computation. In short, an MoE layer includes a router and an expert layer. For each input state, the router assigns an affinity score to each expert. Then, a top-K strategy selects the top K experts to compute the output.</p>
-
-<p>Despite their success, MoE models often suffer from <strong>unbalanced expert workloads</strong>. This imbalance can lead to router collapse and reduced computational efficiency. To address this, researchers have proposed solutions like:</p>
+<p>Consider a Markov chain (MC) with:</p>
 
 <ul>
-  <li>Adding auxiliary load-balancing loss when training the router,</li>
-  <li>Introducing bias when selecting top-K experts,</li>
-  <li>Solving an integer programming problem for load balancing.</li>
+  <li>Finite state space: $\lvert S\rvert = d &lt; \infty$</li>
+  <li>Stationary transition matrix $P$</li>
+  <li>$P$ is irreducible and aperiodic</li>
 </ul>
 
-<p>EPLB (Expert Parallelism Load Balancer) is DeepSeek’s Python-based tool that helps replicate and allocate experts to GPUs across different nodes. It aims to balance the workload at three levels: nodes, GPUs, and experts.</p>
+<p>We begin with a technical lemma that connects irreducibility and aperiodicity to a uniform positivity condition on $P^m$.</p>
 
-<h2 id="algorithm-explained">Algorithm explained</h2>
+<blockquote>
+  <p><strong>Lemma 1.</strong> Let $P$ be the transition matrix of an irreducible Markov chain on a finite state space $S$. Then $P$ is aperiodic if and only if there exists $m \geq 1$ such that $P^m(x,y) &gt; 0$ for all $x, y \in S$.</p>
+</blockquote>
 
-<p>The core idea of EPLB involves two main steps:</p>
+<p><em>Remark.</em> This lemma guarantees the existence of $m$ such that $P^m \gg 0$ (all entries strictly positive), which is the starting point of the convergence analysis below. We will revisit the necessity of finiteness in Lemma 1 at the end of this note.</p>
+
+<h2 id="convergence-analysis">Convergence Analysis</h2>
+
+<p>We first consider the case $m = 1$, i.e., $P \gg 0$.</p>
+
+<p><strong>1. Decomposition of $P$</strong></p>
+
+<p>Let $\Lambda$ be a <strong>stochastic matrix</strong> ($\Lambda \mathbf{e} = \mathbf{e}$) with <strong>identical rows</strong>, i.e., $\Lambda = \begin{bmatrix} \lambda \\ \vdots \\ \lambda \end{bmatrix}$ where $\lambda\  \mathbf{e}= 1$.</p>
+
+<p>Since $P \gg 0$, there exists $\delta \in (0,1)$ such that $P \geq \delta \Lambda$. Define</p>
+
+\[P = \delta \Lambda + (1 - \delta) Q, \qquad Q = \frac{P - \delta \Lambda}{1 - \delta}.\]
+
+<p>Then $Q \geq 0$, and $Q$ is stochastic: $Q\mathbf{e} = \frac{P\mathbf{e} - \delta \Lambda\mathbf{e}}{1 - \delta}= \mathbf{e}$.</p>
+
+<p><em>Remark.</em> The parameter $\delta$ measures how much of $P$ can be “explained” by the memoryless component $\Lambda$. A larger $\delta$ means faster mixing.</p>
+
+<p><strong>2. Computing powers of $P$</strong></p>
+
+<p>A key property: $R\Lambda = \Lambda$ for any stochastic matrix $R$, since $R\Lambda = R \mathbf{e} \lambda = \mathbf{e} \lambda = \Lambda$.</p>
+
+<p>Expanding $P^2$:</p>
+
+\[\begin{aligned}
+P^2 &amp;= P(\delta \Lambda + (1 - \delta)Q) \\
+&amp;= \delta \Lambda + (1 - \delta)PQ \\
+&amp;= \delta \Lambda + (1 - \delta)(\delta \Lambda + (1 - \delta)Q)Q \\
+&amp;= \delta \Lambda + (1 - \delta)\delta \Lambda Q + (1 - \delta)^2 Q^2
+\end{aligned}\]
+
+<p>By induction, the general formula is:</p>
+
+\[P^n = \sum_{j=0}^{n-1}\delta(1 - \delta)^{j}\Lambda Q^{j} + (1-\delta)^n Q^n.\]
+
+<p>As $n \to \infty$, the remainder $(1-\delta)^n Q^n \to 0$, and:</p>
+
+\[P^n \to \sum_{j=0}^{\infty} \delta(1 - \delta)^j \Lambda Q^j \quad \triangleq \quad \Pi.\]
+
+<p><strong>3. Structure of $\Pi$</strong></p>
 
 <ul>
-  <li><strong>Decomposing</strong> the joint decision problem (replication and reallocation) into three smaller subproblems.</li>
-  <li><strong>Greedily</strong> solving each subproblem.</li>
+  <li>$\Pi$ is <strong>stochastic</strong>: since $Q^j\mathbf{e} = \mathbf{e}$ for all $j$, we have $\Lambda Q^j\mathbf{e} = \Lambda\mathbf{e} = \mathbf{e}$, and the geometric series preserves row sums.</li>
+  <li>$\Pi$ has <strong>identical rows</strong>: since $\Lambda Q^j= \mathbf{e} (\lambda Q^j)$, every term in the series has identical rows.</li>
 </ul>
 
-<p>Here’s how the problem and algorithm are structured.</p>
+<p>Therefore $\Pi$ is a rank-1 stochastic matrix whose common row is the stationary distribution $\pi$.</p>
 
-<p>To aid understanding, the figure below shows an example setup. Each MoE layer includes 16 physical experts (representing 12 logical experts), distributed across 2 computing nodes (each with 4 GPUs). These 16 experts are grouped into 8 sets, which are then assigned to GPUs.</p>
+<p><strong>4. Rate of convergence</strong></p>
 
-<p><img src="/img/EPLB/example.png" alt="test" style="width: 80%; height: auto;" /></p>
+<p>Define the matrix operator norm induced by the $\ell_\infty$ vector norm. For any stochastic matrix $P$, $\lVert P\rVert = 1$. Then:</p>
 
-<p>EPLB aims to balance the workload across nodes, groups, and experts by replicating and reallocating experts to GPUs. Because this is a complex joint decision problem, EPLB breaks it into the following subproblems:</p>
+\[\lVert P^n - \Pi\rVert = O\!\left((1 - \delta)^n\right) \qquad \text{(rate of mixing)}\]
 
-<ol>
-  <li>Given current groups, allocate these groups to nodes.
-    <ul>
-      <li>Objective: balance the workload between nodes.</li>
-      <li>Algorithm: Balanced Packing</li>
-    </ul>
-  </li>
-  <li>In each node, replicate the experts.
-    <ul>
-      <li>Objective: balance the workload between experts.</li>
-      <li>Algorithm: Balanced Replication.</li>
-    </ul>
-  </li>
-  <li>In each node, allocate experts to groups.
-    <ul>
-      <li>Objective: balance the workload between groups.</li>
-      <li>Algorithm: Balanced Packing</li>
-    </ul>
-  </li>
-</ol>
+<p><strong>5. Generalization to $m &gt; 1$</strong></p>
 
-<p>Note that steps 1 and 3 both use the same packing algorithm, while step 2 uses a different replication algorithm. EPLB applies greedy strategies to solve both. Here I summarized the pseudocode used in EPLB:</p>
+<p>By Lemma 1, for a finite irreducible aperiodic chain, there exists $m$ such that $P^m \gg 0$. Applying the $m=1$ argument to $P^m$ yields</p>
 
-<p><img src="/img/EPLB/code.png" alt="test" style="width: 80%; height: auto;" /></p>
+\[P^{m\,k} \to \Pi := \sum_{j=0}^\infty \delta(1-\delta)^j \Lambda Q^j,
+\qquad
+\lVert\,P^{m\,k}-\Pi\,\rVert = O\!\left((1-\delta)^k\right).\]
 
-<h2 id="heuristic-or-optimization">Heuristic or Optimization?</h2>
+<p>For general $n$, write $n=km+r$ with $0\le r&lt;m$. Then $P^n = (P^m)^k P^r$. Since $\Pi$ has identical rows, $\Pi P^r = \Pi$, so:</p>
 
-<p>EPLB relies on a series of heuristics—specifically, hierarchical load balancing and greedy algorithms. Still, the approach is impactful in the AI community. Nowadays, efficient and intuitive algorithms are often preferred, as they are usually good enough for practical use.</p>
+\[\lVert P^n-\Pi\rVert = \lVert(P^{mk}-\Pi)P^r\rVert \leq \lVert P^{mk}-\Pi\rVert= O\!\left((1-\delta)^k\right).\]
 
-<p>In contrast, seeking an optimal solution may require significantly more computational resources and can even lead to “overfitting”—not just in the training/testing sense, but also with respect to the optimization objective itself versus other goals that are not explicitly optimized.</p>
+<h2 id="generalizations-and-doeblins-condition">Generalizations and Doeblin’s Condition</h2>
 
-<p>As someone who has worked in optimization, I believe it’s increasingly important to improve computational efficiency for finding the optimal solution and, at times, embrace heuristics :)</p>
+<p>The convergence analysis relies entirely on the decomposition $P^m = \delta \Lambda + (1 - \delta) Q$. This decomposition admits a natural probabilistic interpretation and extends to several broader settings.</p>
+
+<p><strong>Probabilistic Interpretation (Coupling).</strong> At each block of $m$ steps, with probability $\delta$, the chain “forgets” its past and transitions according to the memoryless kernel $\Lambda$; with probability $1-\delta$, it follows the residual kernel $Q$. The number of blocks until the first “reset” is geometric with parameter $\delta$, which directly gives the exponential mixing rate.</p>
+
+<p><strong>Non-Stationary Transitions.</strong>
+Transition matrices $P(1), P(2), \ldots$ may vary over time, so we do <strong>not</strong> expect a stationary equilibrium. However, if a <strong>uniform lower bound</strong> holds:</p>
+
+\[P(i, x, y) \geq \delta \lambda(y), \quad \forall\, x \in S,\; i \geq 1,\]
+
+<p>then each $P(i) = \delta \Lambda + (1 - \delta) Q_i$, and the same telescoping argument applies:</p>
+
+\[\begin{aligned}
+P(1)P(2) &amp;= P(1)\bigl(\delta \Lambda + (1 - \delta)Q_2\bigr) = \delta \Lambda + (1 - \delta) P(1) Q_2 \\
+&amp;= \delta \Lambda + (1 - \delta)\delta \Lambda Q_2 + (1 - \delta)^2 Q_1 Q_2.
+\end{aligned}\]
+
+<p>In general, $\lVert P(1) \cdots P(n) - \text{(rank-1)}\rVert \to 0$ at a geometric rate, even without stationarity.</p>
+
+<p><strong>Infinite Discrete State Space.</strong>
+For $\lvert S\rvert = \infty$, Lemma 1 may fail (see discussion below), so the decomposition $P^m \gg 0$ cannot be guaranteed. One must instead directly assume <strong>Doeblin’s condition</strong>: there exist $m$, $\delta &gt; 0$, and a probability measure $\lambda$ such that $P^m(x, \cdot) \geq \delta \lambda(\cdot)$ for all $x \in S$.</p>
+
+<p><strong>Continuous State Space.</strong>
+Doeblin’s condition generalizes naturally: assume there exist $m$, $\delta &gt; 0$, and a probability measure $\lambda$ on $(S, \mathcal{B})$ such that</p>
+
+\[\mathbb{P}_x(X_m \in B) \geq \delta \lambda(B), \quad \forall\, x \in S,\; B \in \mathcal{B}.\]
+
+<p>Then $\lvert\mathbb{P}_x(X_n \in B) - \pi(B)\rvert = O(r^n)$ for some $r &lt; 1$, where $\pi$ is the unique stationary measure.</p>
+
+<h2 id="discussion-on-lemma-1">Discussion on Lemma 1</h2>
+
+<p>Recall Lemma 1: <em>$P$ is irreducible and aperiodic on a finite state space if and only if $\exists\, m$ such that $P^m(x,y) &gt; 0$ for all $x,y$.</em></p>
+
+<p>This equivalence relies critically on <strong>finiteness</strong> of the state space. For infinite state spaces, an irreducible aperiodic chain may have no $m$ for which $P^m \gg 0$.</p>
+
+<p><strong>Counterexample: Birth-death chain.</strong>
+Consider the chain on $\lbrace 0, 1, 2, \ldots\rbrace$ with nearest-neighbor transitions. Starting from state $s$, in any finite number of steps $m$, the chain can reach at most state $s + m$, so $P^m(s, s+m+1) = 0$ for all $m$. Hence no single $m$ makes $P^m$ uniformly positive, even though the chain is irreducible and aperiodic.</p>
+
+<p>This is precisely why Doeblin’s condition must be imposed as an additional assumption in the infinite state space setting.</p>
 
 
                 <hr style="visibility: hidden;">
@@ -286,19 +339,12 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2025/05/01/TeX/" data-toggle="tooltip" data-placement="top" title="Writing LaTeX Locally on macOS">
+                        <a href="/2026/02/05/From-DRS-to-ADMM/" data-toggle="tooltip" data-placement="top" title="A Step-by-step Derivation of ADMM from DRS">
                         Previous<br>
-                        <span>Writing LaTeX Locally on macOS</span>
+                        <span>A Step-by-step Derivation of ADMM from DRS</span>
                         </a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2025/05/19/IPLB/" data-toggle="tooltip" data-placement="top" title="Optimizing EPLB by Integer (Conic) Linear Programming">
-                        Next<br>
-                        <span>Optimizing EPLB by Integer (Conic) Linear Programming</span>
-                        </a>
-                    </li>
                     
                 </ul>
 
