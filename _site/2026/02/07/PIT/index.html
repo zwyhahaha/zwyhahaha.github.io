@@ -20,7 +20,7 @@
     <meta name="keywords"  content="Blog">
     <meta name="theme-color" content="#000000">
     
-    <title>Asymptotic Memoryless of Markov Chains - Wanyu Zhang</title>
+    <title>Polynomial Identity Testing and Schwartz-Zippel Lemma - Wanyu Zhang</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -32,7 +32,7 @@
     <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2026/02/06/Asymptotic-Memoryless/">
+    <link rel="canonical" href="http://localhost:4000/2026/02/07/PIT/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -201,137 +201,70 @@
                         <a href="/tags/#Lecture Notes" title="Lecture Notes">Lecture Notes</a>
                         
                     </div>
-                    <h1>Asymptotic Memoryless of Markov Chains</h1>
+                    <h1>Polynomial Identity Testing and Schwartz-Zippel Lemma</h1>
                     
-                    <span class="meta">Posted by Wanyu Zhang on February 6, 2026</span>
+                    <span class="meta">Posted by Wanyu Zhang on February 7, 2026</span>
                 </div>
 
-				<p>This is the first post in a series of notes taken from the <strong>Stochastic Systems</strong> class (MS&amp;E 321) taught by Professor Peter Glynn. This series will be updated as the course progresses.</p>
+				<p>Given two polynomials $f$ and $g$, like $x_1^2 - x_2^2$ and $(x_1 + x_2)(x_1 - x_2)$, how do we determine whether they are equal? This problem is known as <em>Polynomial Identity Testing</em> (PIT), which is equivalent to testing whether $f - g$ is identically zero. A polynomial is identically $0$ if and only if all its coefficients are $0$. However, expanding a polynomial into its monomial representation may incur exponential cost. This blog presents a simple randomized algorithm that solves PIT efficiently.</p>
 
-<p>A fundamental property of Markov chains is that their long-run behavior “forgets” the initial state. More precisely, for a finite, irreducible, aperiodic Markov chain with transition matrix $P$, the $n$-step transition probabilities $P^n(x,y)$ converge to a stationary distribution $\pi(y)$ at a geometric rate. The key idea behind the proof is a clean algebraic decomposition $P^m = \delta \Lambda + (1-\delta)Q$, which separates a “memoryless” rank-1 component $\Lambda$ from a remainder $Q$. This decomposition admits a natural probabilistic interpretation via coupling, and extends to non-stationary transitions, infinite state spaces, and continuous state spaces through Doeblin’s condition.</p>
+<p>I learned this algorithm in the <em>Combinatorial Optimization</em> class (MS&amp;E 315) taught by Professor Aaron Sidford. The course encodes the problem of testing whether a graph has a perfect matching as an instance of PIT. (See the <a href="https://drive.google.com/file/d/1KeqiYijcLzkfmvqs69inXX55WG1-6aK_/view">lecture notes</a>, Chapter 10, for details.)</p>
 
-<h2 id="setup">Setup</h2>
+<h2 id="algorithm">Algorithm</h2>
 
-<p>Consider a Markov chain (MC) with:</p>
+<p>The algorithm is remarkably simple: randomly sample a point and check whether the polynomial evaluates to $0$.</p>
 
-<ul>
-  <li>Finite state space: $\lvert S\rvert = d &lt; \infty$</li>
-  <li>Stationary transition matrix $P$</li>
-  <li>$P$ is irreducible and aperiodic</li>
-</ul>
+<p>Specifically, let $f(x_1, \ldots, x_n)$ be a polynomial of degree at most $d$ over a field $\mathbb{F}$, and let $S \subseteq \mathbb{F}$ be any finite set. Sample $r_1, \ldots, r_n$ independently and uniformly at random from $S$. If $f(r_1, \ldots, r_n) = 0$, return “$f \equiv 0$”; otherwise return “$f \not\equiv 0$”.</p>
 
-<p>We begin with a technical lemma that connects irreducibility and aperiodicity to a uniform positivity condition on $P^m$.</p>
+<p>The correctness of this algorithm is guaranteed by the following lemma:</p>
 
 <blockquote>
-  <p><strong>Lemma 1.</strong> Let $P$ be the transition matrix of an irreducible Markov chain on a finite state space $S$. Then $P$ is aperiodic if and only if there exists $m \geq 1$ such that $P^m(x,y) &gt; 0$ for all $x, y \in S$.</p>
+  <p><strong>Schwartz-Zippel Lemma.</strong> Let $f \in \mathbb{F}[x_1, \ldots, x_n]$ be a nonzero polynomial of degree at most $d$. For any finite set $S \subseteq \mathbb{F}$, if $r_1, \ldots, r_n$ are sampled independently and uniformly at random from $S$, then</p>
+
+\[\Pr[f(r_1, \ldots, r_n) = 0] \leq \frac{d}{\lvert S\rvert}.\]
 </blockquote>
 
-<p><em>Remark.</em> This lemma guarantees the existence of $m$ such that $P^m \gg 0$ (all entries strictly positive), which is the starting point of the convergence analysis below. We will revisit the necessity of finiteness in Lemma 1 at the end of this note.</p>
-
-<h2 id="convergence-analysis">Convergence Analysis</h2>
-
-<p>We first consider the case $m = 1$, i.e., $P \gg 0$.</p>
-
-<p><strong>1. Decomposition of $P$</strong></p>
-
-<p>Let $\Lambda$ be a <strong>stochastic matrix</strong> ($\Lambda \mathbf{e} = \mathbf{e}$) with <strong>identical rows</strong>, i.e., $\Lambda = \begin{bmatrix} \lambda \\ \vdots \\ \lambda \end{bmatrix}$ where $\lambda\  \mathbf{e}= 1$.</p>
-
-<p>Since $P \gg 0$, there exists $\delta \in (0,1)$ such that $P \geq \delta \Lambda$. Define</p>
-
-\[P = \delta \Lambda + (1 - \delta) Q, \qquad Q = \frac{P - \delta \Lambda}{1 - \delta}.\]
-
-<p>Then $Q \geq 0$, and $Q$ is stochastic: $Q\mathbf{e} = \frac{P\mathbf{e} - \delta \Lambda\mathbf{e}}{1 - \delta}= \mathbf{e}$.</p>
-
-<p><em>Remark.</em> The parameter $\delta$ measures how much of $P$ can be “explained” by the memoryless component $\Lambda$. A larger $\delta$ means faster mixing.</p>
-
-<p><strong>2. Computing powers of $P$</strong></p>
-
-<p>A key property: $R\Lambda = \Lambda$ for any stochastic matrix $R$, since $R\Lambda = R \mathbf{e} \lambda = \mathbf{e} \lambda = \Lambda$.</p>
-
-<p>Expanding $P^2$:</p>
-
-\[\begin{aligned}
-P^2 &amp;= P(\delta \Lambda + (1 - \delta)Q) \\
-&amp;= \delta \Lambda + (1 - \delta)PQ \\
-&amp;= \delta \Lambda + (1 - \delta)(\delta \Lambda + (1 - \delta)Q)Q \\
-&amp;= \delta \Lambda + (1 - \delta)\delta \Lambda Q + (1 - \delta)^2 Q^2
-\end{aligned}\]
-
-<p>By induction, the general formula is:</p>
-
-\[P^n = \sum_{j=0}^{n-1}\delta(1 - \delta)^{j}\Lambda Q^{j} + (1-\delta)^n Q^n.\]
-
-<p>As $n \to \infty$, the remainder $(1-\delta)^n Q^n \to 0$, and:</p>
-
-\[P^n \to \sum_{j=0}^{\infty} \delta(1 - \delta)^j \Lambda Q^j \quad \triangleq \quad \Pi.\]
-
-<p><strong>3. Structure of $\Pi$</strong></p>
-
+<p>Several observations follow from this lemma:</p>
 <ul>
-  <li>$\Pi$ is <strong>stochastic</strong>: since $Q^j\mathbf{e} = \mathbf{e}$ for all $j$, we have $\Lambda Q^j\mathbf{e} = \Lambda\mathbf{e} = \mathbf{e}$, and the geometric series preserves row sums.</li>
-  <li>$\Pi$ has <strong>identical rows</strong>: since $\Lambda Q^j= \mathbf{e} (\lambda Q^j)$, every term in the series has identical rows.</li>
+  <li>The algorithm can only err when $f \not\equiv 0$ but the random evaluation happens to land on a root of $f$. The Schwartz-Zippel Lemma guarantees that the success probability is at least $1 - \frac{d}{\lvert S\rvert}$. Since $S$ is arbitrary, choosing a larger set $S$ increases the success probability.</li>
+  <li>By repeating the test independently $k$ times, the error probability drops to $\left(\frac{d}{\lvert S\rvert}\right)^k$.</li>
+  <li>The bound is independent of the number of variables $n$.</li>
 </ul>
 
-<p>Therefore $\Pi$ is a rank-1 stochastic matrix whose common row is the stationary distribution $\pi$.</p>
+<h2 id="proof">Proof</h2>
 
-<p><strong>4. Rate of convergence</strong></p>
+<p>The proof proceeds by induction on $n$.</p>
 
-<p>Define the matrix operator norm induced by the $\ell_\infty$ vector norm. For any stochastic matrix $P$, $\lVert P\rVert = 1$. Then:</p>
+<p><strong>Base case ($n = 1$).</strong> The polynomial $f$ is univariate of degree at most $d$, so it has at most $d$ roots over $\mathbb{F}$. Therefore,</p>
 
-\[\lVert P^n - \Pi\rVert = O\!\left((1 - \delta)^n\right) \qquad \text{(rate of mixing)}\]
+\[\Pr[f(r) = 0] \leq \frac{\lvert\{\text{roots of } f\} \cap S\rvert}{\lvert S\rvert} \leq \frac{d}{\lvert S\rvert}.\]
 
-<p><strong>5. Generalization to $m &gt; 1$</strong></p>
+<p><strong>Inductive step.</strong> Assume the lemma holds for all nonzero polynomials in $n - 1$ variables. We prove it for $n$ variables. Factor out $x_1$ by writing</p>
 
-<p>By Lemma 1, for a finite irreducible aperiodic chain, there exists $m$ such that $P^m \gg 0$. Applying the $m=1$ argument to $P^m$ yields</p>
+\[f(x_1, \ldots, x_n) = \sum_{i=0}^{k} x_1^i \, f_i(x_2, \ldots, x_n),\]
 
-\[P^{m\,k} \to \Pi := \sum_{j=0}^\infty \delta(1-\delta)^j \Lambda Q^j,
-\qquad
-\lVert\,P^{m\,k}-\Pi\,\rVert = O\!\left((1-\delta)^k\right).\]
+<p>where $k$ is the largest power of $x_1$ appearing in $f$, so that $f_k \not\equiv 0$. Note that $\deg(f_k) \leq d - k$, since each monomial $x_1^k \cdot m$ in $f$ contributes a monomial $m$ of degree at most $d - k$ to $f_k$.</p>
 
-<p>For general $n$, write $n=km+r$ with $0\le r&lt;m$. Then $P^n = (P^m)^k P^r$. Since $\Pi$ has identical rows, $\Pi P^r = \Pi$, so:</p>
+<p>Define the event $A = {f_k(r_2, \ldots, r_n) = 0}$. We consider two cases.</p>
 
-\[\lVert P^n-\Pi\rVert = \lVert(P^{mk}-\Pi)P^r\rVert \leq \lVert P^{mk}-\Pi\rVert= O\!\left((1-\delta)^k\right).\]
+<p><strong>Case 1: $A$ occurs.</strong> Since $f_k$ is a nonzero polynomial in $n - 1$ variables with $\deg(f_k) \leq d - k$, the induction hypothesis gives</p>
 
-<h2 id="generalizations-and-doeblins-condition">Generalizations and Doeblin’s Condition</h2>
+\[\Pr[A] \leq \frac{d - k}{\lvert S\rvert}.\]
 
-<p>The convergence analysis relies entirely on the decomposition $P^m = \delta \Lambda + (1 - \delta) Q$. This decomposition admits a natural probabilistic interpretation and extends to several broader settings.</p>
+<p><strong>Case 2: $A^c$ occurs.</strong> Conditioned on $r_2, \ldots, r_n$ such that $f_k(r_2, \ldots, r_n) \neq 0$, the function $g(x_1) = f(x_1, r_2, \ldots, r_n)$ is a nonzero univariate polynomial of degree $k$ in $x_1$. By the base case argument,</p>
 
-<p><strong>Probabilistic Interpretation (Coupling).</strong> At each block of $m$ steps, with probability $\delta$, the chain “forgets” its past and transitions according to the memoryless kernel $\Lambda$; with probability $1-\delta$, it follows the residual kernel $Q$. The number of blocks until the first “reset” is geometric with parameter $\delta$, which directly gives the exponential mixing rate.</p>
+\[\Pr[f(r) = 0 \mid A^c] \leq \frac{k}{\lvert S\rvert}.\]
 
-<p><strong>Non-Stationary Transitions.</strong>
-Transition matrices $P(1), P(2), \ldots$ may vary over time, so we do <strong>not</strong> expect a stationary equilibrium. However, if a <strong>uniform lower bound</strong> holds:</p>
-
-\[P(i, x, y) \geq \delta \lambda(y), \quad \forall\, x \in S,\; i \geq 1,\]
-
-<p>then each $P(i) = \delta \Lambda + (1 - \delta) Q_i$, and the same telescoping argument applies:</p>
+<p>Combining the two cases by the law of total probability,</p>
 
 \[\begin{aligned}
-P(1)P(2) &amp;= P(1)\bigl(\delta \Lambda + (1 - \delta)Q_2\bigr) = \delta \Lambda + (1 - \delta) P(1) Q_2 \\
-&amp;= \delta \Lambda + (1 - \delta)\delta \Lambda Q_2 + (1 - \delta)^2 Q_1 Q_2.
+\Pr[f(r) = 0]
+&amp;= \Pr[A]\,\Pr[f(r) = 0 \mid A] + \Pr[A^c]\,\Pr[f(r) = 0 \mid A^c] \\
+&amp;\leq \Pr[A] + \Pr[f(r) = 0 \mid A^c] \\
+&amp;\leq \frac{d - k}{\lvert S\rvert} + \frac{k}{\lvert S\rvert} = \frac{d}{\lvert S\rvert}.
 \end{aligned}\]
 
-<p>In general, $\lVert P(1) \cdots P(n) - \text{(rank-1)}\rVert \to 0$ at a geometric rate, even without stationarity.</p>
-
-<p><strong>Infinite Discrete State Space.</strong>
-For $\lvert S\rvert = \infty$, Lemma 1 may fail (see discussion below), so the decomposition $P^m \gg 0$ cannot be guaranteed. One must instead directly assume <strong>Doeblin’s condition</strong>: there exist $m$, $\delta &gt; 0$, and a probability measure $\lambda$ such that $P^m(x, \cdot) \geq \delta \lambda(\cdot)$ for all $x \in S$.</p>
-
-<p><strong>Continuous State Space.</strong>
-Doeblin’s condition generalizes naturally: assume there exist $m$, $\delta &gt; 0$, and a probability measure $\lambda$ on $(S, \mathcal{B})$ such that</p>
-
-\[\mathbb{P}_x(X_m \in B) \geq \delta \lambda(B), \quad \forall\, x \in S,\; B \in \mathcal{B}.\]
-
-<p>Then $\lvert\mathbb{P}_x(X_n \in B) - \pi(B)\rvert = O(r^n)$ for some $r &lt; 1$, where $\pi$ is the unique stationary measure.</p>
-
-<h2 id="discussion-on-lemma-1">Discussion on Lemma 1</h2>
-
-<p>Recall Lemma 1: <em>$P$ is irreducible and aperiodic on a finite state space if and only if $\exists\, m$ such that $P^m(x,y) &gt; 0$ for all $x,y$.</em></p>
-
-<p>This equivalence relies critically on <strong>finiteness</strong> of the state space. For infinite state spaces, an irreducible aperiodic chain may have no $m$ for which $P^m \gg 0$.</p>
-
-<p><strong>Counterexample: Birth-death chain.</strong>
-Consider the chain on $\lbrace 0, 1, 2, \ldots\rbrace$ with nearest-neighbor transitions. Starting from state $s$, in any finite number of steps $m$, the chain can reach at most state $s + m$, so $P^m(s, s+m+1) = 0$ for all $m$. Hence no single $m$ makes $P^m$ uniformly positive, even though the chain is irreducible and aperiodic.</p>
-
-<p>This is precisely why Doeblin’s condition must be imposed as an additional assumption in the infinite state space setting.</p>
+<p>$\blacksquare$</p>
 
 
                 <hr style="visibility: hidden;">
@@ -339,19 +272,12 @@ Consider the chain on $\lbrace 0, 1, 2, \ldots\rbrace$ with nearest-neighbor tra
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2026/02/05/From-DRS-to-ADMM/" data-toggle="tooltip" data-placement="top" title="A Step-by-step Derivation of ADMM from DRS">
+                        <a href="/2026/02/06/Asymptotic-Memoryless/" data-toggle="tooltip" data-placement="top" title="Asymptotic Memoryless of Markov Chains">
                         Previous<br>
-                        <span>A Step-by-step Derivation of ADMM from DRS</span>
+                        <span>Asymptotic Memoryless of Markov Chains</span>
                         </a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2026/02/07/PIT/" data-toggle="tooltip" data-placement="top" title="Polynomial Identity Testing and Schwartz-Zippel Lemma">
-                        Next<br>
-                        <span>Polynomial Identity Testing and Schwartz-Zippel Lemma</span>
-                        </a>
-                    </li>
                     
                 </ul>
 
@@ -365,20 +291,6 @@ Consider the chain on $\lbrace 0, 1, 2, \ldots\rbrace$ with nearest-neighbor tra
             </div>  
 
     <!-- Side Catalog Container -->
-        
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
         
 
     <!-- Sidebar Container -->
@@ -555,50 +467,6 @@ Consider the chain on $\lbrace 0, 1, 2, \ldots\rbrace$ with nearest-neighbor tra
 
 
 <!-- Side Catalog -->
-
-<script type="text/javascript">
-    function generateCatalog (selector) {
-        var P = $('div.post-container'),a,n,t,l,i,c;
-        a = P.find('h1,h2,h3,h4,h5,h6');
-        a.each(function () {
-            n = $(this).prop('tagName').toLowerCase();
-            i = "#"+$(this).prop('id');
-            t = $(this).text();
-            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
-            l = $('<li class="'+n+'_nav"></li>').append(c);
-            $(selector).append(l);
-        });
-        return true;    
-    }
-
-    generateCatalog(".catalog-body");
-
-    // toggle side catalog
-    $(".catalog-toggle").click((function(e){
-        e.preventDefault();
-        $('.side-catalog').toggleClass("fold")
-    }))
-
-    /*
-     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
-     * Fork by Hux to support padding
-     */
-    async("/js/jquery.nav.js", function () {
-        $('.catalog-body').onePageNav({
-            currentClass: "active",
-            changeHash: !1,
-            easing: "swing",
-            filter: "",
-            scrollSpeed: 700,
-            scrollOffset: 0,
-            scrollThreshold: .2,
-            begin: null,
-            end: null,
-            scrollChange: null,
-            padding: 80
-        });
-    });
-</script>
 
 
 

@@ -5,9 +5,80 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 06 Feb 2026 22:10:41 -0800</pubDate>
-    <lastBuildDate>Fri, 06 Feb 2026 22:10:41 -0800</lastBuildDate>
+    <pubDate>Sat, 07 Feb 2026 20:46:30 -0800</pubDate>
+    <lastBuildDate>Sat, 07 Feb 2026 20:46:30 -0800</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
+    
+      <item>
+        <title>Polynomial Identity Testing and Schwartz-Zippel Lemma</title>
+        <description>&lt;p&gt;Given two polynomials $f$ and $g$, like $x_1^2 - x_2^2$ and $(x_1 + x_2)(x_1 - x_2)$, how do we determine whether they are equal? This problem is known as &lt;em&gt;Polynomial Identity Testing&lt;/em&gt; (PIT), which is equivalent to testing whether $f - g$ is identically zero. A polynomial is identically $0$ if and only if all its coefficients are $0$. However, expanding a polynomial into its monomial representation may incur exponential cost. This blog presents a simple randomized algorithm that solves PIT efficiently.&lt;/p&gt;
+
+&lt;p&gt;I learned this algorithm in the &lt;em&gt;Combinatorial Optimization&lt;/em&gt; class (MS&amp;amp;E 315) taught by Professor Aaron Sidford. The course encodes the problem of testing whether a graph has a perfect matching as an instance of PIT. (See the &lt;a href=&quot;https://drive.google.com/file/d/1KeqiYijcLzkfmvqs69inXX55WG1-6aK_/view&quot;&gt;lecture notes&lt;/a&gt;, Chapter 10, for details.)&lt;/p&gt;
+
+&lt;h2 id=&quot;algorithm&quot;&gt;Algorithm&lt;/h2&gt;
+
+&lt;p&gt;The algorithm is remarkably simple: randomly sample a point and check whether the polynomial evaluates to $0$.&lt;/p&gt;
+
+&lt;p&gt;Specifically, let $f(x_1, \ldots, x_n)$ be a polynomial of degree at most $d$ over a field $\mathbb{F}$, and let $S \subseteq \mathbb{F}$ be any finite set. Sample $r_1, \ldots, r_n$ independently and uniformly at random from $S$. If $f(r_1, \ldots, r_n) = 0$, return “$f \equiv 0$”; otherwise return “$f \not\equiv 0$”.&lt;/p&gt;
+
+&lt;p&gt;The correctness of this algorithm is guaranteed by the following lemma:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;strong&gt;Schwartz-Zippel Lemma.&lt;/strong&gt; Let $f \in \mathbb{F}[x_1, \ldots, x_n]$ be a nonzero polynomial of degree at most $d$. For any finite set $S \subseteq \mathbb{F}$, if $r_1, \ldots, r_n$ are sampled independently and uniformly at random from $S$, then&lt;/p&gt;
+
+\[\Pr[f(r_1, \ldots, r_n) = 0] \leq \frac{d}{\lvert S\rvert}.\]
+&lt;/blockquote&gt;
+
+&lt;p&gt;Several observations follow from this lemma:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;The algorithm can only err when $f \not\equiv 0$ but the random evaluation happens to land on a root of $f$. The Schwartz-Zippel Lemma guarantees that the success probability is at least $1 - \frac{d}{\lvert S\rvert}$. Since $S$ is arbitrary, choosing a larger set $S$ increases the success probability.&lt;/li&gt;
+  &lt;li&gt;By repeating the test independently $k$ times, the error probability drops to $\left(\frac{d}{\lvert S\rvert}\right)^k$.&lt;/li&gt;
+  &lt;li&gt;The bound is independent of the number of variables $n$.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;proof&quot;&gt;Proof&lt;/h2&gt;
+
+&lt;p&gt;The proof proceeds by induction on $n$.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Base case ($n = 1$).&lt;/strong&gt; The polynomial $f$ is univariate of degree at most $d$, so it has at most $d$ roots over $\mathbb{F}$. Therefore,&lt;/p&gt;
+
+\[\Pr[f(r) = 0] \leq \frac{\lvert\{\text{roots of } f\} \cap S\rvert}{\lvert S\rvert} \leq \frac{d}{\lvert S\rvert}.\]
+
+&lt;p&gt;&lt;strong&gt;Inductive step.&lt;/strong&gt; Assume the lemma holds for all nonzero polynomials in $n - 1$ variables. We prove it for $n$ variables. Factor out $x_1$ by writing&lt;/p&gt;
+
+\[f(x_1, \ldots, x_n) = \sum_{i=0}^{k} x_1^i \, f_i(x_2, \ldots, x_n),\]
+
+&lt;p&gt;where $k$ is the largest power of $x_1$ appearing in $f$, so that $f_k \not\equiv 0$. Note that $\deg(f_k) \leq d - k$, since each monomial $x_1^k \cdot m$ in $f$ contributes a monomial $m$ of degree at most $d - k$ to $f_k$.&lt;/p&gt;
+
+&lt;p&gt;Define the event $A = {f_k(r_2, \ldots, r_n) = 0}$. We consider two cases.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Case 1: $A$ occurs.&lt;/strong&gt; Since $f_k$ is a nonzero polynomial in $n - 1$ variables with $\deg(f_k) \leq d - k$, the induction hypothesis gives&lt;/p&gt;
+
+\[\Pr[A] \leq \frac{d - k}{\lvert S\rvert}.\]
+
+&lt;p&gt;&lt;strong&gt;Case 2: $A^c$ occurs.&lt;/strong&gt; Conditioned on $r_2, \ldots, r_n$ such that $f_k(r_2, \ldots, r_n) \neq 0$, the function $g(x_1) = f(x_1, r_2, \ldots, r_n)$ is a nonzero univariate polynomial of degree $k$ in $x_1$. By the base case argument,&lt;/p&gt;
+
+\[\Pr[f(r) = 0 \mid A^c] \leq \frac{k}{\lvert S\rvert}.\]
+
+&lt;p&gt;Combining the two cases by the law of total probability,&lt;/p&gt;
+
+\[\begin{aligned}
+\Pr[f(r) = 0]
+&amp;amp;= \Pr[A]\,\Pr[f(r) = 0 \mid A] + \Pr[A^c]\,\Pr[f(r) = 0 \mid A^c] \\
+&amp;amp;\leq \Pr[A] + \Pr[f(r) = 0 \mid A^c] \\
+&amp;amp;\leq \frac{d - k}{\lvert S\rvert} + \frac{k}{\lvert S\rvert} = \frac{d}{\lvert S\rvert}.
+\end{aligned}\]
+
+&lt;p&gt;$\blacksquare$&lt;/p&gt;
+</description>
+        <pubDate>Sat, 07 Feb 2026 00:00:00 -0800</pubDate>
+        <link>http://localhost:4000/2026/02/07/PIT/</link>
+        <guid isPermaLink="true">http://localhost:4000/2026/02/07/PIT/</guid>
+        
+        <category>Lecture Notes</category>
+        
+        
+      </item>
     
       <item>
         <title>Asymptotic Memoryless of Markov Chains</title>
@@ -970,91 +1041,6 @@ j}$.&lt;/p&gt;
         <pubDate>Mon, 19 May 2025 00:00:00 -0700</pubDate>
         <link>http://localhost:4000/2025/05/19/IPLB/</link>
         <guid isPermaLink="true">http://localhost:4000/2025/05/19/IPLB/</guid>
-        
-        <category>Optimization</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Code Review | Expert Parallelism Load Balancer</title>
-        <description>&lt;p&gt;DeepSeek recently released a simple yet effective toolbox for load balancing in Mixture of Experts (MoE) architectures. The &lt;a href=&quot;https://github.com/deepseek-ai/EPLB&quot;&gt;EPLB toolbox&lt;/a&gt; consists of only one Python file and has already received 1.2k stars on GitHub. The algorithm is heuristic, straightforward, and influential. However, it is described only in the README file—there’s no accompanying paper or technical report. So I spent about an hour reading through its ~160 lines of code and summarized the workflow in this blog.&lt;/p&gt;
-
-&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
-
-&lt;p&gt;If you’re unfamiliar with the MoE architecture, the following resources may be helpful:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://huggingface.co/blog/moe&quot;&gt;Blog by HuggingFace: Mixture of Experts Explained&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2401.06066&quot;&gt;Paper by DeepSeek: DeepSeekMoE&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/2412.19437v1&quot;&gt;DeepSeek-V3 Technical Report&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;MoE models activate only a few experts for each input instead of passing the data through the entire network. This allows for scaling up model parameters without significantly increasing computation. In short, an MoE layer includes a router and an expert layer. For each input state, the router assigns an affinity score to each expert. Then, a top-K strategy selects the top K experts to compute the output.&lt;/p&gt;
-
-&lt;p&gt;Despite their success, MoE models often suffer from &lt;strong&gt;unbalanced expert workloads&lt;/strong&gt;. This imbalance can lead to router collapse and reduced computational efficiency. To address this, researchers have proposed solutions like:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Adding auxiliary load-balancing loss when training the router,&lt;/li&gt;
-  &lt;li&gt;Introducing bias when selecting top-K experts,&lt;/li&gt;
-  &lt;li&gt;Solving an integer programming problem for load balancing.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;EPLB (Expert Parallelism Load Balancer) is DeepSeek’s Python-based tool that helps replicate and allocate experts to GPUs across different nodes. It aims to balance the workload at three levels: nodes, GPUs, and experts.&lt;/p&gt;
-
-&lt;h2 id=&quot;algorithm-explained&quot;&gt;Algorithm explained&lt;/h2&gt;
-
-&lt;p&gt;The core idea of EPLB involves two main steps:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Decomposing&lt;/strong&gt; the joint decision problem (replication and reallocation) into three smaller subproblems.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Greedily&lt;/strong&gt; solving each subproblem.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Here’s how the problem and algorithm are structured.&lt;/p&gt;
-
-&lt;p&gt;To aid understanding, the figure below shows an example setup. Each MoE layer includes 16 physical experts (representing 12 logical experts), distributed across 2 computing nodes (each with 4 GPUs). These 16 experts are grouped into 8 sets, which are then assigned to GPUs.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/EPLB/example.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;EPLB aims to balance the workload across nodes, groups, and experts by replicating and reallocating experts to GPUs. Because this is a complex joint decision problem, EPLB breaks it into the following subproblems:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Given current groups, allocate these groups to nodes.
-    &lt;ul&gt;
-      &lt;li&gt;Objective: balance the workload between nodes.&lt;/li&gt;
-      &lt;li&gt;Algorithm: Balanced Packing&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;In each node, replicate the experts.
-    &lt;ul&gt;
-      &lt;li&gt;Objective: balance the workload between experts.&lt;/li&gt;
-      &lt;li&gt;Algorithm: Balanced Replication.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;In each node, allocate experts to groups.
-    &lt;ul&gt;
-      &lt;li&gt;Objective: balance the workload between groups.&lt;/li&gt;
-      &lt;li&gt;Algorithm: Balanced Packing&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Note that steps 1 and 3 both use the same packing algorithm, while step 2 uses a different replication algorithm. EPLB applies greedy strategies to solve both. Here I summarized the pseudocode used in EPLB:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/img/EPLB/code.png&quot; alt=&quot;test&quot; style=&quot;width: 80%; height: auto;&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;heuristic-or-optimization&quot;&gt;Heuristic or Optimization?&lt;/h2&gt;
-
-&lt;p&gt;EPLB relies on a series of heuristics—specifically, hierarchical load balancing and greedy algorithms. Still, the approach is impactful in the AI community. Nowadays, efficient and intuitive algorithms are often preferred, as they are usually good enough for practical use.&lt;/p&gt;
-
-&lt;p&gt;In contrast, seeking an optimal solution may require significantly more computational resources and can even lead to “overfitting”—not just in the training/testing sense, but also with respect to the optimization objective itself versus other goals that are not explicitly optimized.&lt;/p&gt;
-
-&lt;p&gt;As someone who has worked in optimization, I believe it’s increasingly important to improve computational efficiency for finding the optimal solution and, at times, embrace heuristics :)&lt;/p&gt;
-</description>
-        <pubDate>Sat, 17 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/17/EPLB/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/17/EPLB/</guid>
         
         <category>Optimization</category>
         
