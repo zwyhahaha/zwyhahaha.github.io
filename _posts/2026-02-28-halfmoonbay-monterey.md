@@ -18,7 +18,7 @@ tags:
 
 ## Monterey
 
-<img src="{{ site.baseurl }}/img/halfmoonbay-monterey/monterey/1.jpeg" alt="Monterey Bay seabirds" style="max-width: 45%; height: auto;">
-<img src="{{ site.baseurl }}/img/halfmoonbay-monterey/monterey/2.jpeg" alt="Sailboat on Monterey Bay" style="max-width: 45%; height: auto;">
+<img src="{{ site.baseurl }}/img/halfmoonbay-monterey/monterey/1.jpeg" alt="Monterey Bay seabirds" style="max-width: 90%; height: auto;">
+<img src="{{ site.baseurl }}/img/halfmoonbay-monterey/monterey/2.jpeg" alt="Sailboat on Monterey Bay" style="max-width: 90%; height: auto;">
 
 <img src="{{ site.baseurl }}/img/halfmoonbay-monterey/monterey/3.jpeg" alt="Monterey marina" style="width: 90%; height: auto;">
