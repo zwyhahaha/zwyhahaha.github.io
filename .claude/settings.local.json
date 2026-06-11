@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(sips:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(magick --version)",
+      "Bash(convert --version)",
+      "Bash(python3 -c \"import PIL; print\\('Pillow', PIL.__version__\\)\")",
+      "Bash(python3 -c \"import numpy; print\\('numpy', numpy.__version__\\)\")",
+      "Bash(python3 *)"
     ]
   }
 }

@@ -5,9 +5,282 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 07 Feb 2026 20:46:30 -0800</pubDate>
-    <lastBuildDate>Sat, 07 Feb 2026 20:46:30 -0800</lastBuildDate>
+    <pubDate>Wed, 10 Jun 2026 20:50:54 -0700</pubDate>
+    <lastBuildDate>Wed, 10 Jun 2026 20:50:54 -0700</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
+    
+      <item>
+        <title>Envelope Function for Extended DRS</title>
+        <description>&lt;p&gt;Operator splitting methods, like forward backward splitting (FBS) and Douglas-Rachford splitting (DRS), can be viewed as gradient descent on the envelope function. This point of view is useful because it turns a nonsmooth splitting iteration into a smooth optimization method on a surrogate objective. Related envelope constructions also appear for other splitting schemes, such as the &lt;a href=&quot;https://arxiv.org/abs/1804.08739&quot;&gt;Davis-Yin envelope&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this post I first review the classical envelope functions for FBS and DRS, and then derive the corresponding envelope for &lt;strong&gt;extended DRS&lt;/strong&gt;. Throughout, I write the composite objective as&lt;/p&gt;
+
+\[F(u):=f(u)+g(u),\]
+
+&lt;p&gt;where $f$ is the smooth block and $g$ is the prox-friendly, possibly nonsmooth block. For DRS, I also assume that the proximal map of $f$ is tractable.&lt;/p&gt;
+
+&lt;h2 id=&quot;1-envelope-functions-for-fbs-and-drs&quot;&gt;1. Envelope functions for FBS and DRS&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;FBS.&lt;/strong&gt; Suppose $f$ is convex, twice differentiable, and $L_f$-smooth, and $g$ is proper, closed, convex, and proximable. The FBS step with stepsize $\gamma&amp;gt;0$ is&lt;/p&gt;
+
+\[x^+ = \operatorname{prox}_{\gamma g}\bigl(x-\gamma \nabla f(x)\bigr).\]
+
+&lt;p&gt;The &lt;strong&gt;forward-backward envelope&lt;/strong&gt; (FBE), introduced by &lt;a href=&quot;https://arxiv.org/abs/1402.6655&quot;&gt;Patrinos, Stella, and Bemporad&lt;/a&gt;, is&lt;/p&gt;
+
+\[F_\gamma^{\mathrm{FB}}(x)
+:=
+f(x)-\tfrac{\gamma}{2}\|\nabla f(x)\|^2
++g_\gamma\bigl(x-\gamma\nabla f(x)\bigr),\]
+
+&lt;p&gt;where $g_\gamma$ is the Moreau envelope of $g$. Then FBS can be written as a variable-metric gradient step on the FBE:&lt;/p&gt;
+
+\[x^+
+=
+x-\gamma\bigl(I-\gamma\nabla^2 f(x)\bigr)^{-1}
+\nabla F_\gamma^{\mathrm{FB}}(x).\]
+
+&lt;p&gt;When $0&amp;lt;\gamma&amp;lt;1/L_f$, the envelope is exact:&lt;/p&gt;
+
+\[\min_x F(x)=\min_x F_\gamma^{\mathrm{FB}}(x),
+\qquad
+\operatorname{argmin} F
+=
+\operatorname{argmin} F_\gamma^{\mathrm{FB}}.\]
+
+&lt;p&gt;So minimizing the FBE is equivalent to solving the original composite problem, but the FBE is differentiable even when $g$ is nonsmooth.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;DRS.&lt;/strong&gt; To obtain a smooth envelope, assume that $f$ is twice differentiable and $L_f$-smooth. Define&lt;/p&gt;
+
+\[P_\gamma(x):=\operatorname{prox}_{\gamma f}(x),
+\qquad
+G_\gamma(x):=\operatorname{prox}_{\gamma g}\bigl(2P_\gamma(x)-x\bigr).\]
+
+&lt;p&gt;The classical DRS step is&lt;/p&gt;
+
+\[x^+=x+G_\gamma(x)-P_\gamma(x).\]
+
+&lt;p&gt;The &lt;strong&gt;Douglas-Rachford envelope&lt;/strong&gt; (DRE), introduced by &lt;a href=&quot;https://arxiv.org/abs/1407.6723&quot;&gt;Patrinos, Stella, and Bemporad&lt;/a&gt;, is&lt;/p&gt;
+
+\[F_\gamma^{\mathrm{DR}}(x)
+:=
+f_\gamma(x)-\gamma\|\nabla f_\gamma(x)\|^2
++g_\gamma\bigl(x-2\gamma\nabla f_\gamma(x)\bigr).\]
+
+&lt;p&gt;DRS is again a variable-metric gradient method:&lt;/p&gt;
+
+\[x^+
+=
+x-\gamma
+\bigl(I-2\gamma\nabla^2 f_\gamma(x)\bigr)^{-1}
+\nabla F_\gamma^{\mathrm{DR}}(x).\]
+
+&lt;p&gt;When $0&amp;lt;\gamma&amp;lt;1/L_f$, the DRE is exact up to the proximal map $P_\gamma$:&lt;/p&gt;
+
+\[\min_u F(u)=\min_x F_\gamma^{\mathrm{DR}}(x),
+\qquad
+P_\gamma\bigl(\operatorname{argmin}F_\gamma^{\mathrm{DR}}\bigr)
+=
+\operatorname{argmin}F.\]
+
+&lt;h2 id=&quot;2-extended-drs&quot;&gt;2. Extended DRS&lt;/h2&gt;
+
+&lt;p&gt;A recent paper by &lt;a href=&quot;https://arxiv.org/abs/2511.19637&quot;&gt;Nilsson, Åkerman, and Giselsson&lt;/a&gt; studies an extended DRS family with two proximal stepsizes. For the optimization problem&lt;/p&gt;
+
+\[\min_u F(u),\]
+
+&lt;p&gt;extended DRS takes the form&lt;/p&gt;
+
+\[P_\alpha(x):=\operatorname{prox}_{\alpha f}(x),\]
+
+\[G_{\alpha,\beta}(x)
+:=
+\operatorname{prox}_{\beta g}
+\left(
+\left(1+\tfrac{\beta}{\alpha}\right)P_\alpha(x)
+-
+\tfrac{\beta}{\alpha}x
+\right),\]
+
+\[x^+
+=
+x+\theta\bigl(G_{\alpha,\beta}(x)-P_\alpha(x)\bigr).\]
+
+&lt;p&gt;The standard DRS iteration is recovered by setting $\alpha=\beta=\gamma$ and $\theta=1$. For the convex optimization setting, &lt;a href=&quot;https://arxiv.org/abs/2511.19637&quot;&gt;the extended DRS paper&lt;/a&gt; gives the convergence range&lt;/p&gt;
+
+\[0&amp;lt;\theta&amp;lt;\min\left\{2,\tfrac{2\alpha}{\beta}\right\}.\]
+
+&lt;h2 id=&quot;3-extended-douglas-rachford-envelope&quot;&gt;3. Extended Douglas-Rachford envelope&lt;/h2&gt;
+
+&lt;p&gt;The extended DRS envelope is&lt;/p&gt;
+
+\[F_{\alpha,\beta}^{\mathrm{EDR}}(x)
+:=
+f_\alpha(x)
+-
+\tfrac{\alpha+\beta}{2}\|\nabla f_\alpha(x)\|^2
++
+g_\beta\bigl(x-(\alpha+\beta)\nabla f_\alpha(x)\bigr).\]
+
+&lt;p&gt;The key identity is&lt;/p&gt;
+
+\[x-(\alpha+\beta)\nabla f_\alpha(x)
+=
+\left(1+\tfrac{\beta}{\alpha}\right)P_\alpha(x)
+-
+\tfrac{\beta}{\alpha}x.\]
+
+&lt;p&gt;Therefore the last term in $F_{\alpha,\beta}^{\mathrm{EDR}}$ is exactly the Moreau envelope associated with the second proximal step in extended DRS.&lt;/p&gt;
+
+&lt;p&gt;Hence the extended DRS update can be written as&lt;/p&gt;
+
+\[x^+
+=
+x-\theta\beta
+\bigl(I-(\alpha+\beta)\nabla^2 f_\alpha(x)\bigr)^{-1}
+\nabla F_{\alpha,\beta}^{\mathrm{EDR}}(x),\]
+
+&lt;p&gt;whenever $0&amp;lt;\beta&amp;lt;1/L_f$. Thus extended DRS is gradient descent on the extended DRE, under a variable metric.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Exactness of the extended envelope.&lt;/strong&gt; The same envelope sandwich argument extends to $F_{\alpha,\beta}^{\mathrm{EDR}}$. For $P=P_\alpha(x)$, $G=G_{\alpha,\beta}(x)$, and $R=P-G$, we have&lt;/p&gt;
+
+\[F(G)
++
+\tfrac{1-\beta L_f}{2\beta}\|R\|^2
+\le
+F_{\alpha,\beta}^{\mathrm{EDR}}(x)
+\le
+F(P)
+-
+\tfrac{1}{2\beta}\|R\|^2.\]
+
+&lt;p&gt;Therefore, if $0&amp;lt;\beta&amp;lt;1/L_f$ and the original problem has a minimizer, then&lt;/p&gt;
+
+\[\min_x F_{\alpha,\beta}^{\mathrm{EDR}}(x)
+=
+\min_u F(u),
+\quad
+P_\alpha\bigl(\operatorname{argmin}F_{\alpha,\beta}^{\mathrm{EDR}}\bigr)
+=
+\operatorname{argmin}F.\]
+
+&lt;p&gt;&lt;strong&gt;Convex and smooth envelope in the quadratic case.&lt;/strong&gt; Suppose&lt;/p&gt;
+
+\[f(u)=\tfrac{1}{2}u^\top Q u+q^\top u,\;
+\mu I\preceq Q\preceq L I\]
+
+&lt;p&gt;and $g$ is proper, closed, convex, and proximable. In this case, if $\alpha&amp;gt;0$ and $0&amp;lt;\beta\le 1/L$, then the extended DRE is smooth and convex with&lt;/p&gt;
+
+\[L_{\alpha,\beta}^{\mathrm{EDR}}
+=
+\tfrac{1-\beta\mu}{\beta(1+\alpha\mu)^2},
+\qquad
+\mu_{\alpha,\beta}^{\mathrm{EDR}}
+=
+\min\left\{
+\tfrac{\mu(1-\beta\mu)}{(1+\alpha\mu)^2},
+\tfrac{L(1-\beta L)}{(1+\alpha L)^2}
+\right\}.\]
+
+&lt;p&gt;This gives a clean smooth convex objective on which the extended DRS iteration is simply a gradient method with a variable metric.&lt;/p&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Panagiotis Patrinos, Lorenzo Stella, and Alberto Bemporad. &lt;a href=&quot;https://arxiv.org/abs/1402.6655&quot;&gt;Forward-Backward Truncated Newton Methods for Convex Composite Optimization&lt;/a&gt;, 2014.&lt;/li&gt;
+  &lt;li&gt;Panagiotis Patrinos, Lorenzo Stella, and Alberto Bemporad. &lt;a href=&quot;https://arxiv.org/abs/1407.6723&quot;&gt;Douglas-Rachford Splitting: Complexity Estimates and Accelerated Variants&lt;/a&gt;, 2014.&lt;/li&gt;
+  &lt;li&gt;Max Nilsson, Anton Åkerman, and Pontus Giselsson. &lt;a href=&quot;https://arxiv.org/abs/2511.19637&quot;&gt;Extending Douglas-Rachford Splitting for Convex Optimization&lt;/a&gt;, 2025.&lt;/li&gt;
+  &lt;li&gt;Yanli Liu and Wotao Yin. &lt;a href=&quot;https://arxiv.org/abs/1804.08739&quot;&gt;An Envelope for Davis-Yin Splitting and Strict Saddle Point Avoidance&lt;/a&gt;, 2019.&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        <pubDate>Wed, 10 Jun 2026 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2026/06/10/envelope-function-for-extended-drs/</link>
+        <guid isPermaLink="true">http://localhost:4000/2026/06/10/envelope-function-for-extended-drs/</guid>
+        
+        <category>Optimization</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Big Island, Hawaii</title>
+        <description>&lt;h2 id=&quot;hapuna-beach&quot;&gt;Hapuna Beach&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/hapuna-beach.jpeg&quot; alt=&quot;Hapuna Beach turquoise water and lava rock&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/hapuna-sunset.jpeg&quot; alt=&quot;Sunset with palm silhouettes at Hapuna Beach&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The same beach with palms against a pueple and orange sky.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;kua-bay&quot;&gt;Kua Bay&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/kuabay.jpeg&quot; alt=&quot;Kua Bay turquoise water and lava rock shore&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/kuabay-tree.jpeg&quot; alt=&quot;Lone shade tree above the deep blue ocean at Kua Bay&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;A lone shade tree standing watch over the deep blue.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;puʻuhonua-o-hōnaunau&quot;&gt;Puʻuhonua o Hōnaunau&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/honaunau.jpeg&quot; alt=&quot;Palm-lined cove at Puuhonua o Honaunau&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/honaunau-people.jpeg&quot; alt=&quot;Cultural craft demonstration under a thatched hut&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Beautiful traditional crafts.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;punaluʻu-black-sand-beach&quot;&gt;Punaluʻu Black Sand Beach&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/blacksand.jpeg&quot; alt=&quot;Sea turtle resting on the black sand at Punaluu&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Black sand! and a green sea turtle went back home.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;south-point&quot;&gt;South Point&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/southpoint-momument.jpeg&quot; alt=&quot;Coral-covered monument at South Point&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;The southernmost point of the United States, its monument encrusted with offerings of coral.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ʻakaka-falls&quot;&gt;ʻAkaka Falls&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/akaka-rainfall.jpeg&quot; alt=&quot;Akaka Falls through dense rainforest&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;mauna-kea&quot;&gt;Mauna Kea&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Hawaii/mauna-kea.jpeg&quot; alt=&quot;Above the clouds near the summit of Mauna Kea&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Above the clouds near the summit — the highest point on the island.&lt;/em&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 30 Mar 2026 00:00:00 -0700</pubDate>
+        <link>http://localhost:4000/2026/03/30/Hawaii/</link>
+        <guid isPermaLink="true">http://localhost:4000/2026/03/30/Hawaii/</guid>
+        
+        <category>Travel✈️</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Half Moon Bay and Monterey</title>
+        <description>&lt;h2 id=&quot;half-moon-bay&quot;&gt;Half Moon Bay&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/halfmoonbay-monterey/halfmoonbay/1.jpeg&quot; alt=&quot;Half Moon Bay at dusk&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/halfmoonbay-monterey/halfmoonbay/2.jpeg&quot; alt=&quot;Half Moon Bay coastline&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;monterey&quot;&gt;Monterey&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/halfmoonbay-monterey/monterey/1.jpeg&quot; alt=&quot;Monterey Bay seabirds&quot; style=&quot;max-width: 90%; height: auto;&quot; /&gt;
+&lt;img src=&quot;/img/halfmoonbay-monterey/monterey/2.jpeg&quot; alt=&quot;Sailboat on Monterey Bay&quot; style=&quot;max-width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/halfmoonbay-monterey/monterey/3.jpeg&quot; alt=&quot;Monterey marina&quot; style=&quot;width: 90%; height: auto;&quot; /&gt;&lt;/p&gt;
+</description>
+        <pubDate>Sat, 28 Feb 2026 00:00:00 -0800</pubDate>
+        <link>http://localhost:4000/2026/02/28/halfmoonbay-monterey/</link>
+        <guid isPermaLink="true">http://localhost:4000/2026/02/28/halfmoonbay-monterey/</guid>
+        
+        <category>Travel✈️</category>
+        
+        
+      </item>
     
       <item>
         <title>Polynomial Identity Testing and Schwartz-Zippel Lemma</title>
@@ -758,291 +1031,6 @@ P
         <guid isPermaLink="true">http://localhost:4000/2025/07/07/FirstTalk/</guid>
         
         <category>Tips</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Helpful Resources in Grad School</title>
-        <description>&lt;p&gt;I’ve benefited greatly from reading advice posts—especially during my graduate school application. In this post, I’ve collected some of the most helpful resources I’ve come across, covering both graduate school applications and research life. I will continue to update this list as I discover new and insightful advice.&lt;/p&gt;
-
-&lt;p&gt;As a gentle disclaimer, I’ll borrow a word of caution from &lt;em&gt;Carl Sandburg&lt;/em&gt;:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;“Beware of advice, even this.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;applying-to-graduate-school&quot;&gt;Applying to Graduate School&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://csrankings.org/advice.html&quot;&gt;Advice on Applying to Grad School in Computer Science&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/how-to-apply-and-get-in-to-graduate-school-in-science-mathematics-engineering-or-computer-science/&quot;&gt;HOWTO: Get into grad school for science, engineering, math and computer science&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/how-to-recommendation-letter/&quot;&gt;How to get a great letter of recommendation&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://bldavies.com/blog/applying-economics-phd-programs/#interviews&quot;&gt;Applying to economics PhD programs&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://cs-sop.notion.site/CS-PhD-Statements-of-Purpose-df39955313834889b7ac5411c37b958d&quot;&gt;CS PhD Statements of Purpose&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.cs.cmu.edu/~pavlo/blog/2015/10/how-to-write-a-bad-statement-for-a-computer-science-phd-admissions-application.html&quot;&gt;How to Write a Bad Statement for a Computer Science Ph.D. Admissions Application&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;giving-talks&quot;&gt;Giving Talks&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://graphics.stanford.edu/~kayvonf/misc/cleartalktips.pdf&quot;&gt;Tips for Giving Clear Talks&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/academic-presentation-tips/&quot;&gt;10 tips for academic talks&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.cs.jhu.edu/~jason/advice/how-to-give-a-talk.html&quot;&gt;How to Prepare a Talk&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://christopher-thomas-ryan.github.io/papers/Paths_to_Research.pdf&quot;&gt;(Highly Recommend!) Paths to Research, Chapter 10&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;writing-cvs&quot;&gt;Writing CVs&lt;/h2&gt;
-
-&lt;p&gt;Tips from Course ESOLLANG 697 at Stanford:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Do &lt;em&gt;not&lt;/em&gt; include photo, race, religion, nationality, birthday, gender, etc.&lt;/li&gt;
-  &lt;li&gt;Highlight the last name. If your name is Zhang San in Chinese pinyin, then use (Zhang, San / San ZHANG). If it’s scary to use all caps, use &lt;em&gt;small cap&lt;/em&gt; instead. In LaTex, it’s (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;San \textsc{Zhang}&lt;/code&gt;).&lt;/li&gt;
-  &lt;li&gt;Include mailing address, phone number, and email address.&lt;/li&gt;
-  &lt;li&gt;Do &lt;em&gt;not&lt;/em&gt; include experience prior to college.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;writing-emails&quot;&gt;Writing Emails&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://lauraportwoodstacer.com/how-to-email-your-professor-without-being-annoying-af&quot;&gt;How to Email Your Professor (without being annoying AF)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Tips from Course ESOLLANG 697 at Stanford:&lt;/p&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;Start with your request, or who you are if this is your first time emailing that person, rather than “I hope this email finds you well”.&lt;/li&gt;
-      &lt;li&gt;Be short.&lt;/li&gt;
-      &lt;li&gt;Salutation: start with “Dear Professor [Last Name]”, and switch to “Hello [First Name]” when you have close collaboration with him/her.&lt;/li&gt;
-      &lt;li&gt;The larger the request, the more polite the language. Use “I wonder”, “if you might be willing to” or past tense to create distance and politeness. Also remember to give the receiver options and not to impose.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;technical-writing&quot;&gt;Technical Writing&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.cs.ubc.ca/~schmidtm/Courses/Notes/writing.pdf&quot;&gt;Some Notes on Writing, by Prof. Mark Schmidt&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;professional-research-advice&quot;&gt;Professional Research Advice&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.cs.jhu.edu/~jason/advice/&quot;&gt;Advice for Research Students, by Prof. Jason Eisner&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://matt.might.net/articles/&quot;&gt;Blog of Prof. Matt Might&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://homes.cs.washington.edu/~mernst/advice/agre-networking-on-the-network-20050814.html&quot;&gt;Networking on the Network:  A Guide to Professional Skills for PhD Students, by Prof. Phil Agre&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://christopher-thomas-ryan.github.io/papers/Paths_to_Research.pdf&quot;&gt;Book: Paths to Research, by Christopher Thomas Ryan and Runshan Fu&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;miscellaneous&quot;&gt;Miscellaneous&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;A Science History Blog: &lt;a href=&quot;https://etherwave.wordpress.com/about/&quot;&gt;Ether Wave Propaganda: a history of science blog, by Will Thomas and Christopher Donohue&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Tips for Project Framing: &lt;a href=&quot;https://stanfordh4d.substack.com/p/technology-transfer-for-defense-leveraging&quot;&gt;Leveraging the Heilmeier Catechism: A Blueprint for Effective Project Framing&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Fun: &lt;a href=&quot;https://xkcd.com&quot;&gt;xkcd: A webcomic of romance, sarcasm, math, and language&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-        <pubDate>Sun, 22 Jun 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/06/22/Resource/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/06/22/Resource/</guid>
-        
-        <category>Tips</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Routines for Setting Up a New Server</title>
-        <description>&lt;p&gt;Lately, I’ve been running deep learning experiments across different computing clusters. Every time I switch to a new server, I have to go through a series of setup steps to get my environment ready. To avoid repeating the same work from scratch each time, I decided to document my routine here. This post mainly serves as a personal checklist, but it might also be useful to others facing similar tasks. I’ll keep it updated whenever I add new steps to the routine.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;[!NOTE]&lt;/p&gt;
-
-  &lt;p&gt;[Updated 10/25] Recently, I found a useful AI tool built in the Mac Terminal - &lt;a href=&quot;https://www.warp.dev/&quot;&gt;Warp&lt;/a&gt;. I can use it to generate commands and scripts, check the environment of a new server, analyze errors, and automate pipeline. It is particularly helpful when using the remote server. So the routines in this post has been replaced by this wonderful AI tool. I also recommend you giving it a try!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;connect-to-github-account&quot;&gt;Connect to GitHub Account&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Generate an SSH key&lt;/p&gt;
-
-    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh-keygen &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; ed25519 &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;your_email@example.com&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;After generating the key, display it with:&lt;/p&gt;
-
-    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.ssh/id_ed25519.pub
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Add the public key to GitHub.&lt;/p&gt;
-
-    &lt;p&gt;Navigate to &lt;strong&gt;Settings &amp;gt; SSH and GPG keys&lt;/strong&gt;&lt;/p&gt;
-
-    &lt;p&gt;Click &lt;strong&gt;“New SSH key”&lt;/strong&gt;, then paste the copied content&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Testing SSH connection.&lt;/p&gt;
-
-    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh &lt;span class=&quot;nt&quot;&gt;-T&lt;/span&gt; git@github.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-
-    &lt;p&gt;If prompted, type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yes&lt;/code&gt; and press Enter.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;set-up-a-conda-environment&quot;&gt;Set Up a Conda Environment&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Create a new environment.&lt;/p&gt;
-
-    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;conda create &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; myenv &lt;span class=&quot;nv&quot;&gt;python&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.10
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Use a faster pip mirror&lt;/p&gt;
-
-    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;pip config &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-pip config &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;install.trusted-host pypi.tuna.tsinghua.edu.cn
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;set-up-hugging-face-mirror&quot;&gt;Set Up Hugging Face Mirror&lt;/h2&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;HF_ENDPOINT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://hf-mirror.com&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;export HF_ENDPOINT=&quot;https://hf-mirror.com&quot;&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.bashrc
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Then reload your shell:&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-</description>
-        <pubDate>Fri, 23 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/23/ServerEnv/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/23/ServerEnv/</guid>
-        
-        <category>Tips</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Optimizing EPLB by Integer (Conic) Linear Programming</title>
-        <description>&lt;p&gt;In the last post, I reviewed the code of &lt;a href=&quot;https://github.com/deepseek-ai/EPLB&quot;&gt;EPLB&lt;/a&gt; (Expert Parallelism Load Balancer). As a quick recap, EPLB is a toolbox for expert load balancing in the MoE architecture, it outputs the expert replication plan, grouping plan, and reallocation plan. The main idea of the whole algorithm is to decompose the joint decision problems into three subproblems and solve each by greedy methods.&lt;/p&gt;
-
-&lt;p&gt;The main algorithms used are &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;balanced expert replication&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;balanced packing&lt;/code&gt;. In EPLB, they are all solved by greedy algorithms (see my last post for the pseudocode). In this post, I will present how to solve these problems by optimization, in particular, by integer (conic) linear programming. Besides optimization formulation, I also implemented these algorithms in Python. The interface is the same as EPLB, and I termed it as IPLB (Integer Programming based Load Balancer). I have opensourced the algorithm on Github:&lt;/p&gt;
-
-&lt;div align=&quot;center&quot;&gt;
-  &lt;a href=&quot;https://github.com/zwyhahaha/IPLB&quot;&gt;https://github.com/zwyhahaha/IPLB&lt;/a&gt;
-&lt;/div&gt;
-&lt;p&gt;Any feedback is welcome!&lt;/p&gt;
-
-&lt;h2 id=&quot;function-replica_experts&quot;&gt;Function: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replica_experts&lt;/code&gt;&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Input&lt;/strong&gt;: weights(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_layers&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_log_experts&lt;/code&gt;), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_phy_experts&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Objective&lt;/strong&gt;: replicate experts, for each layer, minimize the maximal workload.&lt;/p&gt;
-
-&lt;p&gt;For each layer $l$, the weight (workload) is $w_l = (w_{l1}, …, w_{le})$, the number of physical experts (replicas) is $c$. The decision variable is the number of replicas for each logical expert, $r_l = (r_{l1}, …, r_{le})$. The optimization problem is,&lt;/p&gt;
-
-\[\begin{array}{rcl}
-  \min_{r_l} &amp;amp; \max_{1 \leq j \leq e}  \frac{w_{l
-  j}}{r_{l j}} &amp;amp; \\
-  \text{s.t.} &amp;amp; \sum_{j = 1}^e r_{l j} \leq c &amp;amp; \\
-  &amp;amp; r_{l j} \in \mathbb{Z}_+ &amp;amp; 
-\end{array}\]
-
-&lt;p&gt;After reformulation,&lt;/p&gt;
-
-\[\begin{array}{rcl}
-  \min_{\alpha, {\mathbf{r}}_l} &amp;amp; \alpha &amp;amp; \\
-  \text{s.t.} &amp;amp; w_{l j} \leq \alpha r_{l j} &amp;amp; \forall 1 \leq j \leq e\\
-  &amp;amp; \sum_{j = 1}^e r_{l j} \leq c &amp;amp; \\
-  &amp;amp; r_{l j} \in \mathbb{Z}_+ &amp;amp; 
-\end{array}\]
-
-&lt;p&gt;The constraint that, $w_{l j} \leq \alpha r_{l j}$ is bilinear. However, since $\alpha$ and $r_{l j}$ are both positive, this constraint is actually convex and is semidefinite cone or second-order cone.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;semidefinite cone&lt;/li&gt;
-&lt;/ol&gt;
-
-\[\left(\begin{array}{cc}
-     \alpha &amp;amp; \sqrt{w_{l j}}\\
-     \sqrt{w_{l j}} &amp;amp; r_{l j}
-   \end{array}\right) \succcurlyeq 0\]
-
-&lt;p&gt;which is equivalent to $\alpha \geq 0, r \geq 0,$$w_{l j} \leq \alpha r_{l 
-j}$.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Second order cone.&lt;/li&gt;
-&lt;/ol&gt;
-
-\[\left(\begin{array}{c}
-     \alpha\\
-     r_{l j}\\
-     \sqrt{2 w_{l j}}
-   \end{array}\right) \in \mathcal{Q}_r^3\]
-
-&lt;p&gt;where $\mathcal{Q}_r^3 = { (x, y, z) \in \mathbb{R}^3 : 2 x y \geq z^2, x 
-\geq 0, y \geq 0 }$ represents rotated second-order cone. Equivalently, this is a second-order cone after linear transformation:&lt;/p&gt;
-
-\[\left(\begin{array}{c}
-     \alpha\\
-     \frac{r_{l j} - \sqrt{2 w_{l j}}}{2}\\
-     \frac{r_{l j} + \sqrt{2 w_{l j}}}{2}
-   \end{array}\right) \in \mathcal{Q}^3\]
-
-&lt;p&gt;where $\mathcal{Q}^3 = { (x, y, z) \in \mathbb{R}^3 : z^2 \geq x^2 + y^2 }$.&lt;/p&gt;
-
-&lt;p&gt;Therefore, the problem &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;replica_experts&lt;/code&gt; can be solved by &lt;em&gt;integer conic linear programming&lt;/em&gt;, which is supported by &lt;strong&gt;GUROBI&lt;/strong&gt; and &lt;strong&gt;COPT&lt;/strong&gt;!&lt;/p&gt;
-
-&lt;h2 id=&quot;function-balanced_packing&quot;&gt;Function: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;balanced_packing&lt;/code&gt;&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Input&lt;/strong&gt;: weights(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_layers&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_obj&lt;/code&gt;), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_packs&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Objective&lt;/strong&gt;: assign &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_obj&lt;/code&gt; objects to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;num_packs&lt;/code&gt; packs, for each layer, minimize the maximal workload among packs.&lt;/p&gt;
-
-&lt;p&gt;For each layer $l$, the weight is ${\mathbf{w}} = (w_1, …, w_n)$. The decision variable is, the assignment from objects to packs $a_{i j}$. The optimization problem is,&lt;/p&gt;
-
-\[\begin{array}{rcl}
-  \min_{ a } &amp;amp; \max_{1 \leq j \leq m}  \sum_{i = 1}^n w_i a_{i j} &amp;amp; \\
-  \text{s.t.} &amp;amp; \sum_{j = 1}^m a_{i j} = 1 &amp;amp; \\
-   &amp;amp; \sum_{i = 1}^n a_{i j} \leq  \frac{n}{m} &amp;amp; \\
-   &amp;amp; a_{i j} \in \{ 0, 1 \} &amp;amp; 
-\end{array}\]
-
-&lt;p&gt;After reformulation,&lt;/p&gt;
-
-\[\begin{array}{rcl}
-  \min_{a} &amp;amp; \alpha &amp;amp; \\
-  \text{s.t.} &amp;amp; \alpha \geq \sum_{i = 1}^n w_i a_{i j} &amp;amp; \forall 1 \leq j \leq m\\
-  &amp;amp; \sum_{j = 1}^m a_{i j} = 1 &amp;amp; \\
-  &amp;amp; \sum_{i = 1}^n a_{i j} \leq  \frac{n}{m} &amp;amp; \\
-  &amp;amp; a_{i j} \in \{ 0, 1 \} &amp;amp; 
-\end{array}\]
-
-&lt;p&gt;which is a standard &lt;em&gt;integer linear programming&lt;/em&gt;.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 19 May 2025 00:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2025/05/19/IPLB/</link>
-        <guid isPermaLink="true">http://localhost:4000/2025/05/19/IPLB/</guid>
-        
-        <category>Optimization</category>
         
         
       </item>

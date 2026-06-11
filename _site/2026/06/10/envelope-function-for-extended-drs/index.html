@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                tex2jax: {
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                inlineMath: [['$','$']]
+                }
+            });
+        </script>
+    </head>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords"  content="Blog">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Envelope Function for Extended DRS - Wanyu Zhang</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="http://localhost:4000/2026/06/10/envelope-function-for-extended-drs/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Over the Rainbow</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Blogs</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/travel/">Travel</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true,
+      tags: 'ams',
+      packages: {'[+]': ['bm']}
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+    }
+  };
+</script>
+<script id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <div class="post-meta-header">
+                    <div class="post-tags">
+                        
+                        <a href="/tags/#Optimization" title="Optimization">Optimization</a>
+                        
+                    </div>
+                    <h1>Envelope Function for Extended DRS</h1>
+                    
+                    <span class="meta">Posted by Wanyu Zhang on June 10, 2026</span>
+                </div>
+
+				<p>Operator splitting methods, like forward backward splitting (FBS) and Douglas-Rachford splitting (DRS), can be viewed as gradient descent on the envelope function. This point of view is useful because it turns a nonsmooth splitting iteration into a smooth optimization method on a surrogate objective. Related envelope constructions also appear for other splitting schemes, such as the <a href="https://arxiv.org/abs/1804.08739">Davis-Yin envelope</a>.</p>
+
+<p>In this post I first review the classical envelope functions for FBS and DRS, and then derive the corresponding envelope for <strong>extended DRS</strong>. Throughout, I write the composite objective as</p>
+
+\[F(u):=f(u)+g(u),\]
+
+<p>where $f$ is the smooth block and $g$ is the prox-friendly, possibly nonsmooth block. For DRS, I also assume that the proximal map of $f$ is tractable.</p>
+
+<h2 id="1-envelope-functions-for-fbs-and-drs">1. Envelope functions for FBS and DRS</h2>
+
+<p><strong>FBS.</strong> Suppose $f$ is convex, twice differentiable, and $L_f$-smooth, and $g$ is proper, closed, convex, and proximable. The FBS step with stepsize $\gamma&gt;0$ is</p>
+
+\[x^+ = \operatorname{prox}_{\gamma g}\bigl(x-\gamma \nabla f(x)\bigr).\]
+
+<p>The <strong>forward-backward envelope</strong> (FBE), introduced by <a href="https://arxiv.org/abs/1402.6655">Patrinos, Stella, and Bemporad</a>, is</p>
+
+\[F_\gamma^{\mathrm{FB}}(x)
+:=
+f(x)-\tfrac{\gamma}{2}\|\nabla f(x)\|^2
++g_\gamma\bigl(x-\gamma\nabla f(x)\bigr),\]
+
+<p>where $g_\gamma$ is the Moreau envelope of $g$. Then FBS can be written as a variable-metric gradient step on the FBE:</p>
+
+\[x^+
+=
+x-\gamma\bigl(I-\gamma\nabla^2 f(x)\bigr)^{-1}
+\nabla F_\gamma^{\mathrm{FB}}(x).\]
+
+<p>When $0&lt;\gamma&lt;1/L_f$, the envelope is exact:</p>
+
+\[\min_x F(x)=\min_x F_\gamma^{\mathrm{FB}}(x),
+\qquad
+\operatorname{argmin} F
+=
+\operatorname{argmin} F_\gamma^{\mathrm{FB}}.\]
+
+<p>So minimizing the FBE is equivalent to solving the original composite problem, but the FBE is differentiable even when $g$ is nonsmooth.</p>
+
+<p><strong>DRS.</strong> To obtain a smooth envelope, assume that $f$ is twice differentiable and $L_f$-smooth. Define</p>
+
+\[P_\gamma(x):=\operatorname{prox}_{\gamma f}(x),
+\qquad
+G_\gamma(x):=\operatorname{prox}_{\gamma g}\bigl(2P_\gamma(x)-x\bigr).\]
+
+<p>The classical DRS step is</p>
+
+\[x^+=x+G_\gamma(x)-P_\gamma(x).\]
+
+<p>The <strong>Douglas-Rachford envelope</strong> (DRE), introduced by <a href="https://arxiv.org/abs/1407.6723">Patrinos, Stella, and Bemporad</a>, is</p>
+
+\[F_\gamma^{\mathrm{DR}}(x)
+:=
+f_\gamma(x)-\gamma\|\nabla f_\gamma(x)\|^2
++g_\gamma\bigl(x-2\gamma\nabla f_\gamma(x)\bigr).\]
+
+<p>DRS is again a variable-metric gradient method:</p>
+
+\[x^+
+=
+x-\gamma
+\bigl(I-2\gamma\nabla^2 f_\gamma(x)\bigr)^{-1}
+\nabla F_\gamma^{\mathrm{DR}}(x).\]
+
+<p>When $0&lt;\gamma&lt;1/L_f$, the DRE is exact up to the proximal map $P_\gamma$:</p>
+
+\[\min_u F(u)=\min_x F_\gamma^{\mathrm{DR}}(x),
+\qquad
+P_\gamma\bigl(\operatorname{argmin}F_\gamma^{\mathrm{DR}}\bigr)
+=
+\operatorname{argmin}F.\]
+
+<h2 id="2-extended-drs">2. Extended DRS</h2>
+
+<p>A recent paper by <a href="https://arxiv.org/abs/2511.19637">Nilsson, Åkerman, and Giselsson</a> studies an extended DRS family with two proximal stepsizes. For the optimization problem</p>
+
+\[\min_u F(u),\]
+
+<p>extended DRS takes the form</p>
+
+\[P_\alpha(x):=\operatorname{prox}_{\alpha f}(x),\]
+
+\[G_{\alpha,\beta}(x)
+:=
+\operatorname{prox}_{\beta g}
+\left(
+\left(1+\tfrac{\beta}{\alpha}\right)P_\alpha(x)
+-
+\tfrac{\beta}{\alpha}x
+\right),\]
+
+\[x^+
+=
+x+\theta\bigl(G_{\alpha,\beta}(x)-P_\alpha(x)\bigr).\]
+
+<p>The standard DRS iteration is recovered by setting $\alpha=\beta=\gamma$ and $\theta=1$. For the convex optimization setting, <a href="https://arxiv.org/abs/2511.19637">the extended DRS paper</a> gives the convergence range</p>
+
+\[0&lt;\theta&lt;\min\left\{2,\tfrac{2\alpha}{\beta}\right\}.\]
+
+<h2 id="3-extended-douglas-rachford-envelope">3. Extended Douglas-Rachford envelope</h2>
+
+<p>The extended DRS envelope is</p>
+
+\[F_{\alpha,\beta}^{\mathrm{EDR}}(x)
+:=
+f_\alpha(x)
+-
+\tfrac{\alpha+\beta}{2}\|\nabla f_\alpha(x)\|^2
++
+g_\beta\bigl(x-(\alpha+\beta)\nabla f_\alpha(x)\bigr).\]
+
+<p>The key identity is</p>
+
+\[x-(\alpha+\beta)\nabla f_\alpha(x)
+=
+\left(1+\tfrac{\beta}{\alpha}\right)P_\alpha(x)
+-
+\tfrac{\beta}{\alpha}x.\]
+
+<p>Therefore the last term in $F_{\alpha,\beta}^{\mathrm{EDR}}$ is exactly the Moreau envelope associated with the second proximal step in extended DRS.</p>
+
+<p>Hence the extended DRS update can be written as</p>
+
+\[x^+
+=
+x-\theta\beta
+\bigl(I-(\alpha+\beta)\nabla^2 f_\alpha(x)\bigr)^{-1}
+\nabla F_{\alpha,\beta}^{\mathrm{EDR}}(x),\]
+
+<p>whenever $0&lt;\beta&lt;1/L_f$. Thus extended DRS is gradient descent on the extended DRE, under a variable metric.</p>
+
+<p><strong>Exactness of the extended envelope.</strong> The same envelope sandwich argument extends to $F_{\alpha,\beta}^{\mathrm{EDR}}$. For $P=P_\alpha(x)$, $G=G_{\alpha,\beta}(x)$, and $R=P-G$, we have</p>
+
+\[F(G)
++
+\tfrac{1-\beta L_f}{2\beta}\|R\|^2
+\le
+F_{\alpha,\beta}^{\mathrm{EDR}}(x)
+\le
+F(P)
+-
+\tfrac{1}{2\beta}\|R\|^2.\]
+
+<p>Therefore, if $0&lt;\beta&lt;1/L_f$ and the original problem has a minimizer, then</p>
+
+\[\min_x F_{\alpha,\beta}^{\mathrm{EDR}}(x)
+=
+\min_u F(u),
+\quad
+P_\alpha\bigl(\operatorname{argmin}F_{\alpha,\beta}^{\mathrm{EDR}}\bigr)
+=
+\operatorname{argmin}F.\]
+
+<p><strong>Convex and smooth envelope in the quadratic case.</strong> Suppose</p>
+
+\[f(u)=\tfrac{1}{2}u^\top Q u+q^\top u,\;
+\mu I\preceq Q\preceq L I\]
+
+<p>and $g$ is proper, closed, convex, and proximable. In this case, if $\alpha&gt;0$ and $0&lt;\beta\le 1/L$, then the extended DRE is smooth and convex with</p>
+
+\[L_{\alpha,\beta}^{\mathrm{EDR}}
+=
+\tfrac{1-\beta\mu}{\beta(1+\alpha\mu)^2},
+\qquad
+\mu_{\alpha,\beta}^{\mathrm{EDR}}
+=
+\min\left\{
+\tfrac{\mu(1-\beta\mu)}{(1+\alpha\mu)^2},
+\tfrac{L(1-\beta L)}{(1+\alpha L)^2}
+\right\}.\]
+
+<p>This gives a clean smooth convex objective on which the extended DRS iteration is simply a gradient method with a variable metric.</p>
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li>Panagiotis Patrinos, Lorenzo Stella, and Alberto Bemporad. <a href="https://arxiv.org/abs/1402.6655">Forward-Backward Truncated Newton Methods for Convex Composite Optimization</a>, 2014.</li>
+  <li>Panagiotis Patrinos, Lorenzo Stella, and Alberto Bemporad. <a href="https://arxiv.org/abs/1407.6723">Douglas-Rachford Splitting: Complexity Estimates and Accelerated Variants</a>, 2014.</li>
+  <li>Max Nilsson, Anton Åkerman, and Pontus Giselsson. <a href="https://arxiv.org/abs/2511.19637">Extending Douglas-Rachford Splitting for Convex Optimization</a>, 2025.</li>
+  <li>Yanli Liu and Wotao Yin. <a href="https://arxiv.org/abs/1804.08739">An Envelope for Davis-Yin Splitting and Strict Saddle Point Avoidance</a>, 2019.</li>
+</ol>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2026/03/30/Hawaii/" data-toggle="tooltip" data-placement="top" title="Big Island, Hawaii">
+                        Previous<br>
+                        <span>Big Island, Hawaii</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Optimization" title="Optimization" rel="12">
+                                    Optimization
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Tips" title="Tips" rel="7">
+                                    Tips
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Travel✈️" title="Travel✈️" rel="6">
+                                    Travel✈️
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.post-meta-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
